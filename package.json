@@ -12,6 +12,8 @@
     "express": "^4.17.1"
   },
   "dependencies": {
-    "mysql": "^2.17.1"
+    "gaussian": "^1.1.0",
+    "mysql": "^2.17.1",
+    "random-normal": "^1.0.0"
   }
 }
