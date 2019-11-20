@@ -1,10 +1,10 @@
 USE miri;
 
-CREATE TABLE IF NOT EXISTS location (
-        id INT NOT NULL AUTO_INCREMENT,
-        name CHAR(255),
-        PRIMARY KEY (id)
-);
+CREATE TABLE IF NOT EXISTS user (
+	id INT NOT NULL AUTO_INCREMENT,
+	householdid INT NOT NULL,
+	PRIMARY KEY (userid),
+	FOREIGN KEY (householdid) REFERENCES household(id)
 
 CREATE TABLE IF NOT EXISTS household (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -16,11 +16,10 @@ CREATE TABLE IF NOT EXISTS household (
 	FOREIGN KEY (locationid) REFERENCES location(id)
 );
 
-CREATE TABLE IF NOT EXISTS user (
-        id INT NOT NULL AUTO_INCREMENT,
-        householdid INT NOT NULL,
-        PRIMARY KEY (userid),
-        FOREIGN KEY (householdid) REFERENCES household(id),
+CREATE TABLE IF NOT EXISTS location (
+	id INT NOT NULL AUTO_INCREMENT,
+	name CHAR(255),
+	PRIMARY KEY (id),
 );
 
 CREATE TABLE IF NOT EXISTS windspeed (
