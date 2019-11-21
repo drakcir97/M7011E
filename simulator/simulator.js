@@ -268,6 +268,7 @@ function generatePowerTotal(dateid) {
 }
 
 function createTestHouseholds(location) {
+	console.log("Location in createTestHouseholds",location);
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 	con.query(sqlLocation, function (err, result) {
 		var locationid = result[0]['id'];
@@ -298,7 +299,7 @@ function update() {
 	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate(); 
 	var dateid = generateDate();
 	createLocation(location);
-	createTestHouseholds()
+	createTestHouseholds();
 	generateTemperature(location);
 	generateWindForDay(location,date);
 	generateWindForTime(location,date,dateid);
