@@ -183,9 +183,9 @@ function createLocation(location){
 		console.log("location was found");
 		var count = result[0]['COUNT(*)'];
 		if (count == 0) {
-        	var sql = mysql.format("INSERT INTO location (name) VALUES (?)", [location]);
+        	var sqlInsert = mysql.format("INSERT INTO location (name) VALUES (?)", [location]);
 			console.log("after");
-            con.query(sql, function(err, result) {
+            con.query(sqlInsert, function(err, result) {
                 if (err) throw err;
                 console.log("Location not found, was inserted");
             });
