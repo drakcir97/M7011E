@@ -60,8 +60,6 @@ function generateTemperature(location,dateid) {
 function generateDate() {
 	var dateTime = require('node-datetime');
 	var dt = dateTime.create();
-	var nowDate = new Date(); 
-	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate(); 
 	var formatted = dt.format('Y-m-d H:M:S');
 	var sqlInsert = mysql.format("INSERT INTO datet (dt) VALUES (?)", [formatted]);
 	con.query(sqlInsert, function (err, result) {
@@ -72,9 +70,7 @@ function generateDate() {
 			if (err) throw err;
 			var dateid = result[0]['id'];
 			console.log(dateid);
-			console.log(date);
-			var arr = [dateid,date];
-			return arr;
+			return dateid;
 		});
 	});
 	
@@ -266,11 +262,9 @@ function generatePowerTotal(dateid) {
 //Updates values in db. That is, generates new values and inserts them accordingly.
 function update() {
 	var location = "Kiruna";
-	var dateArray = [];
-	dateArray = generateDate();
-	console.log(dateArray);
-	var dateid = dateArray[0];
-	var date = dateArray[1];
+	var dateid = generateDate();
+	var nowDate = new Date(); 
+	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate(); 
 	createLocation(location);
 	generateTemperature(location);
 	generateWindForDay(location,date);
@@ -299,11 +293,11 @@ function update() {
 con.connect(function(err) {
 	if (err) throw err;
 	console.log("Connected to db");
-	//update();
+	update();
 	//var location = "Kiruna";
 	//createLocation(location);
-	var temp = generateDate();
-	console.log(temp);
+	//var temp = generateDate();
+	//console.log(temp);
 });
 
 //con.end(function(err) {
