@@ -270,11 +270,13 @@ function generatePowerTotal(dateid) {
 function createTestHouseholds(location) {
 	console.log("Location in createTestHouseholds",location);
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
+	var apartment = "apartment";
+	var house = "house";
 	con.query(sqlLocation, function (err, result) {
 		var locationid = result[0]['id'];
 		var i = 0;
 		while(i<5) {
-			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, "apartment"]);
+			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, apartment]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
 			});
@@ -282,7 +284,7 @@ function createTestHouseholds(location) {
 		}
 		var j = 0;
 		while (j<2) {
-			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, "house"]);
+			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, house]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
 			});
