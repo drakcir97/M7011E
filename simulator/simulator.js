@@ -266,7 +266,7 @@ function update() {
 	createLocation(location);
 	generateTemperature(location);
 	generateWindForDay(location,date);
-	generateWindForLocation(location,date,dateid);
+	generateWindForTime(location,date,dateid);
 	var sqlHousehold = "SELECT id FROM household";
 	con.query(sqlInsert, function (err, result) {
 		for(house in result[0]['id']) {
