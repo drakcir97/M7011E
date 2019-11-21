@@ -299,7 +299,7 @@ function update() {
 	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate(); 
 	var dateid = generateDate();
 	createLocation(location);
-	createTestHouseholds();
+	createTestHouseholds(location);
 	generateTemperature(location);
 	generateWindForDay(location,date);
 	generateWindForTime(location,date,dateid);
