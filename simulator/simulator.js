@@ -71,8 +71,8 @@ function generateDate() {
 		console.log("date was inserted");
 		console.log(lookupDate);
 	});
-	//var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
-	var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
+	var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
+	//var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
 	con.query(sqlLookup, function (err, result) {
 		//if (err) throw err;
 		console.log("testDate",result[0]['id']);
@@ -187,11 +187,11 @@ function createLocation(location){
 	var sql = mysql.format("SELECT COUNT(*) FROM location WHERE name=?", [location]);  
     con.query(sql, function (err, result) {
         if (err) throw err;           
-		console.log("location was found");
+		console.log("Number of location found",result[0]['COUNT(*)']);
 		var count = result[0]['COUNT(*)'];
 		if (count == 0) {
         	var sqlInsert = mysql.format("INSERT INTO location (name) VALUES (?)", [location]);
-			console.log("after");
+			console.log("Passed count == 0");
             con.query(sqlInsert, function(err, result) {
                 if (err) throw err;
                 console.log("Location not found, was inserted");
