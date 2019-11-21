@@ -67,7 +67,7 @@ function generateDate() {
 	// SELECT fields FROM table ORDER BY id DESC LIMIT 1;
 	//INSERT INTO blog(title,desc) VALUES ('blog1','description'); SELECT * FROM blog
 	con.query(sqlInsert, function (err, result) {
-		if (err) throw err;
+		//if (err) throw err;
 		console.log("date was inserted");
 		console.log(lookupDate);
 		//var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
