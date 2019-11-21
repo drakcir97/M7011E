@@ -267,7 +267,7 @@ function generatePowerTotal(dateid) {
 	});
 }
 
-fn createTestHouseholds(location) {
+function createTestHouseholds(location) {
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 	con.query(sqlLocation, function (err, result) {
 		var locationid = result[0]['id'];
