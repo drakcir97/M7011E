@@ -308,11 +308,11 @@ function update() {
 con.connect(function(err) {
 	if (err) throw err;
 	console.log("Connected to db");
-	update();
-	//var location = "Kiruna";
-	//createLocation(location);
-	//var temp = generateDate();
-	//console.log(temp);
+	//update();
+	var location = "Kiruna";
+	createLocation(location);
+	var temp = generateDate();
+	console.log(temp);
 });
 
 //con.end(function(err) {
