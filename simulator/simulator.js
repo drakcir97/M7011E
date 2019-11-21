@@ -260,8 +260,7 @@ function generatePowerCost(householdid, dateid, totalin, totalout,totalhousehold
 				}
 			} 
 		});
-	}
-	
+	});
 }
 
 function generatePowerTotal(dateid) {
