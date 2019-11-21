@@ -65,7 +65,7 @@ function generateDate() {
 	con.query(sqlInsert, function (err, result) {
 		if (err) throw err;
 		console.log("date was inserted");
-		var sqlLookup = mysql.format("Select id FROM datet WHERE dt=?", [formatted]);
+		var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [formatted]);
 		con.query(sqlLookup, function (err, result) {
 			if (err) throw err;
 			var dateid = result[0]['id'];
@@ -113,6 +113,7 @@ function generateWindForTime(location,date,dateid) {
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 	con.query(sqlLocation, function (err, result) {
 		if (err) throw err;
+		console.log(result[0]);
 		var locationId = result[0]['id'];
 		var sqlGetAvg = mysql.format("SELECT windspeed FROM averagewindspeed WHERE dt=? AND locationid=?", [date,locationId]);
 		con.query(sqlGetAvg, function(err, result) {
@@ -277,7 +278,9 @@ function update() {
 		}
 	});
 	generatePowerTotal(dateid);
-	var totalin,totalout = getPowerTotal(dateid);
+	var totalarr = getPowerTotal(dateid);
+	var totalin = totalarr[0];
+	var totalout = totalarr[1];
 	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
 	con.query(sqlCountHousehold, function (err, result) {
 		var sqlHousehold = "SELECT id FROM household";
