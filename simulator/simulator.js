@@ -100,6 +100,7 @@ function generateDate() {
 		con.query(sqlLookup, function (err, result) {
 			if (err) throw err;
 			return result[0]['id'],date;
+		});
 	});
 	
 }
