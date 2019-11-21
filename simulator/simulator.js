@@ -64,11 +64,14 @@ function generateDate() {
 	var lookupDate = formatted;
 	console.log(formatted);
 	var sqlInsert = mysql.format("INSERT INTO datet (dt) VALUES (?)", [formatted]);
+	// SELECT fields FROM table ORDER BY id DESC LIMIT 1;
+	//INSERT INTO blog(title,desc) VALUES ('blog1','description'); SELECT * FROM blog
 	con.query(sqlInsert, function (err, result) {
 		if (err) throw err;
 		console.log("date was inserted");
 		console.log(lookupDate);
-		var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
+		//var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
+		var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
 		con.query(sqlLookup, function (err, result) {
 			//if (err) throw err;
 			console.log("testDate",result[0]['id']);
