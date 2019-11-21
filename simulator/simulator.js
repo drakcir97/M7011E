@@ -302,7 +302,8 @@ con.connect(function(err) {
 	//update();
 	//var location = "Kiruna";
 	//createLocation(location);
-	generateDate();
+	var temp = generateDate();
+	console.log(temp);
 });
 
 //con.end(function(err) {
