@@ -62,6 +62,7 @@ function generateDate() {
 	var dt = dateTime.create();
 	var formatted = dt.format('Y-m-d H:M:S');
 	var lookupDate = formatted;
+	console.log(formatted);
 	var sqlInsert = mysql.format("INSERT INTO datet (dt) VALUES (?)", [formatted]);
 	con.query(sqlInsert, function (err, result) {
 		if (err) throw err;
