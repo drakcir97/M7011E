@@ -67,6 +67,7 @@ function generateDate() {
 	con.query(sqlInsert, function (err, result) {
 		if (err) throw err;
 		console.log("date was inserted");
+		console.log(lookupDate);
 		var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
 		con.query(sqlLookup, function (err, result) {
 			if (err) throw err;
