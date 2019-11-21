@@ -267,6 +267,28 @@ function generatePowerTotal(dateid) {
 	});
 }
 
+fn createTestHouseholds(location) {
+	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
+	con.query(sqlLocation, function (err, result) {
+		var locationid = result[0]['id'];
+		var i = 0;
+		for(int i = 0; i<5; i++) {
+			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?)", [locationid, "apartment"]);
+			con.query(sql, function (err, result) {
+				if (err) throw err;
+			});
+		}
+		var j = 0;
+		for(int j = 0; j<2; j++) {
+			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?)", [locationid, "house"]);
+			con.query(sql, function (err, result) {
+				if (err) throw err;
+			});
+		}
+		console.log("Inserted households to test");
+	});
+}
+
 //Updates values in db. That is, generates new values and inserts them accordingly.
 function update() {
 	var location = "Kiruna";
@@ -274,6 +296,7 @@ function update() {
 	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate(); 
 	var dateid = generateDate();
 	createLocation(location);
+	createTestHouseholds()
 	generateTemperature(location);
 	generateWindForDay(location,date);
 	generateWindForTime(location,date,dateid);
