@@ -78,10 +78,10 @@ function generateDate() {
 
 //Tests if wind for day and location already exists, return true if it does.
 function testWindForDay(location,date) {
-	var sql = mysql.format("SELECT COUNT(id) FROM averagewindspeed WHERE locationid=? AND dt=?", [location,date]);
+	var sql = mysql.format("SELECT COUNT(i) FROM averagewindspeed WHERE locationid=? AND dt=?", [location,date]);
 	con.query(sql, function (err, result) {
 		if (err) throw err;
-		var count = result[0]['COUNT(id)'];
+		var count = result[0]['COUNT(i)'];
 		if (count == 0) {
 			return false;
 		}
