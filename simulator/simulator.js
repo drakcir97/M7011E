@@ -47,8 +47,8 @@ function generateTemperature(location,dateid) {
 			//var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate(); 
 			var locationId = result[0]['id'];
 			var sql = mysql.format("INSERT INTO temperature (locationid, temperature, datetimeid) VALUES (?,?,?)", [locationId, temperature, dateid]);
-			con.query(sql, function(err2, result) {
-				if (err2) throw err2;
+			con.query(sql, function(err, result) {
+				if (err) throw err;
 				console.log("Temperature was inserted");
 			});
 		});
@@ -99,8 +99,8 @@ function generateWindForDay(location,date){
 			var meanWind = getNormValues(7, 2);
 			var locationId = result[0]['id'];
         	var sql = mysql.format("INSERT INTO averagewindspeed (locationid, windspeed, dt) VALUES (?,?,?)", [locationId, meanWind, date]);
-    		con.query(sql, function (err2, result) {
-            	if (err2) throw err2;
+    		con.query(sql, function (err, result) {
+            	if (err) throw err;
             	console.log("1 record inserted");
 			});
 			return date;
@@ -185,8 +185,8 @@ function createLocation(location){
 		if (count == 0) {
         	var sql = mysql.format("INSERT INTO location (name) VALUES (?)", [location]);
 			console.log("after");
-            con.query(sql, function(err2, result) {
-                if (err2) throw err2;
+            con.query(sql, function(err, result) {
+                if (err) throw err;
                 console.log("Location not found, was inserted");
             });
 		}
