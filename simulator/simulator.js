@@ -71,6 +71,8 @@ function generateDate() {
 		con.query(sqlLookup, function (err, result) {
 			if (err) throw err;
 			var dateid = result[0]['id'];
+			console.log(dateid);
+			console.log(date);
 			return [[dateid], [date]];
 		});
 	});
