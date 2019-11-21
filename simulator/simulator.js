@@ -74,7 +74,7 @@ function generateDate() {
 			console.log(dateid);
 			console.log(date);
 			var arr = [dateid,date];
-	//		return arr;
+			return arr;
 		});
 	});
 	
