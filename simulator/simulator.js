@@ -70,7 +70,8 @@ function generateDate() {
 		var sqlLookup = mysql.format("Select id FROM datet WHERE dt=?", [formatted]);
 		con.query(sqlLookup, function (err, result) {
 			if (err) throw err;
-			return [result[0]['id'],date];
+			var dateid = result[0]['id'];
+			return [dateid, date];
 		});
 	});
 	
