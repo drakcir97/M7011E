@@ -268,7 +268,7 @@ function update() {
 	generateWindForDay(location,date);
 	generateWindForTime(location,date,dateid);
 	var sqlHousehold = "SELECT id FROM household";
-	con.query(sqlHouseHold, function (err, result) {
+	con.query(sqlHousehold, function (err, result) {
 		for(house in result[0]['id']) {
 			generatePowerForTime(house,dateid);
 			generatePowerUsageForTime(house,dateid);
@@ -277,10 +277,10 @@ function update() {
 	generatePowerTotal(dateid);
 	var totalin,totalout = getPowerTotal(dateid);
 	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
-	con.query(sqlCountHouseHold, function (err, result) {
+	con.query(sqlCountHousehold, function (err, result) {
 		var sqlHousehold = "SELECT id FROM household";
 		var totalhouseholds = result[0]['COUNT(id)'];
-		con.query(sqlHouseHold, function (err, result) {
+		con.query(sqlHousehold, function (err, result) {
 			for(house in result[0]['id']) {
 				generatePowerCost(house, dateid,totalin,totalout,totalhouseholds);
 			}
