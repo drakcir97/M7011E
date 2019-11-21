@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS temperature (
 	locationid int NOT NULL,
 	temperature float NOT NULL,
 	datetimeid int NOT NULL,
+	PRIMARY KEY (i),
 	FOREIGN KEY (locationid) REFERENCES location(id),
 	FOREIGN KEY (datetimeid) REFERENCES datet(id)
 );
