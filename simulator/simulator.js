@@ -61,11 +61,12 @@ function generateDate() {
 	var dateTime = require('node-datetime');
 	var dt = dateTime.create();
 	var formatted = dt.format('Y-m-d H:M:S');
+	var lookupDate = formatted;
 	var sqlInsert = mysql.format("INSERT INTO datet (dt) VALUES (?)", [formatted]);
 	con.query(sqlInsert, function (err, result) {
 		if (err) throw err;
 		console.log("date was inserted");
-		var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [formatted]);
+		var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
 		con.query(sqlLookup, function (err, result) {
 			if (err) throw err;
 			var dateid = result[0]['id'];
