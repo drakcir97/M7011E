@@ -268,7 +268,7 @@ function update() {
 	generateWindForDay(location,date);
 	generateWindForTime(location,date,dateid);
 	var sqlHousehold = "SELECT id FROM household";
-	con.query(sqlInsert, function (err, result) {
+	con.query(sqlHouseHold, function (err, result) {
 		for(house in result[0]['id']) {
 			generatePowerForTime(house,dateid);
 			generatePowerUsageForTime(house,dateid);
