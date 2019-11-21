@@ -305,6 +305,7 @@ function update() {
 	generateWindForTime(location,date,dateid);
 	var sqlHousehold = "SELECT id FROM household";
 	con.query(sqlHousehold, function (err, result) {
+		console.log("Result in loop",result[0]['id']);
 		for(house in result[0]['id']) {
 			generatePowerForTime(house,dateid);
 			generatePowerUsageForTime(house,dateid);
