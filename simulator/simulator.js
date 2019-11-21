@@ -74,7 +74,7 @@ function generateDate() {
 			console.log(dateid);
 			console.log(date);
 			var arr = [dateid,date];
-			return arr;
+	//		return arr;
 		});
 	});
 	
@@ -299,9 +299,10 @@ function update() {
 con.connect(function(err) {
 	if (err) throw err;
 	console.log("Connected to db");
-	update();
+	//update();
 	//var location = "Kiruna";
 	//createLocation(location);
+	generateDate();
 });
 
 //con.end(function(err) {
