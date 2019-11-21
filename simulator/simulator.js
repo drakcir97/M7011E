@@ -275,6 +275,7 @@ function createTestHouseholds(location) {
 	con.query(sqlLocation, function (err, result) {
 		var locationid = result[0]['id'];
 		var i = 0;
+		console.log("locationid ",locationid);
 		while(i<5) {
 			console.log("i ",i);
 			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, apartment]);
@@ -292,6 +293,10 @@ function createTestHouseholds(location) {
 			});
 			j=j+1;
 		}
+		var sqlHousehold = "SELECT COUNT(*) FROM household";
+		con.query(sqlHousehold, function (err, result) {
+			console.log(result[0]['COUNT(*)']);
+		});
 		console.log("Inserted households to test");
 	});
 }
