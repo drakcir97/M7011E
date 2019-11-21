@@ -6,16 +6,14 @@ var randomNormal = require('random-normal')
 var mysql = require('mysql');
 
 //	var elePro = ((1.3968**windSpeedCurrentTime)*56.94).toFixed(3);
-var config = {
-	apartmentPower = 300, //Average power used by an apartment.
-	housePower = 2500, //Average power used by house.
-	tempMinAffect = 25, //At this value no power goes to heat.
-	tempMaxAffect = -30, //At this value maximum power goes to heat.
-	tempAffect = 2, //Maximum affect temperature has.
-	tempCoefficient = 0.6, //Procentage that is affected by temperature.
-	powerCostHigh = 0.01, //Cost if powerplant
-	powerCostLow = 0.005, //Cost if wind
-}
+var apartmentPower = 300; //Average power used by an apartment.
+var housePower = 2500; //Average power used by house.
+var	tempMinAffect = 25; //At this value no power goes to heat.
+var	tempMaxAffect = -30; //At this value maximum power goes to heat.
+var	tempAffect = 2; //Maximum affect temperature has.
+var	tempCoefficient = 0.6; //Procentage that is affected by temperature.
+var	powerCostHigh = 0.01; //Cost if powerplant
+var	powerCostLow = 0.005; //Cost if wind
 
 var con = mysql.createConnection({
   host: "localhost",
@@ -184,19 +182,19 @@ function generatePowerUsageForTime(householdid,dateid) {
 			var temp = result[0]['temperature'];
 			var typePwr = 0;
 			if (housetype == "apartment") {
-				typePwr = config.apartmentPower;
+				typePwr = apartmentPower;
 			} else {
-				typePwr = config.housePower;
+				typePwr = housePower;
 			}
 			var tempPwr = 0;
-			if (temp > config.tempMinAffect) { //Temp is higher then minumum affect, 0 goes to heating.
+			if (temp > tempMinAffect) { //Temp is higher then minumum affect, 0 goes to heating.
 				tempPwr = 0;
-			} else if (temp < config.tempMaxAffect) { //Temp is lower then max affect, max to heating.
-				tempPwr = typePwr*config.tempCoefficient*config.tempAffect; 
+			} else if (temp < tempMaxAffect) { //Temp is lower then max affect, max to heating.
+				tempPwr = typePwr*tempCoefficient*tempAffect; 
 			} else { //Somewhere inbetween, calculate amount using linear division of affect.
-				tempPwr = typePwr*config.tempCoefficient*temp*(config.tempAffect/(Math.abs(config.tempMaxAffect)+Math.abs(config.tempMinAffect)))
+				tempPwr = typePwr*tempCoefficient*temp*(tempAffect/(Math.abs(tempMaxAffect)+Math.abs(tempMinAffect)))
 			}
-			var pwr = (1-config.tempCoefficient) * typePwr + tempPwr;
+			var pwr = (1-tempCoefficient) * typePwr + tempPwr;
 			var sqlInsert = mysql.format("INSERT INTO powerusage (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,pwr,dateid]);
 			con.query(sqlInsert, function(err, result) {
 				if (err) throw err;
@@ -246,17 +244,17 @@ function generatePowerCost(householdid, dateid, totalin, totalout,totalhousehold
 			powerusage = parseFloat(result[0]['value']);
 			powersum = powergenerated - powerusage;
 			if(powersum >= 0) {
-				powercost = config.powerCostLow*powersum;
+				powercost = powerCostLow*powersum;
 			} else {
 				if (totalin>totalout) {
-					powercost = -config.powerCostLow*powersum;
+					powercost = -powerCostLow*powersum;
 				} else {
 					if ((powersum + totalin/totalhouseholds) > 0) {
-						powercost = config.powerCostLow*powersum;
+						powercost = powerCostLow*powersum;
 					} else {
 						var powerCheap = totalin/totalhouseholds;
 						var powerExpensive = (powersum+powerCheap);
-						powercost = powerExpensive*config.powerCostHigh - powerCheap*config.powerCostLow;
+						powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
 					}
 				}
 			} 
