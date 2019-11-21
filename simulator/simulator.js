@@ -70,7 +70,7 @@ function generateDate() {
 		var sqlLookup = mysql.format("Select id FROM datet WHERE dt=?", [formatted]);
 		con.query(sqlLookup, function (err, result) {
 			if (err) throw err;
-			return result[0]['id'],date;
+			return [result[0]['id'],date];
 		});
 	});
 	
@@ -262,7 +262,9 @@ function generatePowerTotal(dateid) {
 //Updates values in db. That is, generates new values and inserts them accordingly.
 function update() {
 	var location = "Kiruna";
-	var dateid, date = generateDate();
+	var dateArray = generateDate();
+	var dateid = dateArray[0];
+	var date = dateArray[1];
 	createLocation(location);
 	generateTemperature(location);
 	generateWindForDay(location,date);
@@ -291,9 +293,9 @@ function update() {
 con.connect(function(err) {
 	if (err) throw err;
 	console.log("Connected to db");
-	//update();
-	var location = "Kiruna";
-	createLocation(location);
+	update();
+	//var location = "Kiruna";
+	//createLocation(location);
 });
 
 //con.end(function(err) {
