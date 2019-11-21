@@ -263,7 +263,9 @@ function generatePowerTotal(dateid) {
 //Updates values in db. That is, generates new values and inserts them accordingly.
 function update() {
 	var location = "Kiruna";
-	var dateArray = generateDate();
+	var dateArray = [];
+	dateArray = generateDate();
+	console.log(dateArray);
 	var dateid = dateArray[0];
 	var date = dateArray[1];
 	createLocation(location);
