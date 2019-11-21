@@ -184,11 +184,11 @@ function generatePowerUsageForTime(householdid,dateid) {
 
 //Creates location if it does not exist.
 function createLocation(location){
-	var sql = mysql.format("SELECT COUNT(*) FROM location WHERE name=?", [location]);  
+	var sql = mysql.format("SELECT COUNT(id) FROM location WHERE name=?", [location]);  
     con.query(sql, function (err, result) {
         if (err) throw err;           
-		console.log("Number of location found",result[0]['COUNT(*)']);
-		var count = result[0]['COUNT(*)'];
+		console.log("Number of location found",result[0]['COUNT(id)']);
+		var count = result[0]['COUNT(id)'];
 		if (count == 0) {
         	var sqlInsert = mysql.format("INSERT INTO location (name) VALUES (?)", [location]);
 			console.log("Passed count == 0");
