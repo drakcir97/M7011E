@@ -56,35 +56,6 @@ function generateTemperature(location,dateid) {
 		
 }
 
-//Updates values in db. That is, generates new values and inserts them accordingly.
-function update() {
-	var location = "Kiruna";
-	var dateid, date = generateDate();
-	createLocation(location);
-	generateTemperature(location);
-	generateWindForDay(location,date);
-	generateWindForLocation(location,date,dateid);
-	var sqlHousehold = "SELECT id FROM household";
-	con.query(sqlInsert, function (err, result) {
-		for(house in result[0]['id']) {
-			generatePowerForTime(house,dateid);
-			generatePowerUsageForTime(house,dateid);
-		}
-	});
-	generatePowerTotal(dateid);
-	var totalin,totalout = getPowerTotal(dateid);
-	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
-	con.query(sqlCountHouseHold, function (err, result) {
-		var sqlHousehold = "SELECT id FROM household";
-		var totalhouseholds = result[0]['COUNT(id)'];
-		con.query(sqlHouseHold, function (err, result) {
-			for(house in result[0]['id']) {
-				generatePowerCost(house, dateid,totalin,totalout,totalhouseholds);
-			}
-		});
-	});
-}
-
 //Generates a date object in db, used to update values. Returns two dates, one with time, one without.
 function generateDate() {
 	var dateTime = require('node-datetime');
@@ -284,6 +255,35 @@ function generatePowerTotal(dateid) {
 				if (err) throw err;
 				console.log("Total power inserted");
 			});
+		});
+	});
+}
+
+//Updates values in db. That is, generates new values and inserts them accordingly.
+function update() {
+	var location = "Kiruna";
+	var dateid, date = generateDate();
+	createLocation(location);
+	generateTemperature(location);
+	generateWindForDay(location,date);
+	generateWindForLocation(location,date,dateid);
+	var sqlHousehold = "SELECT id FROM household";
+	con.query(sqlInsert, function (err, result) {
+		for(house in result[0]['id']) {
+			generatePowerForTime(house,dateid);
+			generatePowerUsageForTime(house,dateid);
+		}
+	});
+	generatePowerTotal(dateid);
+	var totalin,totalout = getPowerTotal(dateid);
+	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
+	con.query(sqlCountHouseHold, function (err, result) {
+		var sqlHousehold = "SELECT id FROM household";
+		var totalhouseholds = result[0]['COUNT(id)'];
+		con.query(sqlHouseHold, function (err, result) {
+			for(house in result[0]['id']) {
+				generatePowerCost(house, dateid,totalin,totalout,totalhouseholds);
+			}
 		});
 	});
 }
