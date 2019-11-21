@@ -73,7 +73,8 @@ function generateDate() {
 			var dateid = result[0]['id'];
 			console.log(dateid);
 			console.log(date);
-			return [[dateid], [date]];
+			var arr = [dateid,date];
+			return arr;
 		});
 	});
 	
@@ -202,7 +203,7 @@ function getPowerTotal(dateid) {
 		if (err) throw err;
 		var totalin = result[0]['powerin'];
 		var totalout = result[0]['powerout'];
-		return totalin,totalout;
+		return [[totalin],[totalout]];
 	});
 }
 
