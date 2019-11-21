@@ -309,16 +309,16 @@ function update() {
 con.connect(function(err) {
 	if (err) throw err;
 	console.log("Connected to db");
-	//update();
-	var location = "Kiruna";
-	createLocation(location);
-	var temp = generateDate();
-	console.log(temp);
-	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
-	con.query(sqlLocation, function (err, result) {
-		if (err) throw err;
-		console.log(result[0]['id']);
-	});
+	update();
+	// var location = "Kiruna";
+	// createLocation(location);
+	// var temp = generateDate();
+	// console.log(temp);
+	// var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
+	// con.query(sqlLocation, function (err, result) {
+	// 	if (err) throw err;
+	// 	console.log(result[0]['id']);
+	// });
 });
 
 //con.end(function(err) {
