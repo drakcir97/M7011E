@@ -259,7 +259,7 @@ function generatePowerCost(householdid, dateid, totalin, totalout,totalhousehold
 					}
 				}
 			} 
-		}
+		});
 	}
 	
 }
