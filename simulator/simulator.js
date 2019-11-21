@@ -272,18 +272,20 @@ function createTestHouseholds(location) {
 	con.query(sqlLocation, function (err, result) {
 		var locationid = result[0]['id'];
 		var i = 0;
-		for(int i = 0; i<5; i++) {
+		while(i<5) {
 			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?)", [locationid, "apartment"]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
 			});
+			i=i+1;
 		}
 		var j = 0;
-		for(int j = 0; j<2; j++) {
+		while (j<2) {
 			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?)", [locationid, "house"]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
 			});
+			j=j+1;
 		}
 		console.log("Inserted households to test");
 	});
