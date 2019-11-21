@@ -276,6 +276,7 @@ function createTestHouseholds(location) {
 		var locationid = result[0]['id'];
 		var i = 0;
 		while(i<5) {
+			console.log("i ",i);
 			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, apartment]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
@@ -284,6 +285,7 @@ function createTestHouseholds(location) {
 		}
 		var j = 0;
 		while (j<2) {
+			console.log("j",j);
 			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, house]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
