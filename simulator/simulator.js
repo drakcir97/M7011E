@@ -291,7 +291,9 @@ function update() {
 con.connect(function(err) {
 	if (err) throw err;
 	console.log("Connected to db");
-	update();
+	//update();
+	var location = "Kiruna";
+	createLocation(location);
 });
 
 //con.end(function(err) {
