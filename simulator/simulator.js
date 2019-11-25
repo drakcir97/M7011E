@@ -182,7 +182,7 @@ async function generateWindForTime(location,date,dateid,callback) {
 			con.query(sql, function (err, result) {
 				if (err) throw err;
 				try {
-					callback();
+					callback(genTotalPower);
 				} catch (e) {
 					console.log("Can't run");
 				}
@@ -207,7 +207,7 @@ async function generatePowerForTime(householdid,dateid) {
 }
 
 //Generates power used using temperature and values from config.
-async function generatePowerUsageForTime(householdid,dateid) {
+async function generatePowerUsageForTime(householdid,dateid,callback) {
 	var sqlType = mysql.format("SELECT housetype FROM household WHERE id=?", [householdid]);
 	con.query(sqlType, function (err, result) {
 		if (err) throw err;
@@ -438,7 +438,7 @@ async function genWindAndTemp(location,date) {
 	});
 }
 
-async function genPower() {
+async function genPower(callback) {
 	await getDate(async function(err, data) {
 		if (err) {
 			console.log("error");
@@ -452,6 +452,11 @@ async function genPower() {
 						//console.log("house",house);
 						await generatePowerForTime(JSON.stringify(house.id),data);
 						await generatePowerUsageForTime(JSON.stringify(house.id),data);
+					}
+					try {
+						callback();
+					} catch (e) {
+						console.log("Can't run");
 					}
 				}
 			});
@@ -505,7 +510,7 @@ async function update() {
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	await genWindAndTemp(location,date);
-	await genTotalPower();
+	//await genTotalPower();
 	// await genPower();
 	// await genWindAndTemp(location,date,async function(err,result) {
 	// 	if(err) {
