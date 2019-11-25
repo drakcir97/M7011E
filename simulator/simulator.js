@@ -29,7 +29,7 @@ function getNormValues(meanIn, stIn){
 }
 
 //Generates temperature, using smhi rest api
-async function generateTemperature(location,dateid) {
+async function generateTemperature(location, date, dateid,callback) {
 	const request = require('request')
 	request({
 		//url below has the id for Arvidsjaur
@@ -50,6 +50,7 @@ async function generateTemperature(location,dateid) {
 			con.query(sql, function(err, result) {
 				if (err) throw err;
 				console.log("Temperature was inserted");
+				callback(location, date, data,genPower);
 			});
 		});
 	});
@@ -140,7 +141,7 @@ async function generateWindForDay(location,date){
 }
 
 //Generate wind for location using average for that day.
-async function generateWindForTime(location,date,dateid) {
+async function generateWindForTime(location,date,dateid,callback) {
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 	con.query(sqlLocation, function (err, result) {
 		if (err) throw err;
@@ -154,6 +155,7 @@ async function generateWindForTime(location,date,dateid) {
 			var sql = mysql.format("INSERT INTO windspeed (locationid, windspeed, datetimeid) VALUES (?,?,?)", [locationId,meanWind,dateid]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
+				callback();
 			});
 		});
 	});
@@ -349,15 +351,14 @@ async function getHouseholds(callback) {
 	});
 }
 
-async function genWindAndTemp(location,date,callback) {
+async function genWindAndTemp(location,date) {
 	await generateDate(async function(err, data) {
 		if(err) {
 			console.log("error");
 		} else {
 			console.log("got an result from dateid ",data);
-			await generateTemperature(location, data);
-			await generateWindForTime(location, date, data);
-			callback(null,null);
+			await generateTemperature(location, date, data,generateWindForTime);
+			//await generateWindForTime(location, date, data,genPower);
 			//generatePowerTotal(data);
 		}
 	});
@@ -392,15 +393,15 @@ async function update() {
 	await createLocation(location);
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
-	// await genWindAndTemp(location,date);
+	await genWindAndTemp(location,date);
 	// await genPower();
-	await genWindAndTemp(location,date,async function(err,result) {
-		if(err) {
-			console.log("error");
-		} else {
-			await genPower();
-		}
-	});
+	// await genWindAndTemp(location,date,async function(err,result) {
+	// 	if(err) {
+	// 		console.log("error");
+	// 	} else {
+	// 		await genPower();
+	// 	}
+	// });
 	//console.log("this is dateid ",dateid);
 	//await generateTemperature(location, dateid);
 	//await generateWindForDay(location,date);
