@@ -394,7 +394,7 @@ async function update() {
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	//await genWindAndTemp(location,date);
 	//await genPower();
-	await genWindAndTemp(location,date,function() {
+	await genWindAndTemp(location,date,async function() {
 		if(err) {
 			console.log("error");
 		} else {
