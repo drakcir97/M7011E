@@ -362,10 +362,7 @@ function genWindAndTemp(location,date,callback) {
 	callback();
 }
 
-function genWindTempPower(location,date,callback) {
-	genWindAndTemp(location,date,function() {
-		console.log("Wind and temp done");
-	});
+function genPower(location,date,callback) {
 	getDate(function(err, data) {
 		if (err) {
 			console.log("error");
@@ -395,7 +392,7 @@ async function update() {
 	await createLocation(location);
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
-	await genWindTempPower(location,date);
+	await genWindAndTemp(location,date,genPower);
 	//console.log("this is dateid ",dateid);
 	//await generateTemperature(location, dateid);
 	//await generateWindForDay(location,date);
