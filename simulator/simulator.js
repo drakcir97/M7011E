@@ -325,7 +325,7 @@ function createTestHouseholds(location) {
 	});
 }
 
-function getHouseholds(callback) {
+async function getHouseholds(callback) {
 	var sqlHousehold = "SELECT id FROM household";
 	con.query(sqlHousehold, function (err, result) {
 		if (err) {
@@ -344,21 +344,21 @@ async function update() {
 	await createLocation(location);
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
-	await generateDate(function(err, data){
-		if(err) {
+	await generateDate(function(err, data) {
+		if (err) {
 			console.log("error");
-		} else{
+		} else {
 			console.log("got an result from dateid ",data);
 			generateTemperature(location, data);
 			generateWindForTime(location, date, data);
 			//generatePowerTotal(data);
-			await getHouseholds(function(err,data_households) {
+			getHouseholds(function(err,data_households) {
 				if (err) {
 					console.log("error");
 				} else {
 					for(house in data_households) {
-						await generatePowerForTime(house,data);
-						await generatePowerUsageForTime(house,data);
+						generatePowerForTime(house,data);
+						generatePowerUsageForTime(house,data);
 					}
 				}
 			});
