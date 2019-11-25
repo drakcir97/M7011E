@@ -333,8 +333,8 @@ async function getHouseholds(callback) {
 		} else {
 			console.log(result[0]['id']);
 			console.log(result['id']);
-			console.log(result);
-			callback(null,result['id']);
+			console.log(JSON.stringify(result));
+			callback(null,JSON.stringify(result));
 		}
 	});
 }
