@@ -340,7 +340,7 @@ async function update() {
 				console.log("got an result from dateid ",data);
 				generateTemperature(location, data);
 				generateWindForTime(location, date, data);
-				generatePowerTotal(data);
+//				generatePowerTotal(data);
 			}
 	});
 	//console.log("this is dateid ",dateid);
