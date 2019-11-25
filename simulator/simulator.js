@@ -487,7 +487,7 @@ async function genTotalPower() {
 										var totalhouseholds = result[0]['COUNT(id)'];
 										con.query(sqlHousehold, function (err, result) {
 											for(house of result) {
-												generatePowerCost(JSON.stringify(house.id), data,dataIn,dataOut,totalhouseholds);
+												await generatePowerCost(JSON.stringify(house.id), data,dataIn,dataOut,totalhouseholds);
 											}
 										});
 									});
