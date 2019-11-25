@@ -348,14 +348,7 @@ async function getHouseholds(callback) {
 	});
 }
 
-//Updates values in db. That is, generates new values and inserts them accordingly.
-async function update() {
-	var location = "Boden";
-	var nowDate = new Date(); 
-	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
-	await createLocation(location);
-	await createTestHouseholds(location);
-	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
+function genWindAndTemp(_callback) {
 	await generateDate(function(err, data) {
 		if(err) {
 			console.log("error");
@@ -365,6 +358,13 @@ async function update() {
 			generateWindForTime(location, date, data);
 			//generatePowerTotal(data);
 		}
+	});
+	_callback();
+}
+
+function genWindTempPower(_callback) {
+	genWindAndTemp(function() {
+		console.log("Wind and temp done");
 	});
 	await getDate(function(err, data) {
 		if (err) {
@@ -384,6 +384,18 @@ async function update() {
 			});
 		}
 	});
+	_callback();
+}
+
+//Updates values in db. That is, generates new values and inserts them accordingly.
+async function update() {
+	var location = "Boden";
+	var nowDate = new Date(); 
+	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
+	await createLocation(location);
+	await createTestHouseholds(location);
+	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
+	await genWindTempPower();
 	//console.log("this is dateid ",dateid);
 	//await generateTemperature(location, dateid);
 	//await generateWindForDay(location,date);
