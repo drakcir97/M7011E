@@ -300,16 +300,16 @@ function getPowerTotalOut(dateid,callback) {
 }
 
 async function generatePowerCost(householdid, dateid, totalin, totalout,totalhouseholds) {
-	console.log("houseid in powercost ",householdid);
+	console.log("houseid in powercost ",householdid," ",dateid);
 	var powergenerated = 0;
 	var powerusage = 0;
 	var powersum = 0;
 	var powercost = 0;
-	var sql = mysql.format("SELECT value FROM powergenerated WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-	con.query(sql, function (err, result) {
+	var sqlGen = mysql.format("SELECT value FROM powergenerated WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+	con.query(sqlGen, function (err, result) {
 		powergenerated = parseFloat(JSON.stringify(result[0].value));
-		var sql = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-		con.query(sql, function (err, result) {
+		var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+		con.query(sqlUsage, function (err, result) {
 			powerusage = parseFloat(JSON.stringify(result[0].value));
 			powersum = powergenerated - powerusage;
 			if(powersum >= 0) {
