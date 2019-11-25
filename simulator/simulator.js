@@ -144,11 +144,11 @@ async function generateWindForTime(location,date,dateid) {
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 	con.query(sqlLocation, function (err, result) {
 		if (err) throw err;
-		console.log(result[0]);
 		var locationId = result[0]['id'];
 		var sqlGetAvg = mysql.format("SELECT windspeed FROM averagewindspeed WHERE dt=? AND locationid=?", [date,locationId]);
 		con.query(sqlGetAvg, function(err, result) {
 			if (err) throw err;
+			console.log(result[0]);
 			var avgForDay = result[0]['windspeed'];
 			var meanWind = getNormValues(avgForDay,2); //Replace later for real deviation.
 			var sql = mysql.format("INSERT INTO windspeed (locationid, windspeed, datetimeid) VALUES (?,?,?)", [locationId,meanWind,dateid]);
@@ -164,6 +164,7 @@ function generatePowerForTime(householdid,dateid) {
 	var sqlType = mysql.format("SELECT windspeed FROM windspeed WHERE datetimeid=?", [dateid]);
 	con.query(sqlType, function (err, result) {
 		if (err) throw err;
+		console.log(result);
 		var windSpeedCurrentTime = result[0]['windspeed'];
 		var meanPwr = ((1.3968**windSpeedCurrentTime)*56.94).toFixed(3);
 		var sqlInsert = mysql.format("INSERT INTO powergenerated (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,meanPwr,dateid]);
@@ -391,15 +392,15 @@ async function update() {
 	await createLocation(location);
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
-	await genWindAndTemp(location,date,genPower);
+	await genWindAndTemp(location,date);
 	//console.log("this is dateid ",dateid);
 	//await generateTemperature(location, dateid);
 	//await generateWindForDay(location,date);
 	//generateWindForTime(location,date,dateid);
-	await generatePowerTotal(dateid);
-	var totalarr = await getPowerTotal(dateid);
-	var totalin = totalarr[0];
-	var totalout = totalarr[1];
+//	await generatePowerTotal(dateid);
+//	var totalarr = await getPowerTotal(dateid);
+//	var totalin = totalarr[0];
+//	var totalout = totalarr[1];
 //	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
 //	con.query(sqlCountHousehold, function (err, result) {
 //		var sqlHousehold = "SELECT id FROM household";
