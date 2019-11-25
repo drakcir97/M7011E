@@ -180,7 +180,6 @@ async function generatePowerUsageForTime(householdid,dateid) {
 	con.query(sqlType, function (err, result) {
 		if (err) throw err;
 		var housetype = result[0]['housetype'];
-		var meanPwr = getNormValues(typePwr,typePwr*0.2);
 		var sqlTemp = mysql.format("SELECT temperature FROM temperature WHERE datetimeid=?", [dateid]);
 		con.query(sqlTemp, function(err, result) {
 			if (err) throw err;
@@ -191,15 +190,16 @@ async function generatePowerUsageForTime(householdid,dateid) {
 			} else {
 				typePwr = housePower;
 			}
+			var meanPwr = getNormValues(typePwr,typePwr*0.2);
 			var tempPwr = 0;
 			if (temp > tempMinAffect) { //Temp is higher then minumum affect, 0 goes to heating.
 				tempPwr = 0;
 			} else if (temp < tempMaxAffect) { //Temp is lower then max affect, max to heating.
-				tempPwr = typePwr*tempCoefficient*tempAffect; 
+				tempPwr = meanPwr*tempCoefficient*tempAffect; 
 			} else { //Somewhere inbetween, calculate amount using linear division of affect.
-				tempPwr = typePwr*tempCoefficient*temp*(tempAffect/(Math.abs(tempMaxAffect)+Math.abs(tempMinAffect)))
+				tempPwr = meanPwr*tempCoefficient*temp*(tempAffect/(Math.abs(tempMaxAffect)+Math.abs(tempMinAffect)))
 			}
-			var pwr = (1-tempCoefficient) * typePwr + tempPwr;
+			var pwr = (1-tempCoefficient) * meanPwr + tempPwr;
 			var sqlInsert = mysql.format("INSERT INTO powerusage (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,pwr,dateid]);
 			con.query(sqlInsert, function(err, result) {
 				if (err) throw err;
