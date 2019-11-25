@@ -325,6 +325,18 @@ function createTestHouseholds(location) {
 	});
 }
 
+function getDate(callback) {
+	var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
+	con.query(sqlLookup, function (err, result) {
+		if (err) {
+			callback(err, null);
+		} else {
+			console.log("should return ",result[0]['id']);
+			callback(null, result[0]['id']);
+		}
+	});
+}
+
 async function getHouseholds(callback) {
 	var sqlHousehold = "SELECT id FROM household";
 	con.query(sqlHousehold, function (err, result) {
@@ -352,18 +364,20 @@ async function update() {
 			generateTemperature(location, data);
 			generateWindForTime(location, date, data);
 			//generatePowerTotal(data);
-			getHouseholds(function(err,data_households) {
-				if (err) {
-					console.log("error");
-				} else {
-					for(house of data_households) {
-						console.log("house",house);
-						generatePowerForTime(JSON.stringify(house.id),data);
-						generatePowerUsageForTime(JSON.stringify(house.id),data);
-					}
-				}
-			});
 		}
+	});
+	await getDate(function(err, data) {
+		getHouseholds(function(err,data_households) {
+			if (err) {
+				console.log("error");
+			} else {
+				for(house of data_households) {
+					console.log("house",house);
+					generatePowerForTime(JSON.stringify(house.id),data);
+					generatePowerUsageForTime(JSON.stringify(house.id),data);
+				}
+			}
+		});
 	});
 	//console.log("this is dateid ",dateid);
 	//await generateTemperature(location, dateid);
