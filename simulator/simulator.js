@@ -331,10 +331,7 @@ async function getHouseholds(callback) {
 		if (err) {
 			callback(err,null);
 		} else {
-			console.log(result[0]['id']);
-			console.log(result['id']);
-			console.log(JSON.stringify(result));
-			callback(null,JSON.stringify(result));
+			callback(null,result);
 		}
 	});
 }
@@ -359,11 +356,10 @@ async function update() {
 				if (err) {
 					console.log("error");
 				} else {
-					console.log("before house in data_households",data_households);
 					for(house of data_households) {
 						console.log("house",house);
-						generatePowerForTime(house,data);
-						generatePowerUsageForTime(house,data);
+						generatePowerForTime(JSON.stringify(house.id),data);
+						generatePowerUsageForTime(JSON.stringify(house.id),data);
 					}
 				}
 			});
