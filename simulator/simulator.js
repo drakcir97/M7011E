@@ -348,7 +348,7 @@ function getHouseholds(callback) {
 	});
 }
 
-function genWindAndTemp(location,date,callback) {
+async function genWindAndTemp(location,date) {
 	generateDate(function(err, data) {
 		if(err) {
 			console.log("error");
@@ -359,10 +359,9 @@ function genWindAndTemp(location,date,callback) {
 			//generatePowerTotal(data);
 		}
 	});
-	callback();
 }
 
-function genPower(location,date,callback) {
+async function genPower() {
 	getDate(function(err, data) {
 		if (err) {
 			console.log("error");
@@ -381,7 +380,6 @@ function genPower(location,date,callback) {
 			});
 		}
 	});
-	callback();
 }
 
 //Updates values in db. That is, generates new values and inserts them accordingly.
@@ -392,7 +390,8 @@ async function update() {
 	await createLocation(location);
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
-	await genWindAndTemp(location,date,genPower);
+	await genWindAndTemp(location,date);
+	await genPower();
 	//console.log("this is dateid ",dateid);
 	//await generateTemperature(location, dateid);
 	//await generateWindForDay(location,date);
