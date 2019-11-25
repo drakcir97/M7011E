@@ -162,7 +162,7 @@ function generateWindForTime(location,date,dateid) {
 //Generates power generated for household using windspeed.
 function generatePowerForTime(householdid,dateid) {
 	var sqlType = mysql.format("SELECT windspeed FROM windspeed WHERE datetimeid=?", [dateid]);
-	con.query(sqlLocation, function (err, result) {
+	con.query(sqlType, function (err, result) {
 		if (err) throw err;
 		var windSpeedCurrentTime = result[0]['windspeed'];
 		var meanPwr = ((1.3968**windSpeedCurrentTime)*56.94).toFixed(3);
@@ -176,7 +176,7 @@ function generatePowerForTime(householdid,dateid) {
 //Generates power used using temperature and values from config.
 function generatePowerUsageForTime(householdid,dateid) {
 	var sqlType = mysql.format("SELECT housetype FROM household WHERE id=?", [householdid]);
-	con.query(sqlLocation, function (err, result) {
+	con.query(sqlType, function (err, result) {
 		if (err) throw err;
 		var housetype = result[0]['housetype'];
 		var meanPwr = getNormValues(typePwr,typePwr*0.2);
