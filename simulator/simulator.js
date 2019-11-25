@@ -337,7 +337,7 @@ function getDate(callback) {
 	});
 }
 
-async function getHouseholds(callback) {
+function getHouseholds(callback) {
 	var sqlHousehold = "SELECT id FROM household";
 	con.query(sqlHousehold, function (err, result) {
 		if (err) {
@@ -348,7 +348,7 @@ async function getHouseholds(callback) {
 	});
 }
 
-function genWindAndTemp(_callback) {
+function genWindAndTemp(callback) {
 	await generateDate(function(err, data) {
 		if(err) {
 			console.log("error");
@@ -359,10 +359,10 @@ function genWindAndTemp(_callback) {
 			//generatePowerTotal(data);
 		}
 	});
-	_callback();
+	callback();
 }
 
-function genWindTempPower(_callback) {
+function genWindTempPower(callback) {
 	genWindAndTemp(function() {
 		console.log("Wind and temp done");
 	});
@@ -384,7 +384,7 @@ function genWindTempPower(_callback) {
 			});
 		}
 	});
-	_callback();
+	callback();
 }
 
 //Updates values in db. That is, generates new values and inserts them accordingly.
