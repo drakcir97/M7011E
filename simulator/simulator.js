@@ -408,16 +408,10 @@ async function genTotalPower() {
 				con.query(sqlCountHousehold, function (err, result) {
 					var sqlHousehold = "SELECT id FROM household";
 					var totalhouseholds = result[0]['COUNT(id)'];
-					var sqlPowerTotal = mysql.format("SELECT powerin,powerout FROM powertotal WHERE datetimeid=?", [dataIn, dataOut]);
-					con.query(sqlPowerTotal, function (err, result) {
-						if (err) throw err;
-						var totalin = dataIn;
-						var totalout = dataOut;
-						con.query(sqlHousehold, function (err, result) {
-							for(house in result[0]['id']) {
-								generatePowerCost(house, data,totalin,totalout,totalhouseholds);
-							}
-						});
+					con.query(sqlHousehold, function (err, result) {
+						for(house of result) {
+							generatePowerCost(JSON.stringify(house.id), data,totalin,totalout,totalhouseholds);
+						}
 					});
 				});
 			});
