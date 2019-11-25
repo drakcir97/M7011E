@@ -300,6 +300,7 @@ function getPowerTotalOut(dateid,callback) {
 }
 
 async function generatePowerCost(householdid, dateid, totalin, totalout,totalhouseholds) {
+	console.log("houseid in powercost ",householdid);
 	var powergenerated = 0;
 	var powerusage = 0;
 	var powersum = 0;
