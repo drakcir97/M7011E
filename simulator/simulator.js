@@ -50,7 +50,7 @@ async function generateTemperature(location, date, dateid,callback) {
 			con.query(sql, function(err, result) {
 				if (err) throw err;
 				console.log("Temperature was inserted");
-				callback(location, date, data,genPower);
+				callback(location, date, dateid,genPower);
 			});
 		});
 	});
