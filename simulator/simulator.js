@@ -331,7 +331,7 @@ async function getHouseholds(callback) {
 		if (err) {
 			callback(err,null);
 		} else {
-			callback(null,result[0]['id']);
+			callback(null,result['id']);
 		}
 	});
 }
