@@ -385,6 +385,31 @@ async function genPower() {
 	});
 }
 
+async function genTotalPower() {
+	await getDate(async function(err, data) {
+		await generatePowerTotal(data);
+		var totalarr = await getPowerTotal(data);
+		var totalin = totalarr[0];
+		var totalout = totalarr[1];
+		var sqlCountHousehold = "SELECT COUNT(id) FROM household";
+		con.query(sqlCountHousehold, function (err, result) {
+			var sqlHousehold = "SELECT id FROM household";
+			var totalhouseholds = result[0]['COUNT(id)'];
+			var sqlPowerTotal = mysql.format("SELECT powerin,powerout FROM powertotal WHERE datetimeid=?", [data]);
+			con.query(sqlPowerTotal, function (err, result) {
+				if (err) throw err;
+				var totalin = result[0]['powerin'];
+				var totalout = result[0]['powerout'];
+				con.query(sqlHousehold, function (err, result) {
+					for(house in result[0]['id']) {
+						generatePowerCost(house, data,totalin,totalout,totalhouseholds);
+					}
+				});
+			});
+		});
+	});
+}
+
 //Updates values in db. That is, generates new values and inserts them accordingly.
 async function update() {
 	var location = "Boden";
@@ -394,6 +419,7 @@ async function update() {
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	await genWindAndTemp(location,date);
+	await genTotalPower();
 	// await genPower();
 	// await genWindAndTemp(location,date,async function(err,result) {
 	// 	if(err) {
@@ -406,26 +432,6 @@ async function update() {
 	//await generateTemperature(location, dateid);
 	//await generateWindForDay(location,date);
 	//generateWindForTime(location,date,dateid);
-//	await generatePowerTotal(dateid);
-//	var totalarr = await getPowerTotal(dateid);
-//	var totalin = totalarr[0];
-//	var totalout = totalarr[1];
-//	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
-//	con.query(sqlCountHousehold, function (err, result) {
-//		var sqlHousehold = "SELECT id FROM household";
-//		var totalhouseholds = result[0]['COUNT(id)'];
-//		var sqlPowerTotal = mysql.format("SELECT powerin,powerout FROM powertotal WHERE datetimeid=?", [dateid]);
-//		con.query(sqlPowerTotal, function (err, result) {
-//			if (err) throw err;
-//			var totalin = result[0]['powerin'];
-//			var totalout = result[0]['powerout'];
-//			con.query(sqlHousehold, function (err, result) {
-//				for(house in result[0]['id']) {
-//					generatePowerCost(house, dateid,totalin,totalout,totalhouseholds);
-//				}
-//			});
-//		});
-//	});
 }
 
 con.connect(function(err) {
