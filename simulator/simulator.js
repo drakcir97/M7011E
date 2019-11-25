@@ -357,10 +357,10 @@ async function genWindAndTemp(location,date,callback) {
 			console.log("got an result from dateid ",data);
 			await generateTemperature(location, data);
 			await generateWindForTime(location, date, data);
+			callback(null,null);
 			//generatePowerTotal(data);
 		}
 	});
-	callback(null,null);
 }
 
 async function genPower() {
