@@ -357,7 +357,7 @@ async function update() {
 					console.log("error");
 				} else {
 					console.log("before house in data_households",data_households);
-					for(house in data_households) {
+					for(house of data_households) {
 						console.log("house",house);
 						generatePowerForTime(house,data);
 						generatePowerUsageForTime(house,data);
