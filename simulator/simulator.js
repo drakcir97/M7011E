@@ -304,10 +304,10 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 	var powerusage = 0;
 	var powersum = 0;
 	var powercost = 0;
-	var sql = mysql("SELECT value FROM powergenerated WHERE householdid=?", [householdid]);
+	var sql = mysql.format("SELECT value FROM powergenerated WHERE householdid=?", [householdid]);
 	con.query(sql, function (err, result) {
 		powergenerated = parseFloat(result[0]['value']);
-		var sql = mysql("SELECT value FROM powerusage WHERE householdid=?", [householdid]);
+		var sql = mysql.format("SELECT value FROM powerusage WHERE householdid=?", [householdid]);
 		con.query(sql, function (err, result) {
 			powerusage = parseFloat(result[0]['value']);
 			powersum = powergenerated - powerusage;
