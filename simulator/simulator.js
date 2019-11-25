@@ -57,7 +57,8 @@ function generateTemperature(location,dateid) {
 }
 
 //Generates a date object in db, used to update values. Returns two dates, one with time, one without.
-function generateDate() {
+function generateDate(callback) {
+	var dateid = 0;
 	var dateTime = require('node-datetime');
 	var dt = dateTime.create();
 	var formatted = dt.format('Y-m-d H:M:S');
@@ -74,44 +75,68 @@ function generateDate() {
 	var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
 	//var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
 	con.query(sqlLookup, function (err, result) {
-		//if (err) throw err;
-		console.log("testDate",result[0]['id']);
-		var dateid = result[0]['id'];
-		console.log(dateid);
-		return dateid;
+		if (err) {
+			callback(err, null);
+		} else
+			console.log("should return ",result[0]['id']);
+			callback(null, result[0]['id']);
+//		console.log("testDate",result[0]['id']);
+//		dateid = result[0]['id'];
+//		console.log(dateid);
+//		return dateid;
+		
 	});
+//	return dateid;
 }
 
 //Tests if wind for day and location already exists, return true if it does.
-function testWindForDay(location,date) {
-	var sql = mysql.format("SELECT COUNT(i) FROM averagewindspeed WHERE locationid=? AND dt=?", [location,date]);
+function testWindForDay(location,date, callback) {
+	//below i think we try to check locationid with location
+	//date should be enough?
+	var sql = mysql.format("SELECT COUNT(i) FROM averagewindspeed WHERE dt=?", [date]);
 	con.query(sql, function (err, result) {
-		if (err) throw err;
-		var count = result[0]['COUNT(i)'];
-		if (count == 0) {
-			return false;
+		if (err) {
+			callback(err, null);
 		}
-		return true;
+		var count = result[0]['COUNT(i)'];
+		console.log("this is the result of wind for today already exists ",count);
+		if (count == 0) {
+			callback(null, false);
+		}
+		else{
+			callback(null, true);
+		}
 	});
 }
 
 //Generates average wind for date for location if it does not exist.
 function generateWindForDay(location,date){
 	//createLocation(location);
-	if (testWindForDay(location,date)==false) {
-		var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
-		con.query(sqlLocation, function (err, result) {
-        	if (err) throw err;
-			var meanWind = getNormValues(7, 2);
-			var locationId = result[0]['id'];
-        	var sql = mysql.format("INSERT INTO averagewindspeed (locationid, windspeed, dt) VALUES (?,?,?)", [locationId, meanWind, date]);
-    		con.query(sql, function (err, result) {
-            	if (err) throw err;
-            	console.log("1 record inserted");
-			});
-			return date;
-		});
-	}
+	testWindForDay(location,date, function(err, data) {
+		if(err){
+			console.log("error");
+		}
+		else{
+			console.log("data is ",data);
+			if(data == false){
+				var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
+				con.query(sqlLocation, function (err, result) {
+        				if (err) throw err;
+					var meanWind = getNormValues(7, 2);
+					var locationId = result[0]['id'];
+        				var sql = mysql.format("INSERT INTO averagewindspeed (locationid, windspeed, dt) VALUES (?,?,?)", [locationId, meanWind, date]);
+    					con.query(sql, function (err, result) {
+            					if (err) throw err;
+            					console.log("1 record inserted");
+					});
+//			return date;
+				});
+			}
+			else{
+				console.log("already has a wind for today");
+			}
+		}
+	});
 }
 
 //Generate wind for location using average for that day.
@@ -301,44 +326,55 @@ function createTestHouseholds(location) {
 }
 
 //Updates values in db. That is, generates new values and inserts them accordingly.
-function update() {
-	var location = "Kiruna";
+async function update() {
+	var location = "Boden";
 	var nowDate = new Date(); 
-	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate(); 
-	var dateid = generateDate();
-	createLocation(location);
-	createTestHouseholds(location);
-	generateTemperature(location);
-	generateWindForDay(location,date);
-	generateWindForTime(location,date,dateid);
-	var sqlHousehold = "SELECT id FROM household";
-	con.query(sqlHousehold, function (err, result) {
-		console.log("Result in loop",result[0]['id']);
-		for(house in result[0]['id']) {
-			generatePowerForTime(house,dateid);
-			generatePowerUsageForTime(house,dateid);
-		}
+	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
+	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
+	await generateDate(function(err, data){
+			if(err) {
+				console.log("error");
+			} else{
+				console.log("got an result from dateid ",data);
+				generateTemperature(location, data);
+				generateWindForTime(location, date, data);
+				generatePowerTotal(data);
+			}
 	});
-	generatePowerTotal(dateid);
+	//console.log("this is dateid ",dateid);
+	await createLocation(location);
+	await createTestHouseholds(location);
+//	await generateTemperature(location, dateid);
+//	await generateWindForDay(location,date);
+//	generateWindForTime(location,date,dateid);
+//	var sqlHousehold = "SELECT id FROM household";
+//	con.query(sqlHousehold, function (err, result) {
+//		console.log("Result in loop",result[0]['id']);
+//		for(house in result[0]['id']) {
+//			generatePowerForTime(house,dateid);
+//			generatePowerUsageForTime(house,dateid);
+//		}
+//	});
+//	generatePowerTotal(dateid);
 	// var totalarr = getPowerTotal(dateid);
 	// var totalin = totalarr[0];
 	// var totalout = totalarr[1];
-	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
-	con.query(sqlCountHousehold, function (err, result) {
-		var sqlHousehold = "SELECT id FROM household";
-		var totalhouseholds = result[0]['COUNT(id)'];
-		var sqlPowerTotal = mysql.format("SELECT powerin,powerout FROM powertotal WHERE datetimeid=?", [dateid]);
-		con.query(sqlPowerTotal, function (err, result) {
-			if (err) throw err;
-			var totalin = result[0]['powerin'];
-			var totalout = result[0]['powerout'];
-			con.query(sqlHousehold, function (err, result) {
-				for(house in result[0]['id']) {
-					generatePowerCost(house, dateid,totalin,totalout,totalhouseholds);
-				}
-			});
-		});
-	});
+//	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
+//	con.query(sqlCountHousehold, function (err, result) {
+//		var sqlHousehold = "SELECT id FROM household";
+//		var totalhouseholds = result[0]['COUNT(id)'];
+//		var sqlPowerTotal = mysql.format("SELECT powerin,powerout FROM powertotal WHERE datetimeid=?", [dateid]);
+//		con.query(sqlPowerTotal, function (err, result) {
+//			if (err) throw err;
+//			var totalin = result[0]['powerin'];
+//			var totalout = result[0]['powerout'];
+//			con.query(sqlHousehold, function (err, result) {
+//				for(house in result[0]['id']) {
+//					generatePowerCost(house, dateid,totalin,totalout,totalhouseholds);
+//				}
+//			});
+//		});
+//	});
 }
 
 con.connect(function(err) {
