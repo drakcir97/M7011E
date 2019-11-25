@@ -291,14 +291,14 @@ async function generatePowerTotal(dateid) {
 	var sql = mysql.format("SELECT value FROM powergenerated WHERE datetimeid=?", [dateid]);
 	con.query(sql, function (err, result) {
 		if (err) throw err;  
-		for(val in result[0]['value']) {
-			totalgenerated = totalgenerated + parseFloat(val);
+		for(val of result) {
+			totalgenerated = totalgenerated + parseFloat(JSON.stringify(val.value));
 		}
 		var sql = mysql.format("SELECT value FROM powerusage WHERE datetimeid=?", [dateid]);
 		con.query(sql, function (err, result) {
 			if (err) throw err;  
-			for(val in result[0]['value']) {
-				totalused = totalused + parseFloat(val);
+			for(val of result) {
+				totalused = totalused + parseFloat(JSON.stringify(val.value));
 			}
 			var sql = mysql.format("INSERT INTO powertotal (powerin,powerout,datetimeid) VALUES (?)", [totalgenerated, totalused, dateid]);
 			con.query(sql, function (err, result) {
@@ -378,7 +378,7 @@ async function genWindAndTemp(location,date) {
 	});
 }
 
-async function genPower() {
+async function genPower(callback) {
 	await getDate(async function(err, data) {
 		if (err) {
 			console.log("error");
