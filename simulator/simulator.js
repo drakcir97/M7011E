@@ -349,7 +349,7 @@ function getHouseholds(callback) {
 }
 
 function genWindAndTemp(callback) {
-	await generateDate(function(err, data) {
+	generateDate(function(err, data) {
 		if(err) {
 			console.log("error");
 		} else {
@@ -366,7 +366,7 @@ function genWindTempPower(callback) {
 	genWindAndTemp(function() {
 		console.log("Wind and temp done");
 	});
-	await getDate(function(err, data) {
+	getDate(function(err, data) {
 		if (err) {
 			console.log("error");
 		} else {
