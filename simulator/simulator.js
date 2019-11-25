@@ -350,7 +350,7 @@ async function getHouseholds(callback) {
 }
 
 async function genWindAndTemp(location,date,callback) {
-	await generateDate(function(err, data) {
+	await generateDate(async function(err, data) {
 		if(err) {
 			console.log("error");
 		} else {
@@ -364,12 +364,12 @@ async function genWindAndTemp(location,date,callback) {
 }
 
 async function genPower() {
-	await getDate(function(err, data) {
+	await getDate(async function(err, data) {
 		if (err) {
 			console.log("error");
 		} else {
 			console.log("got an result from dateid ",data);
-			await getHouseholds(function(err,data_households) {
+			await getHouseholds(async function(err,data_households) {
 				if (err) {
 					console.log("error");
 				} else {
