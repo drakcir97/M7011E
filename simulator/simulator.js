@@ -345,7 +345,7 @@ async function update() {
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	await generateDate(function(err, data) {
-		if (err) {
+		if(err) {
 			console.log("error");
 		} else {
 			console.log("got an result from dateid ",data);
