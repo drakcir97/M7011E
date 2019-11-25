@@ -391,7 +391,7 @@ async function update() {
 	await createLocation(location);
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
-	await genWindAndTemp(location,date,genPower());
+	await genWindAndTemp(location,date,genPower);
 	//console.log("this is dateid ",dateid);
 	//await generateTemperature(location, dateid);
 	//await generateWindForDay(location,date);
