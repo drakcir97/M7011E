@@ -327,6 +327,10 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 					}
 				}
 			} 
+			var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+			con.query(sqlCost, function(err, result) {
+				if (err) throw err;
+			});
 		});
 	});
 }
@@ -487,7 +491,7 @@ async function genTotalPower() {
 										var totalhouseholds = result[0]['COUNT(id)'];
 										con.query(sqlHousehold, function (err, result) {
 											for(house of result) {
-												await generatePowerCost(JSON.stringify(house.id), data,dataIn,dataOut,totalhouseholds);
+												generatePowerCost(JSON.stringify(house.id), data,dataIn,dataOut,totalhouseholds);
 											}
 										});
 									});
