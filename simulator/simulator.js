@@ -302,8 +302,6 @@ function createTestHouseholds(location) {
 		var i = 0;
 		console.log("locationid ",locationid);
 		while(i<5) {
-			console.log(locationid);
-			console.log(apartment);
 			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, apartment]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
@@ -327,13 +325,27 @@ function createTestHouseholds(location) {
 	});
 }
 
+function getHouseholds(callback) {
+	var sqlHousehold = "SELECT id FROM household";
+	con.query(sqlHousehold, function (err, result) {
+		if (err) {
+			callback(err,null);
+		} else {
+			callback(null,result[0]['id']);
+		}
+	});
+}
+
 //Updates values in db. That is, generates new values and inserts them accordingly.
 async function update() {
 	var location = "Boden";
 	var nowDate = new Date(); 
 	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
+	await createLocation(location);
+	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	await generateDate(function(err, data){
+<<<<<<< HEAD
 			if(err) {
 				console.log("error");
 			} else{
@@ -342,25 +354,35 @@ async function update() {
 				generateWindForTime(location, date, data);
 //				generatePowerTotal(data);
 			}
+=======
+		if(err) {
+			console.log("error");
+		} else{
+			console.log("got an result from dateid ",data);
+			generateTemperature(location, data);
+			generateWindForTime(location, date, data);
+			//generatePowerTotal(data);
+			await getHouseholds(function(err,data_households) {
+				if (err) {
+					console.log("error");
+				} else {
+					for(house in data_households) {
+						await generatePowerForTime(house,data);
+						await generatePowerUsageForTime(house,data);
+					}
+				}
+			});
+		}
+>>>>>>> 647d51436163a217b0e3eed4c4eeb8406d5334d8
 	});
 	//console.log("this is dateid ",dateid);
-	await createLocation(location);
-	await createTestHouseholds(location);
-//	await generateTemperature(location, dateid);
-//	await generateWindForDay(location,date);
-//	generateWindForTime(location,date,dateid);
-//	var sqlHousehold = "SELECT id FROM household";
-//	con.query(sqlHousehold, function (err, result) {
-//		console.log("Result in loop",result[0]['id']);
-//		for(house in result[0]['id']) {
-//			generatePowerForTime(house,dateid);
-//			generatePowerUsageForTime(house,dateid);
-//		}
-//	});
-//	generatePowerTotal(dateid);
-	// var totalarr = getPowerTotal(dateid);
-	// var totalin = totalarr[0];
-	// var totalout = totalarr[1];
+	//await generateTemperature(location, dateid);
+	//await generateWindForDay(location,date);
+	//generateWindForTime(location,date,dateid);
+	await generatePowerTotal(dateid);
+	var totalarr = await getPowerTotal(dateid);
+	var totalin = totalarr[0];
+	var totalout = totalarr[1];
 //	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
 //	con.query(sqlCountHousehold, function (err, result) {
 //		var sqlHousehold = "SELECT id FROM household";
