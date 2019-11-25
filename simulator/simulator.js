@@ -367,17 +367,22 @@ async function update() {
 		}
 	});
 	await getDate(function(err, data) {
-		getHouseholds(function(err,data_households) {
-			if (err) {
-				console.log("error");
-			} else {
-				for(house of data_households) {
-					console.log("house",house);
-					generatePowerForTime(JSON.stringify(house.id),data);
-					generatePowerUsageForTime(JSON.stringify(house.id),data);
+		if (err) {
+			console.log("error");
+		} else {
+			console.log("got an result from dateid ",data);
+			getHouseholds(function(err,data_households) {
+				if (err) {
+					console.log("error");
+				} else {
+					for(house of data_households) {
+						//console.log("house",house);
+						generatePowerForTime(JSON.stringify(house.id),data);
+						generatePowerUsageForTime(JSON.stringify(house.id),data);
+					}
 				}
-			}
-		});
+			});
+		}
 	});
 	//console.log("this is dateid ",dateid);
 	//await generateTemperature(location, dateid);
