@@ -57,7 +57,7 @@ async function generateTemperature(location,dateid) {
 }
 
 //Generates a date object in db, used to update values. Returns two dates, one with time, one without.
-function generateDate(callback) {
+async function generateDate(callback) {
 	var dateid = 0;
 	var dateTime = require('node-datetime');
 	var dt = dateTime.create();
@@ -90,7 +90,7 @@ function generateDate(callback) {
 }
 
 //Tests if wind for day and location already exists, return true if it does.
-function testWindForDay(location,date, callback) {
+async function testWindForDay(location,date, callback) {
 	//below i think we try to check locationid with location
 	//date should be enough?
 	var sql = mysql.format("SELECT COUNT(i) FROM averagewindspeed WHERE dt=?", [date]);
@@ -110,7 +110,7 @@ function testWindForDay(location,date, callback) {
 }
 
 //Generates average wind for date for location if it does not exist.
-function generateWindForDay(location,date){
+async function generateWindForDay(location,date){
 	//createLocation(location);
 	testWindForDay(location,date, function(err, data) {
 		if(err){
@@ -160,7 +160,7 @@ async function generateWindForTime(location,date,dateid) {
 }
 
 //Generates power generated for household using windspeed.
-function generatePowerForTime(householdid,dateid) {
+async function generatePowerForTime(householdid,dateid) {
 	var sqlType = mysql.format("SELECT windspeed FROM windspeed WHERE datetimeid=?", [dateid]);
 	con.query(sqlType, function (err, result) {
 		if (err) throw err;
@@ -175,7 +175,7 @@ function generatePowerForTime(householdid,dateid) {
 }
 
 //Generates power used using temperature and values from config.
-function generatePowerUsageForTime(householdid,dateid) {
+async function generatePowerUsageForTime(householdid,dateid) {
 	var sqlType = mysql.format("SELECT housetype FROM household WHERE id=?", [householdid]);
 	con.query(sqlType, function (err, result) {
 		if (err) throw err;
@@ -209,7 +209,7 @@ function generatePowerUsageForTime(householdid,dateid) {
 }
 
 //Creates location if it does not exist.
-function createLocation(location){
+async function createLocation(location){
 	console.log("location in createlocation",location);
 	var sql = mysql.format("SELECT COUNT(id) FROM location WHERE name=?", [location]);  
     con.query(sql, function (err, result) {
@@ -237,7 +237,7 @@ function createLocation(location){
 // 	});
 // }
 
-function generatePowerCost(householdid, dateid, totalin, totalout,totalhouseholds) {
+async function generatePowerCost(householdid, dateid, totalin, totalout,totalhouseholds) {
 	var powergenerated = 0;
 	var powerusage = 0;
 	var powersum = 0;
@@ -268,7 +268,7 @@ function generatePowerCost(householdid, dateid, totalin, totalout,totalhousehold
 	});
 }
 
-function generatePowerTotal(dateid) {
+async function generatePowerTotal(dateid) {
 //	(parseFloat(JSON.stringify(objVal[0].value)));
 	var totalgenerated = 0;
 	var totalused = 0;
@@ -293,7 +293,7 @@ function generatePowerTotal(dateid) {
 	});
 }
 
-function createTestHouseholds(location) {
+async function createTestHouseholds(location) {
 	console.log("Location in createTestHouseholds",location);
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 	var apartment = "apartment";
@@ -326,7 +326,7 @@ function createTestHouseholds(location) {
 	});
 }
 
-function getDate(callback) {
+async function getDate(callback) {
 	var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
 	con.query(sqlLookup, function (err, result) {
 		if (err) {
@@ -338,7 +338,7 @@ function getDate(callback) {
 	});
 }
 
-function getHouseholds(callback) {
+async function getHouseholds(callback) {
 	var sqlHousehold = "SELECT id FROM household";
 	con.query(sqlHousehold, function (err, result) {
 		if (err) {
@@ -355,8 +355,8 @@ async function genWindAndTemp(location,date,callback) {
 			console.log("error");
 		} else {
 			console.log("got an result from dateid ",data);
-			generateTemperature(location, data);
-			generateWindForTime(location, date, data);
+			await generateTemperature(location, data);
+			await generateWindForTime(location, date, data);
 			//generatePowerTotal(data);
 		}
 	});
@@ -369,14 +369,14 @@ async function genPower() {
 			console.log("error");
 		} else {
 			console.log("got an result from dateid ",data);
-			getHouseholds(function(err,data_households) {
+			await getHouseholds(function(err,data_households) {
 				if (err) {
 					console.log("error");
 				} else {
 					for(house of data_households) {
 						//console.log("house",house);
-						generatePowerForTime(JSON.stringify(house.id),data);
-						generatePowerUsageForTime(JSON.stringify(house.id),data);
+						await generatePowerForTime(JSON.stringify(house.id),data);
+						await generatePowerUsageForTime(JSON.stringify(house.id),data);
 					}
 				}
 			});
@@ -394,11 +394,11 @@ async function update() {
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	//await genWindAndTemp(location,date);
 	//await genPower();
-	await genWindAndTemp(location,date,function(err, data) {
+	await genWindAndTemp(location,date,function() {
 		if(err) {
 			console.log("error");
 		} else {
-			genPower();
+			await genPower();
 		}
 	});
 	//console.log("this is dateid ",dateid);
