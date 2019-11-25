@@ -378,7 +378,7 @@ async function genWindAndTemp(location,date) {
 	});
 }
 
-async function genPower(callback) {
+async function genPower() {
 	await getDate(async function(err, data) {
 		if (err) {
 			console.log("error");
