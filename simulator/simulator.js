@@ -50,7 +50,11 @@ async function generateTemperature(location, date, dateid,callback) {
 			con.query(sql, function(err, result) {
 				if (err) throw err;
 				console.log("Temperature was inserted");
-				callback(location, date, dateid,genPower);
+				try {
+					callback(location, date, dateid,genPower);
+				} catch (e) {
+					console.log("Can't run");
+				}
 			});
 		});
 	});
@@ -77,16 +81,26 @@ async function generateDate(callback) {
 	//var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
 	con.query(sqlLookup, function (err, result) {
 		if (err) {
-			callback(err, null);
-		} else
-			console.log("should return ",result[0]['id']);
-			callback(null, result[0]['id']);
+			try {
+				callback(err, null);
+			} catch (e) {
+				console.log("Can't run");
+			}
+		} else {
+			try {
+				console.log("should return ",result[0]['id']);
+				callback(null, result[0]['id']);
+			} catch (e) {
+				console.log("Can't run");
+			}
+		}
+	});
 //		console.log("testDate",result[0]['id']);
 //		dateid = result[0]['id'];
 //		console.log(dateid);
 //		return dateid;
 		
-	});
+	
 //	return dateid;
 }
 
@@ -97,15 +111,27 @@ async function testWindForDay(location,date, callback) {
 	var sql = mysql.format("SELECT COUNT(i) FROM averagewindspeed WHERE dt=?", [date]);
 	con.query(sql, function (err, result) {
 		if (err) {
-			callback(err, null);
+			try {
+				callback(err, null);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		}
 		var count = result[0]['COUNT(i)'];
 		console.log("this is the result of wind for today already exists ",count);
 		if (count == 0) {
-			callback(null, false);
+			try {
+				callback(null, false);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		}
 		else{
-			callback(null, true);
+			try {
+				callback(null, true);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		}
 	});
 }
@@ -155,7 +181,11 @@ async function generateWindForTime(location,date,dateid,callback) {
 			var sql = mysql.format("INSERT INTO windspeed (locationid, windspeed, datetimeid) VALUES (?,?,?)", [locationId,meanWind,dateid]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
-				callback();
+				try {
+					callback();
+				} catch (e) {
+					console.log("Can't run");
+				}
 			});
 		});
 	});
@@ -233,10 +263,18 @@ function getPowerTotalIn(dateid,callback) {
 	var sql = mysql.format("SELECT powerin FROM powertotal WHERE datetimeid=?", [dateid]);
 	con.query(sql, function (err, result) {
 		if (err) {
-			callback(err, null);	
+			try {
+				callback(err, null);
+			} catch (e) {
+				console.log("Can't run");
+			}	
 		} else {
 			var totalin = result[0]['powerin'];
-			callback(null, totalin);
+			try {
+				callback(null, totalin);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		}
 	});
 }
@@ -245,10 +283,18 @@ function getPowerTotalOut(dateid,callback) {
 	var sql = mysql.format("SELECT powerout FROM powertotal WHERE datetimeid=?", [dateid]);
 	con.query(sql, function (err, result) {
 		if (err) {
-			callback(err,null);
+			try {
+				callback(err,null);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		} else {
 			var totalout = result[0]['powerout'];
-			callback(null,totalout);
+			try {
+				callback(null,totalout);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		}
 	});
 }
@@ -304,7 +350,11 @@ async function generatePowerTotal(dateid,callback) {
 			con.query(sql, function (err, result) {
 				if (err) throw err;
 				console.log("Total power inserted");
-				callback();
+				try {
+					callback();
+				} catch (e) {
+					console.log("Can't run");
+				}
 			});
 		});
 	});
@@ -347,7 +397,11 @@ async function getDate(callback) {
 	var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
 	con.query(sqlLookup, function (err, result) {
 		if (err) {
-			callback(err, null);
+			try {
+				callback(err, null);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		} else {
 	//		console.log("should return ",result[0]['id']);
 			callback(null, result[0]['id']);
@@ -359,7 +413,11 @@ async function getHouseholds(callback) {
 	var sqlHousehold = "SELECT id FROM household";
 	con.query(sqlHousehold, function (err, result) {
 		if (err) {
-			callback(err,null);
+			try{
+				callback(err,null);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		} else {
 			callback(null,result);
 		}
