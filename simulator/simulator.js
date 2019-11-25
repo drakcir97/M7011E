@@ -229,15 +229,29 @@ async function createLocation(location){
     });
 }
 
-// function getPowerTotal(dateid) {
-// 	var sql = mysql.format("SELECT powerin,powerout FROM powertotal WHERE datetimeid=?", [dateid]);
-// 	con.query(sql, function (err, result) {
-// 		if (err) throw err;
-// 		var totalin = result[0]['powerin'];
-// 		var totalout = result[0]['powerout'];
-// 		return [[totalin],[totalout]];
-// 	});
-// }
+function getPowerTotalIn(dateid,callback) {
+	var sql = mysql.format("SELECT powerin FROM powertotal WHERE datetimeid=?", [dateid]);
+	con.query(sql, function (err, result) {
+		if (err) {
+			callback(err, null);	
+		} else {
+			var totalin = result[0]['powerin'];
+			callback(null, totalin);
+		}
+	});
+}
+
+function getPowerTotalOut(dateid,callback) {
+	var sql = mysql.format("SELECT powerout FROM powertotal WHERE datetimeid=?", [dateid]);
+	con.query(sql, function (err, result) {
+		if (err) {
+			callback(err,null);
+		} else {
+			var totalout = result[0]['powerout'];
+			callback(null,totalout);
+		}
+	});
+}
 
 async function generatePowerCost(householdid, dateid, totalin, totalout,totalhouseholds) {
 	var powergenerated = 0;
@@ -388,22 +402,23 @@ async function genPower() {
 async function genTotalPower() {
 	await getDate(async function(err, data) {
 		await generatePowerTotal(data);
-		var totalarr = await getPowerTotal(data);
-		var totalin = totalarr[0];
-		var totalout = totalarr[1];
-		var sqlCountHousehold = "SELECT COUNT(id) FROM household";
-		con.query(sqlCountHousehold, function (err, result) {
-			var sqlHousehold = "SELECT id FROM household";
-			var totalhouseholds = result[0]['COUNT(id)'];
-			var sqlPowerTotal = mysql.format("SELECT powerin,powerout FROM powertotal WHERE datetimeid=?", [data]);
-			con.query(sqlPowerTotal, function (err, result) {
-				if (err) throw err;
-				var totalin = result[0]['powerin'];
-				var totalout = result[0]['powerout'];
-				con.query(sqlHousehold, function (err, result) {
-					for(house in result[0]['id']) {
-						generatePowerCost(house, data,totalin,totalout,totalhouseholds);
-					}
+		await getPowerTotalIn(data, async function(err, dataIn){
+			await getPowerTotalOut(data, async function(err, dataOut){
+				var sqlCountHousehold = "SELECT COUNT(id) FROM household";
+				con.query(sqlCountHousehold, function (err, result) {
+					var sqlHousehold = "SELECT id FROM household";
+					var totalhouseholds = result[0]['COUNT(id)'];
+					var sqlPowerTotal = mysql.format("SELECT powerin,powerout FROM powertotal WHERE datetimeid=?", [dataIn, dataOut]);
+					con.query(sqlPowerTotal, function (err, result) {
+						if (err) throw err;
+						var totalin = dataIn;
+						var totalout = dataOut;
+						con.query(sqlHousehold, function (err, result) {
+							for(house in result[0]['id']) {
+								generatePowerCost(house, data,totalin,totalout,totalhouseholds);
+							}
+						});
+					});
 				});
 			});
 		});
