@@ -349,7 +349,7 @@ function getHouseholds(callback) {
 	});
 }
 
-async function genWindAndTemp(location,date) {
+async function genWindAndTemp(location,date,callback) {
 	await generateDate(function(err, data) {
 		if(err) {
 			console.log("error");
@@ -360,6 +360,7 @@ async function genWindAndTemp(location,date) {
 			//generatePowerTotal(data);
 		}
 	});
+	callback();
 }
 
 async function genPower() {
@@ -391,8 +392,15 @@ async function update() {
 	await createLocation(location);
 	await createTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
-	await genWindAndTemp(location,date);
-	await genPower();
+	//await genWindAndTemp(location,date);
+	//await genPower();
+	await genWindAndTemp(location,date,function(err, data) {
+		if(err) {
+			console.log("error");
+		} else {
+			genPower();
+		}
+	});
 	//console.log("this is dateid ",dateid);
 	//await generateTemperature(location, dateid);
 	//await generateWindForDay(location,date);
