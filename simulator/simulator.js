@@ -300,7 +300,7 @@ async function generatePowerTotal(dateid,callback) {
 			for(val of result) {
 				totalused = totalused + parseFloat(JSON.stringify(val.value));
 			}
-			var sql = mysql.format("INSERT INTO powertotal (powerin,powerout,datetimeid) VALUES (?)", [totalgenerated, totalused, dateid]);
+			var sql = mysql.format("INSERT INTO powertotal (powerin,powerout,datetimeid) VALUES (?,?,?)", [totalgenerated, totalused, dateid]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
 				console.log("Total power inserted");
