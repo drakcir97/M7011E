@@ -284,7 +284,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 	});
 }
 
-async function generatePowerTotal(dateid) {
+async function generatePowerTotal(dateid,callback) {
 //	(parseFloat(JSON.stringify(objVal[0].value)));
 	var totalgenerated = 0;
 	var totalused = 0;
@@ -304,6 +304,7 @@ async function generatePowerTotal(dateid) {
 			con.query(sql, function (err, result) {
 				if (err) throw err;
 				console.log("Total power inserted");
+				callback();
 			});
 		});
 	});
@@ -401,21 +402,38 @@ async function genPower() {
 
 async function genTotalPower() {
 	await getDate(async function(err, data) {
-		await generatePowerTotal(data);
-		await getPowerTotalIn(data, async function(err, dataIn){
-			await getPowerTotalOut(data, async function(err, dataOut){
-				var sqlCountHousehold = "SELECT COUNT(id) FROM household";
-				con.query(sqlCountHousehold, function (err, result) {
-					var sqlHousehold = "SELECT id FROM household";
-					var totalhouseholds = result[0]['COUNT(id)'];
-					con.query(sqlHousehold, function (err, result) {
-						for(house of result) {
-							generatePowerCost(JSON.stringify(house.id), data,totalin,totalout,totalhouseholds);
+		if (err) {
+			console.log("error");
+		} else {
+			await generatePowerTotal(data, async function(err,dataTotal) {
+				if (err) {
+					console.log("error");
+				} else {
+					await getPowerTotalIn(data, async function(err, dataIn){
+						if (err) {
+							console.log("error");
+						} else {
+							await getPowerTotalOut(data, async function(err, dataOut){
+								if (err) {
+									console.log("error");
+								} else {
+									var sqlCountHousehold = "SELECT COUNT(id) FROM household";
+									con.query(sqlCountHousehold, function (err, result) {
+										var sqlHousehold = "SELECT id FROM household";
+										var totalhouseholds = result[0]['COUNT(id)'];
+										con.query(sqlHousehold, function (err, result) {
+											for(house of result) {
+												generatePowerCost(JSON.stringify(house.id), data,totalin,totalout,totalhouseholds);
+											}
+										});
+									});
+								}
+							});
 						}
 					});
-				});
+				}
 			});
-		});
+		}
 	});
 }
 
