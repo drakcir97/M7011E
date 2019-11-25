@@ -149,7 +149,7 @@ async function generateWindForTime(location,date,dateid,callback) {
 		var sqlGetAvg = mysql.format("SELECT windspeed FROM averagewindspeed WHERE dt=? AND locationid=?", [date,locationId]);
 		con.query(sqlGetAvg, function(err, result) {
 			if (err) throw err;
-			console.log(result[0]);
+			//console.log(result[0]);
 			var avgForDay = result[0]['windspeed'];
 			var meanWind = getNormValues(avgForDay,2); //Replace later for real deviation.
 			var sql = mysql.format("INSERT INTO windspeed (locationid, windspeed, datetimeid) VALUES (?,?,?)", [locationId,meanWind,dateid]);
@@ -166,7 +166,7 @@ async function generatePowerForTime(householdid,dateid) {
 	var sqlType = mysql.format("SELECT windspeed FROM windspeed WHERE datetimeid=?", [dateid]);
 	con.query(sqlType, function (err, result) {
 		if (err) throw err;
-		console.log(result);
+		//console.log(result);
 		var windSpeedCurrentTime = result[0]['windspeed'];
 		var meanPwr = ((1.3968**windSpeedCurrentTime)*56.94).toFixed(3);
 		var sqlInsert = mysql.format("INSERT INTO powergenerated (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,meanPwr,dateid]);
@@ -328,7 +328,7 @@ async function createTestHouseholds(location) {
 		}
 		var j = 0;
 		while (j<2) {
-			console.log("j",j);
+	//		console.log("j",j);
 			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, house]);
 			con.query(sql, function (err, result) {
 				if (err) throw err;
@@ -337,7 +337,7 @@ async function createTestHouseholds(location) {
 		}
 		var sqlHousehold = "SELECT COUNT(*) FROM household";
 		con.query(sqlHousehold, function (err, result) {
-			console.log(result[0]['COUNT(*)']);
+		//	console.log(result[0]['COUNT(*)']);
 		});
 		console.log("Inserted households to test");
 	});
@@ -349,7 +349,7 @@ async function getDate(callback) {
 		if (err) {
 			callback(err, null);
 		} else {
-			console.log("should return ",result[0]['id']);
+	//		console.log("should return ",result[0]['id']);
 			callback(null, result[0]['id']);
 		}
 	});
