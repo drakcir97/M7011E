@@ -29,7 +29,7 @@ function getNormValues(meanIn, stIn){
 }
 
 //Generates temperature, using smhi rest api
-function generateTemperature(location,dateid) {
+async function generateTemperature(location,dateid) {
 	const request = require('request')
 	request({
 		//url below has the id for Arvidsjaur
@@ -140,7 +140,7 @@ function generateWindForDay(location,date){
 }
 
 //Generate wind for location using average for that day.
-function generateWindForTime(location,date,dateid) {
+async function generateWindForTime(location,date,dateid) {
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 	con.query(sqlLocation, function (err, result) {
 		if (err) throw err;
@@ -354,8 +354,8 @@ async function genWindAndTemp(location,date) {
 			console.log("error");
 		} else {
 			console.log("got an result from dateid ",data);
-			generateTemperature(location, data);
-			generateWindForTime(location, date, data);
+			await generateTemperature(location, data);
+			await generateWindForTime(location, date, data);
 			//generatePowerTotal(data);
 		}
 	});
