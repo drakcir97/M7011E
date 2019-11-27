@@ -229,7 +229,7 @@ async function generatePowerUsageForTime(householdid,dateid,callback) {
 			} else if (temp < tempMaxAffect) { //Temp is lower then max affect, max to heating.
 				tempPwr = meanPwr*tempCoefficient*tempAffect; 
 			} else { //Somewhere inbetween, calculate amount using linear division of affect.
-				tempPwr = meanPwr*tempCoefficient*temp*(tempAffect/(Math.abs(tempMaxAffect)+Math.abs(tempMinAffect)))
+				tempPwr = meanPwr*tempCoefficient*tempAffect*(1-(temp+Math.abs(tempMaxAffect))/(Math.abs(tempMaxAffect)+Math.abs(tempMinAffect)));
 			}
 			var pwr = (1-tempCoefficient) * meanPwr + tempPwr;
 			var sqlInsert = mysql.format("INSERT INTO powerusage (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,pwr,dateid]);
@@ -365,6 +365,49 @@ async function generatePowerTotal(dateid,callback) {
 	});
 }
 
+async function getDate(callback) {
+	var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
+	con.query(sqlLookup, function (err, result) {
+		if (err) {
+			try {
+				callback(err, null);
+			} catch (e) {
+				console.log("Can't run");
+			}
+		} else {
+	//		console.log("should return ",result[0]['id']);
+			callback(null, result[0]['id']);
+		}
+	});
+}
+
+async function getHouseholds(callback) {
+	var sqlHousehold = "SELECT id FROM household";
+	con.query(sqlHousehold, function (err, result) {
+		if (err) {
+			try{
+				callback(err,null);
+			} catch (e) {
+				console.log("Can't run");
+			}
+		} else {
+			callback(null,result);
+		}
+	});
+}
+
+async function checkTestHouseholds(location) {
+	await getHouseholds(async function(err,result) {
+		if (err) {
+			console.log("error");
+		} else {
+			if (result != "") {
+				await createTestHouseholds(location);
+			}
+		}
+	});
+} 
+
 async function createTestHouseholds(location) {
 	console.log("Location in createTestHouseholds",location);
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
@@ -395,37 +438,6 @@ async function createTestHouseholds(location) {
 		//	console.log(result[0]['COUNT(*)']);
 		});
 		console.log("Inserted households to test");
-	});
-}
-
-async function getDate(callback) {
-	var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
-	con.query(sqlLookup, function (err, result) {
-		if (err) {
-			try {
-				callback(err, null);
-			} catch (e) {
-				console.log("Can't run");
-			}
-		} else {
-	//		console.log("should return ",result[0]['id']);
-			callback(null, result[0]['id']);
-		}
-	});
-}
-
-async function getHouseholds(callback) {
-	var sqlHousehold = "SELECT id FROM household";
-	con.query(sqlHousehold, function (err, result) {
-		if (err) {
-			try{
-				callback(err,null);
-			} catch (e) {
-				console.log("Can't run");
-			}
-		} else {
-			callback(null,result);
-		}
 	});
 }
 
@@ -511,7 +523,7 @@ async function update() {
 	var nowDate = new Date(); 
 	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
 	await createLocation(location);
-	await createTestHouseholds(location);
+	await checkTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	await genWindAndTemp(location,date);
 	//await genTotalPower();
