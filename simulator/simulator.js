@@ -397,13 +397,11 @@ async function getHouseholds(callback) {
 }
 
 async function checkTestHouseholds(location) {
-	await getHouseholds(async function(err,result) {
-		if (err) {
-			console.log("error");
-		} else {
-			if (result != "") {
-				await createTestHouseholds(location);
-			}
+	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
+	con.query(sqlCountHousehold, function (err, result) {
+		var totalhouseholds = result[0]['COUNT(id)'];
+		if (totalhouseholds == "0") {
+			await createTestHouseholds(location);
 		}
 	});
 } 
