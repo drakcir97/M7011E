@@ -22,7 +22,7 @@ conn.connect((err) =>{
  
 //show all users
 app.get('/api/users',(req, res) => {
-  let sql = "SELECT * FROM household";
+  let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value,datet.dt FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid INNER JOIN datet ON powerusage.datetimeid=datet.id";
   let query = conn.query(sql, (err, results) => {
     if(err) throw err;
     res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
