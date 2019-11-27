@@ -37,7 +37,34 @@ app.get('/api/users/:id',(req, res) => {
     res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
   });
 });
+
+//show windspeed & temperature
+app.get('/api/weather',(req, res) => {
+    let sql = "SELECT temperature.temperature, windspeed.windspeed, temperature.datetimeid FROM temperature INNER JOIN windspeed ON temperature.datetimeid=windspeed.locationid";
+    let query = conn.query(sql, (err, results) => {
+      if(err) throw err;
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+    });
+});
  
+//show current electricity price
+app.get('/api/electricityprice',(req, res) => {
+    let sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
+    let query = conn.query(sql, (err, results) => {
+      if(err) throw err;
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+    });
+});
+
+//shows current electricity consumtion.
+app.get('/api/electricityconsumtion',(req, res) => {
+    let sql = "SELECT powerout, datetimeid FROM powertotal";
+    let query = conn.query(sql, (err, results) => {
+      if(err) throw err;
+      res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+    });
+});
+  
 //add new product
 app.post('/api/products',(req, res) => {
   let data = {product_name: req.body.product_name, product_price: req.body.product_price};
