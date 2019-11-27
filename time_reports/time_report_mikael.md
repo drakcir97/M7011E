@@ -12,4 +12,7 @@
 | 2019-11-23  | 2       | Try to understand callbackfunctions|
 | 2019-11-24  | 2       | Implement callbacks to some functions|
 | 2019-11-25  | 6       | Added callbacks to more functions |
+| 2019-11-27  | 1       | Read about restful-api |
+| 2019-11-27  | 3       | Implemented get functions to the restful-api |
+| 2019-11-27  | 1       | Tried testing with postman and created a simple login page in html|
 
