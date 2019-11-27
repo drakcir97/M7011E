@@ -401,7 +401,7 @@ async function checkTestHouseholds(location) {
 	con.query(sqlCountHousehold, function (err, result) {
 		var totalhouseholds = result[0]['COUNT(id)'];
 		if (totalhouseholds == "0") {
-			await createTestHouseholds(location);
+			createTestHouseholds(location);
 		}
 	});
 } 
