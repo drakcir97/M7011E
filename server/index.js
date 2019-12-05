@@ -59,8 +59,9 @@ app.post('/login', function(req, res) {
         //res.send('you sent the name "' + req.body.username + '".');
 //        var testEncrypt = saltHashPassword(req.body.userpassword);
 //        res.send("salt: "+testEncrypt.salt+" hash: "+testEncrypt.passwordHash);
-        var sqlLogin = mysql.format("SELECT id FROM user WHERE email=?", [req.body.emailaddress]);
-        con.query(sqlLogin, function(err, result) {
+        res.send("email "+req.body.emailaddress);
+ //       var sqlLogin = mysql.format("SELECT id FROM user WHERE email=?", [req.body.emailaddress]);
+ /**        con.query(sqlLogin, function(err, result) {
                 if(err) throw err;
                 var userid = result[0]['id'];
                 var sqlUserId = mysql.format("SELECT pw FROM passwords WHERE userid=?", [userid]);
@@ -70,14 +71,14 @@ app.post('/login', function(req, res) {
                                 res.sendFile('home.html', {root : './'});
                         }
                 });
-        });
+        }); */
 });
 
 app.get('/signup', (req, res) => {
         res.sendFile('signup.html', {root : './'});
-        req.body.emailaddress;
-        req.body.name;
-        req.body.userpassword;
+        //req.body.emailaddress;
+        //req.body.name;
+        //req.body.userpassword;
         var sqlSignup = mysql.format("INSERT INTO user (name,email) VALUES (?,?)", [req.body.name,req.body.emailaddress]);
         con.query(sqlSignup, function(err,result) {
                 if (err) throw err;
