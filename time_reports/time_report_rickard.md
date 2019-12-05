@@ -12,3 +12,6 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2019-11-25  | 1       | Fixed value generated for electricity generation. Not addded to simulation yet. |
 | 2019-11-26  | 1       | Started looking at restful-api. |
 | 2019-11-27  | 5       | Started work on api. Added fix to sim, started on api, stopped spoof tests from generating more households then needed. |
+| 2019-12-1   | 4       | HTTPS and hashing research. |
+| 2019-12-5   | 0.5     | Presentation for meeting. |
+| 2019-12-5   | 4.5     | Hashing passwords, login, signup, added new database for server. |
