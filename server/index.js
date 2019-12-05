@@ -68,6 +68,9 @@ app.post('/login', function(req, res) {
                         var pw = result[0]['pw'];
                         if (pw == req.body.userpassword) {
                                 res.sendFile('home.html', {root : './'});
+                        } else {
+                                alert("Wrong username or password");
+                                res.sendFile('index.html', {root : './'});
                         }
                 });
         }); 
@@ -81,18 +84,29 @@ app.get('/signup', (req, res) => {
         
 });
 
+app.get('/signout', (req, res) => {
+        res.sendFile('login.html', {root : './'});
+        //req.body.emailaddress;
+        //req.body.name;
+        //req.body.userpassword;
+        
+});
+
 app.post('/signup', function(req, res) {
         var sqlSignup = mysql.format("INSERT INTO user (name,email) VALUES (?,?)", [req.body.name,req.body.emailaddress]);
         con.query(sqlSignup, function(err,result) {
-                if (err) throw err;
-                var sqlUserId = mysql.format("SELECT id FROM user WHERE name=? AND email=?", [req.body.name,req.body.emailaddress]);
-                con.query(sqlUserId, function(err,result) {
-                        var userid = result[0]['id'];
-                        var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw) VALUES (?,?)", [userid, req.body.userpassword]);
-                        con.query(sqlPassword, function(err, result) {
-                                if (err) throw err;   
+                if (err){
+                        res.redirect('/signup');
+                } else {
+                        var sqlUserId = mysql.format("SELECT id FROM user WHERE name=? AND email=?", [req.body.name,req.body.emailaddress]);
+                        con.query(sqlUserId, function(err,result) {
+                                var userid = result[0]['id'];
+                                var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw) VALUES (?,?)", [userid, req.body.userpassword]);
+                                con.query(sqlPassword, function(err, result) {
+                                        if (err) throw err;   
+                                });
                         });
-                });
+                }
         });
 });
 
