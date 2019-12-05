@@ -66,10 +66,12 @@ app.post('/login', function(req, res) {
                 var sqlUserId = mysql.format("SELECT pw FROM passwords WHERE userid=?", [userid]);
                 con.query(sqlUserId, function(err, result){
                         var pw = result[0]['pw'];
-                        if (pw == req.body.userpassword) {
-                                res.sendFile('home.html', {root : './'});
+                        var saltedpw = saltHashPassword(req.body.userpassword);
+                        if (pw == saltedpw) {
+
+                                res.redirect('/home');
                         } else {
-                                res.sendFile('index.html', {root : './'});
+                                res.redirect(404,'/');
                         }
                 });
         }); 
@@ -84,7 +86,7 @@ app.get('/signup', (req, res) => {
 });
 
 app.get('/signout', (req, res) => {
-        res.sendFile('login.html', {root : './'});
+        res.sendFile('index.html', {root : './'});
         //req.body.emailaddress;
         //req.body.name;
         //req.body.userpassword;
@@ -95,14 +97,16 @@ app.post('/signup', function(req, res) {
         var sqlSignup = mysql.format("INSERT INTO user (name,email) VALUES (?,?)", [req.body.name,req.body.emailaddress]);
         con.query(sqlSignup, function(err,result) {
                 if (err){
-                        res.redirect('/signup');
+                        res.redirect(404,'/signup');
                 } else {
                         var sqlUserId = mysql.format("SELECT id FROM user WHERE name=? AND email=?", [req.body.name,req.body.emailaddress]);
                         con.query(sqlUserId, function(err,result) {
                                 var userid = result[0]['id'];
-                                var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw) VALUES (?,?)", [userid, req.body.userpassword]);
+                                var saltedpw = saltHashPassword(req.body.userpassword);
+                                var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw) VALUES (?,?)", [userid, saltedpw]);
                                 con.query(sqlPassword, function(err, result) {
-                                        if (err) throw err;   
+                                        if (err) throw err;
+                                        res.redirect('/');   
                                 });
                         });
                 }
