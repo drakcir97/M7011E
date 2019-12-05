@@ -4,7 +4,7 @@
 <script language="">
         function validate(form){
                 if(form.username.value.length==0){
-                        alert("Enter username!");
+                        alert("Enter email!");
                         form.username.focus();
                         return false;
                 }
@@ -22,7 +22,7 @@
 <body>
 <h1>Login</h1>
 <form id="login" method="post" action="/login">
-<p>Username: <input type="text" name="username" id="username"></p>
+<p>Email: <input type="text" name="username" id="username"></p>
 <p>Password: <input type="password" name="userpassword" id="userpassword"></p>
 <p><input type="Submit" value="Login"></p>
 </form>
