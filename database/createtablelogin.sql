@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE TABLE IF NOT EXISTS passwords (
     id int NOT NULL AUTO_INCREMENT,
     userid int NOT NULL UNIQUE,
+    salt char(255),
     pw char(255),
     PRIMARY KEY (id),
     FOREIGN KEY (userid) REFERENCES user(id)

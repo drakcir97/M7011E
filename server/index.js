@@ -40,14 +40,18 @@ var sha512 = function(password, salt){
         };
 };
 
-function saltHashPassword(userpassword) {
-        var salt = genRandomString(16);
+function saltHashPassword(userpassword, salt) {
         var passwordData = sha512(userpassword, salt);
         console.log('userpassword = '+userpassword);
         console.log('passwordhash = '+passwordData.passwordHash);
         console.log('nSalt = '+passwordData.salt);
         return passwordData
 }
+
+function HashPassword(userpassword) {
+        var salt = genRandomString(16);
+        return saltHashPassword(userpassword, salt); 
+} 
 
 
 app.get('/', (req, res) => {
@@ -63,11 +67,12 @@ app.post('/login', function(req, res) {
         con.query(sqlLogin, function(err, result) {
                 if(err) throw err;
                 var userid = result[0]['id'];
-                var sqlUserId = mysql.format("SELECT pw FROM passwords WHERE userid=?", [userid]);
+                var sqlUserId = mysql.format("SELECT pw,salt FROM passwords WHERE userid=?", [userid]);
                 con.query(sqlUserId, function(err, result){
                         var pw = result[0]['pw'];
-                        var saltedpw = saltHashPassword(req.body.userpassword);
-                        if (pw == saltedpw) {
+                        var salt = result[0]['salt'];
+                        var saltedpw = saltHashPassword(req.body.userpassword,salt);
+                        if (pw == saltedpw.passwordHash) {
 
                                 res.redirect('/home');
                         } else {
@@ -102,8 +107,8 @@ app.post('/signup', function(req, res) {
                         var sqlUserId = mysql.format("SELECT id FROM user WHERE name=? AND email=?", [req.body.name,req.body.emailaddress]);
                         con.query(sqlUserId, function(err,result) {
                                 var userid = result[0]['id'];
-                                var saltedpw = saltHashPassword(req.body.userpassword);
-                                var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw) VALUES (?,?)", [userid, saltedpw]);
+                                var saltedpw = HashPassword(req.body.userpassword);
+                                var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw,salt) VALUES (?,?,?)", [userid, saltedpw.passwordHash, saltedpw.salt]);
                                 con.query(sqlPassword, function(err, result) {
                                         if (err) throw err;
                                         res.redirect('/');   
