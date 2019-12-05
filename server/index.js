@@ -67,14 +67,14 @@ app.post('/login', function(req, res) {
                 con.query(sqlUserId, function(err, result){
                         var pw = result[0]['pw'];
                         if (pw == req.body.userpassword) {
-                                res.sendFile('home.html', {root : '/'});
+                                res.sendFile('home.html', {root : './'});
                         }
                 });
         });
 });
 
 app.get('/signup', (req, res) => {
-        res.sendFile('signup.html', {root : '/'});
+        res.sendFile('signup.html', {root : './'});
         req.body.emailaddress;
         req.body.name;
         req.body.userpassword;
@@ -93,7 +93,7 @@ app.get('/signup', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-        res.sendFile('home.html', {root : '/'});
+        res.sendFile('home.html', {root : './'});
 });
 
 //https.createServer(options, function (req, res) {
