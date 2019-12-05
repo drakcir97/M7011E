@@ -8,5 +8,11 @@
 | 2019-11-19  | 1       | installing mysql and setting up a simple database |
 | 2019-11-19  | 3       | get temperature from smhi's rest api |
 | 2019-11-20  | 3       | connect to database and create some functions |
-| 2019-11-21  | 7       | Fix syntax errors and try to solve issues with databse|
+| 2019-11-21  | 7       | Fix syntax errors and try to solve issues with database|
+| 2019-11-23  | 2       | Try to understand callbackfunctions|
+| 2019-11-24  | 2       | Implement callbacks to some functions|
+| 2019-11-25  | 6       | Added callbacks to more functions |
+| 2019-11-27  | 1       | Read about restful-api |
+| 2019-11-27  | 3       | Implemented get functions to the restful-api |
+| 2019-11-27  | 1       | Tried testing with postman and created a simple login page in html|
 

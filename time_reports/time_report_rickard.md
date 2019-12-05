@@ -7,3 +7,8 @@
 | 2019-11-19  | 1	    | Connected db with node and fixed issues | 
 | 2019-11-20  | 3	    | Corrected tables in db and started on simulator. |
 | 2019-11-21  | 7       | Major update for sim including temp, wind, ele, network ele, still having issues with retriving data from db. |
+| 2019-11-25  | 8       | Fixed several issues getting data from db, works now. 
+Fixed so it does everything in correct order. Just need to fix the values generated and used, not correct currently. |
+| 2019-11-25  | 1       | Fixed value generated for electricity generation. Not addded to simulation yet. |
+| 2019-11-26  | 1       | Started looking at restful-api. |
+| 2019-11-27  | 5       | Started work on api. Added fix to sim, started on api, stopped spoof tests from generating more households then needed. |
