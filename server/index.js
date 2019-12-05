@@ -5,7 +5,6 @@ var request = require('path')
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var mysql = require('mysql');
-var popup = require('popups');
 'use strict';
 var crypto = require('crypto')
 
@@ -70,9 +69,6 @@ app.post('/login', function(req, res) {
                         if (pw == req.body.userpassword) {
                                 res.sendFile('home.html', {root : './'});
                         } else {
-                                popup.alert({
-                                        content: 'Wrong username or password'
-                                });
                                 res.sendFile('index.html', {root : './'});
                         }
                 });
