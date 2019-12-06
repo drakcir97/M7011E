@@ -15,3 +15,4 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2019-12-1   | 4       | HTTPS and hashing research. |
 | 2019-12-5   | 0.5     | Presentation for meeting. |
 | 2019-12-5   | 4.5     | Hashing passwords, login, signup, added new database for server. |
+| 2019-12-6   | 0.5     | Research for tokens. |
