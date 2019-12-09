@@ -3,6 +3,7 @@ var app = express()
 var https = require('https')
 var path = require('path')
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser')
 var fs = require('fs');
 var mysql = require('mysql');
 var authenticator = require("../authentication/authcontrol");
@@ -39,6 +40,7 @@ var captcha = ["SNAKE","JSON","CAPTCHA","PASSWORD","TEST","ANSWER"];
 var dir = path.join(__dirname, 'images/captcha');
 
 app.use(bodyParser.urlencoded({ extended: true}));
+app.use(cookieParser());
 
 //generate salt
 var genRandomString = function(length){
@@ -92,10 +94,11 @@ app.post('/login', function(req, res) {
                         var saltedpw = saltHashPassword(req.body.userpassword,salt);
                         if (pw == saltedpw.passwordHash) {
                                 var token = authenticator.register(userid);
-                                res.status(200).send({ auth: true, token: token })
+                                res.cookie('token', token, { maxAge: jwtExpirySeconds * 1000 })
+                                //res.status(200).send({ auth: true, token: token })
                                 res.redirect('/home');
                         } else {
-                                res.status(401).send({ auth: false, token: null });
+                                //res.status(401).send({ auth: false, token: null });
                                 res.redirect(404,'/');
                         }
                 });
@@ -142,6 +145,10 @@ app.get('/userpage', (req, res) => {
 });
 
 app.post('/addPicture', function(req, res) {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
         var sqlInsertPicture = mysql.format("INSERT INTO user (picture) VALUES (?)", [req.body.picture]);
         con.query(sqlInsertPicture, function(err,result) {
                 if(err){
@@ -173,13 +180,17 @@ app.post('/signup', function(req, res) {
 });
 
 app.get('/home', (req, res) => {
-        var token = req.headers['x-access-token'];
-        if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
-        jwt.verify(token, authenticator.secret, function(err, decoded) {
-                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+        // var token = req.headers['x-access-token'];
+        // if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+        // jwt.verify(token, authenticator.secret, function(err, decoded) {
+        //         if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
-                res.status(200).send(decoded);
-        });
+        //         res.status(200).send(decoded);
+        // });
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
         res.sendFile('home.html', {root : './'});
 });
 
