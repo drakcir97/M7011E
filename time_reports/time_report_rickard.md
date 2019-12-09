@@ -16,3 +16,5 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2019-12-5   | 0.5     | Presentation for meeting. |
 | 2019-12-5   | 4.5     | Hashing passwords, login, signup, added new database for server. |
 | 2019-12-6   | 0.5     | Research for tokens. |
+| 2019-12-8   | 1       | Token implementation, loop with sleep for simulator. |
+| 2019-12-9   | 4       | Token with cookies, captcha work, user add image of house. |

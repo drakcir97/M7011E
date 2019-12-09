@@ -17,5 +17,6 @@
 | 2019-11-27  | 1       | Tried testing with postman and created a simple login page in html|
 | 2019-12-01  | 4       | Fixed https and read about encryption |
 | 2019-12-05  | 5       | implemented encryption and worked with frontend|
+| 2019-12-09  | 4       | more frontend and some problem with tokens |
        
 
