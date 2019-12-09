@@ -93,10 +93,10 @@ app.post('/login', function(req, res) {
                         if (pw == saltedpw.passwordHash) {
                                 var token = authenticator.register(userid);
                                 res.status(200).send({ auth: true, token: token })
-                                //res.redirect('/home');
+                                res.redirect('/home');
                         } else {
-                                return res.status(401).send({ auth: false, token: null });
-                                //res.redirect(404,'/');
+                                res.status(401).send({ auth: false, token: null });
+                                res.redirect(404,'/');
                         }
                 });
         }); 
