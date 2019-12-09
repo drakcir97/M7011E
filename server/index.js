@@ -141,7 +141,7 @@ app.get('/userpage', (req, res) => {
         
 });
 
-app.post('/addPicture', (req, res) {
+app.post('/addPicture', function(req, res) {
         var sqlInsertPicture = mysql.format("INSERT INTO user (picture) VALUES (?)", [req.body.picture]);
         con.query(sqlInsertPicture, function(err,result) {
                 if(err){
