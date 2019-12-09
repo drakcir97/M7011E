@@ -539,10 +539,17 @@ async function update() {
 	//generateWindForTime(location,date,dateid);
 }
 
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 con.connect(function(err) {
 	if (err) throw err;
 	console.log("Connected to db");
-	update();
+	while(true) {
+		update();
+		await sleep(10000);
+	}
 	// var location = "Kiruna";
 	// createLocation(location);
 	// var temp = generateDate();

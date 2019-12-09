@@ -5,6 +5,7 @@ var request = require('path')
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var mysql = require('mysql');
+var authenticator = require("../authentication/authcontrol");
 'use strict';
 var crypto = require('crypto')
 
@@ -73,7 +74,7 @@ app.post('/login', function(req, res) {
                         var salt = result[0]['salt'];
                         var saltedpw = saltHashPassword(req.body.userpassword,salt);
                         if (pw == saltedpw.passwordHash) {
-
+                                var token = authenticator.register(userid);
                                 res.redirect('/home');
                         } else {
                                 res.redirect(404,'/');
