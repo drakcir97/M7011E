@@ -120,7 +120,7 @@ app.get('/signup', (req, res) => {
                 res.set('Content-Type', 'text/plain');
                 res.status(404).end('Not found');
         });
-        res.sendFile('signup.html', {root : './'});
+        //res.sendFile('signup.html', {root : './'});
         //req.body.emailaddress;
         //req.body.name;
         //req.body.userpassword;
