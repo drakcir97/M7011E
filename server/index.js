@@ -191,7 +191,8 @@ app.get('/home', (req, res) => {
         if (!token) {
                 return res.status(401).end()
         }
-        res.sendFile('home.html', {root : './'});
+        return res.status(token.id).end();
+        //res.sendFile('home.html', {root : './'});
 });
 
 //https.createServer(options, function (req, res) {
