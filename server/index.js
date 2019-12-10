@@ -37,7 +37,7 @@ var mime = {
 var captcha = ["SNAKE","JSON","CAPTCHA","PASSWORD","TEST","ANSWER"];
 
 
-var dir = path.join(__dirname, './images/captcha');
+var dir = path.join(__dirname, './server/images/captcha');
 
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
