@@ -108,7 +108,8 @@ app.post('/login', function(req, res) {
 app.get( '/captcha', function( req, res ) {
 
         var x = Math.floor((Math.random() * 5) + 1);
-        fs.readFile( 'images/captcha/0.png', function( err, data ) {
+        var s = parse('images/captcha/%s.png', x);
+        fs.readFile( s, function( err, data ) {
       
           if ( err ) {
       
