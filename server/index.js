@@ -105,10 +105,16 @@ app.post('/login', function(req, res) {
         }); 
 });
 
-app.get( '/captcha', function( req, res ) {
+function parse(str) {
+        var args = [].slice.call(arguments, 1),
+            i = 0;
+    
+        return str.replace(/%s/g, () => args[i++]);
+}
 
-        var x = Math.floor((Math.random() * 5) + 1);
-        var s = parse('images/captcha/%s.png', x);
+app.get( '/captcha/:id', function( req, res ) {
+
+        var s = parse('images/captcha/%s.png', req.params.id);
         fs.readFile( s, function( err, data ) {
       
           if ( err ) {
@@ -116,7 +122,7 @@ app.get( '/captcha', function( req, res ) {
             console.log( err );
             return;
           }
-      
+          //req.body.usercaptcha
           res.write( data );
           return res.end();
         });
