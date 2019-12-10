@@ -18,3 +18,4 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2019-12-6   | 0.5     | Research for tokens. |
 | 2019-12-8   | 1       | Token implementation, loop with sleep for simulator. |
 | 2019-12-9   | 4       | Token with cookies, captcha work, user add image of house. |
+| 2019-12-10  | 3       | Some work trying to make pictures work for captchas and to store images in db. |

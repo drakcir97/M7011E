@@ -18,5 +18,6 @@
 | 2019-12-01  | 4       | Fixed https and read about encryption |
 | 2019-12-05  | 5       | implemented encryption and worked with frontend|
 | 2019-12-09  | 4       | more frontend and some problem with tokens |
+| 2019-12-10  | 5       | Fixed tokens, alot of trouble with images and database |
        
 
