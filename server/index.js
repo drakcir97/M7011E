@@ -114,7 +114,7 @@ function parse(str) {
 
 app.get( '/captcha/:id', function( req, res ) {
 
-        var s = parse('images/captcha/%s.png', req.params.id);
+        var s = parse('images/captcha/%s', req.params.id);
         fs.readFile( s, function( err, data ) {
       
           if ( err ) {
