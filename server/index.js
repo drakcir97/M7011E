@@ -94,7 +94,7 @@ app.post('/login', function(req, res) {
                         var saltedpw = saltHashPassword(req.body.userpassword,salt);
                         if (pw == saltedpw.passwordHash) {
                                 var token = authenticator.register(userid);
-                                res.cookie('token', token, { maxAge: jwtExpirySeconds * 1000 })
+                                res.cookie('token', token, { maxAge: 86400 })
                                 //res.status(200).send({ auth: true, token: token })
                                 res.redirect('/home');
                         } else {
