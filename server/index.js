@@ -37,7 +37,7 @@ var mime = {
 var captcha = ["SNAKE","JSON","CAPTCHA","PASSWORD","TEST","ANSWER"];
 
 
-var dir = path.join(__dirname, './server/images/captcha');
+var dir = path.join(__dirname, 'server/images/captcha');
 
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
@@ -106,7 +106,7 @@ app.post('/login', function(req, res) {
 });
 
 app.get('/signup', (req, res) => {
-        var file = path.join(dir, req.path.replace(/\/$/, './signup.html'));
+        var file = path.join(dir, req.path.replace(/\/$/, 'signup.html'));
         if (file.indexOf(dir + path.sep) !== 0) {
                 return res.status(403).end('Forbidden');
         }
