@@ -15,3 +15,11 @@ CREATE TABLE IF NOT EXISTS passwords (
     PRIMARY KEY (id),
     FOREIGN KEY (userid) REFERENCES user(id)
 );
+
+CREATE TABLE IF NOT EXISTS picture (
+    id int NOT NULL AUTO_INCREMENT,
+    userid int NOT NULL UNIQUE,
+    picture MEDIUMBLOB NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (userid) REFERENCES user(id)
+);

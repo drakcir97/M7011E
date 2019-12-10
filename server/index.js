@@ -37,7 +37,7 @@ var mime = {
 var captcha = ["SNAKE","JSON","CAPTCHA","PASSWORD","TEST","ANSWER"];
 
 
-var dir = path.join(__dirname, 'images/captcha');
+var dir = path.join(__dirname, './images/captcha');
 
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
@@ -106,20 +106,20 @@ app.post('/login', function(req, res) {
 });
 
 app.get('/signup', (req, res) => {
-        // var file = path.join(dir, req.path.replace(/\/$/, '/signup.html'));
-        // if (file.indexOf(dir + path.sep) !== 0) {
-        //         return res.status(403).end('Forbidden');
-        // }
-        // var type = mime[path.extname(file).slice(1)] || 'text/plain';
-        // var s = fs.createReadStream(file);
-        // s.on('open', function () {
-        //         res.set('Content-Type', type);
-        //         s.pipe(res);
-        // });
-        // s.on('error', function () {
-        //         res.set('Content-Type', 'text/plain');
-        //         res.status(404).end('Not found');
-        // });
+        var file = path.join(dir, req.path.replace(/\/$/, '/signup.html'));
+        if (file.indexOf(dir + path.sep) !== 0) {
+                return res.status(403).end('Forbidden');
+        }
+        var type = mime[path.extname(file).slice(1)] || 'text/plain';
+        var s = fs.createReadStream(file);
+        s.on('open', function () {
+                res.set('Content-Type', type);
+                s.pipe(res);
+        });
+        s.on('error', function () {
+                res.set('Content-Type', 'text/plain');
+                res.status(404).end('Not found');
+        });
         res.sendFile('signup.html', {root : './'});
         //req.body.emailaddress;
         //req.body.name;
@@ -136,8 +136,19 @@ app.get('/signout', (req, res) => {
 });
 
 app.get('/userpage', (req, res) => {
-     //   var sqlSelectPicture = mysql.format("SELECT picture FROM user WHERE id=?")
-      //  res.sendFile('user.html', {root : './'});
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                var sqlSelectPicture = mysql.format("SELECT picture FROM picture WHERE userid=?", [JSON.stringify(decoded.id)]);
+                con.query(sqlInsertPicture, function(err,result) {
+                        res.sendFile('user.html', {root : './'});
+                });
+        });
         //req.body.emailaddress;
         //req.body.name;
         //req.body.userpassword;
@@ -149,13 +160,18 @@ app.post('/addPicture', function(req, res) {
         if (!token) {
                 return res.status(401).end()
         }
-        var sqlInsertPicture = mysql.format("INSERT INTO user (picture) VALUES (?)", [req.body.picture]);
-        con.query(sqlInsertPicture, function(err,result) {
-                if(err){
-                        //??
-                } else {
-                        //??
-                }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                var sqlInsertPicture = mysql.format("INSERT INTO picture (userid,picture) VALUES (?,?)", [JSON.stringify(decoded.id),req.body.picture]);
+                con.query(sqlInsertPicture, function(err,result) {
+                        if(err){
+                                //??
+                        } else {
+                                //??
+                        }
+                });
         });
 });
 
@@ -189,10 +205,10 @@ app.get('/home', (req, res) => {
         jwt.verify(token, authenticator.secret, function(err, decoded) {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
-                res.status(200).send(decoded);
+                //res.status(200).send(decoded);
         });
         //return res.status(token.id).end();
-        //res.sendFile('home.html', {root : './'});
+        res.sendFile('home.html', {root : './'});
 });
 
 //https.createServer(options, function (req, res) {
