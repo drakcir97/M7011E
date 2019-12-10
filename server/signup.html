@@ -36,11 +36,11 @@
         <script>
                 function myFunction() {
                         var x = Math.floor((Math.random() * 5) + 1);
-                        document.getElementById("imageCaptcha").src = "./images/captcha/{{x}}.png";
-                        document.getElementById("imageCaptcha").srcset = "./images/captcha/{{x}}.png";
+                        document.getElementById("imageCaptcha").src = "{{x}}.png";
+                        document.getElementById("imageCaptcha").srcset = "{{x}}.png";
                 }
         </script>
-        <img src="./images/captcha/0.png" source media="(min-width: 465px)" srcset="./images/captcha/0.png" id="imageCaptcha" name="imageCaptcha">
+        <img src="0.png" source media="(min-width: 465px)" srcset="0.png" id="imageCaptcha" name="imageCaptcha">
 </picture>
 <p>Captcha: <input type="text" name="usercaptcha" id="usercaptcha"></p>
 <p><input type="Submit" value="Login"></p>
