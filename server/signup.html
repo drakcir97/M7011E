@@ -33,22 +33,19 @@
 <p>Email: <input type="text" name="emailaddress" id="emailaddress"></p>
 <p>Password: <input type="password" name="userpassword" id="userpassword"></p>
 <p>Captcha: <input type="text" name="usercaptcha" id="usercaptcha"></p>
-<input type=imgage id="p1" name="p1" source media="(min-width: 465px)" src="" />
 <input type="hidden" id="p2" name="p2" value="2">
 <picture>
         <script>
                 function img_info() {
                         var x = Math.floor((Math.random() * 5) + 1);
                         var str = x.toString();
-                        var firstValue = "https://3.87.255.174:3000/captcha/"+str+".png"
-                        return firstValue;
+                        return "https://3.87.255.174:3000/captcha/"+str+".png";
                 }
         </script>        
+        <img id="p1" name="p1" source media="(min-width: 465px)" src="" />
                 
         <script>
                 document.getElementById("p1").src = img_info();
-
-        
         </script> 
 
  <!--       <script>
