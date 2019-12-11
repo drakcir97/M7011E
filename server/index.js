@@ -130,6 +130,7 @@ app.get( '/captcha/:id', function( req, res ) {
 });
 
 app.get('/signup', (req, res) => {
+        console.log(req.body.usercaptcha)
         // var file = path.join(dir, req.path.replace(/\/$/, '/signup.html'));
         // if (file.indexOf(dir + path.sep) !== 0) {
         //         return res.status(403).end('Forbidden');
