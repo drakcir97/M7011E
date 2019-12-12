@@ -207,7 +207,7 @@ app.post('/addPicture', function(req, res) {
 
 app.post('/signup', function(req, res) {
         console.log(req.body.usercaptcha); //test captcha
-        console.log(req.body.p1); 
+        console.log(req.body.p2); 
         if (captcha[parseInt(req.body.p2)]==req.body.usercaptcha) {
                 var sqlSignup = mysql.format("INSERT INTO user (name,email) VALUES (?,?)", [req.body.name,req.body.emailaddress]);
                 con.query(sqlSignup, function(err,result) {
