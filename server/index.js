@@ -181,7 +181,7 @@ app.get('/userpage', (req, res) => {
                 var socket = new net.Socket();
                 //var host = parse('localhost/api/users/%s', JSON.stringify(decoded.id));
                 var host = 'localhost/api/users';
-                socket.connect(8080,host, function () {
+                socket.connect({port: 8080,host: host}, function () {
                         console.log("Client: Connected to server");
                 });
 
