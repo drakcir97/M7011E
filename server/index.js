@@ -42,6 +42,7 @@ var dir = path.join(__dirname, 'server/images/captcha');
 
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
+app.use(express.bodyParser({onPart: onPart});
 
 //generate salt
 var genRandomString = function(length){
