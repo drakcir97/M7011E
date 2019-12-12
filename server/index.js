@@ -212,9 +212,14 @@ app.post('/addPicture', function(req, res) {
                 form.parse(req, function (err, fields, files) {
                         var oldpath = files.picture.path;
                         var newpath = 'home/ubuntu/M7011E/server/images/userhouse' + files.picture.name;
+                        console.log("oldpath "+oldpath);
+                        console.log("newpath "+newpath);
                         fs.rename(oldpath, newpath, function (err) {
-                                if (err) throw err;
-                                res.redirect('/');
+                                if (err){
+                                        console.log(err);
+                                } else {
+                                        res.redirect('/');
+                                }
                         });
                 });
         });
