@@ -180,7 +180,7 @@ app.get('/userpage', (req, res) => {
                 
                 // Connect to server
                 var io = require('socket.io-client');
-                var socket = io.connect('http://localhost:8080', {reconnect: true});
+                var socket = io.connect('http://localhost:8080/api/users', {reconnect: true});
 
                 console.log('2');
 
@@ -278,7 +278,7 @@ app.post('/addPicture', function(req, res) {
                                 if (err){
                                         console.log(err);
                                 } else {
-                                        res.redirect('/');
+                                        return res.redirect('/');
                                 }
                         });
                 });
@@ -300,7 +300,7 @@ app.post('/signup', function(req, res) {
                 var sqlSignup = mysql.format("INSERT INTO user (name,email,admin) VALUES (?,?,?)", [req.body.name,req.body.emailaddress,false]);
                 con.query(sqlSignup, function(err,result) {
                         if (err){
-                                res.redirect(404,'/signup');
+                                return res.redirect(404,'/signup');
                         } else {
                                 var sqlUserId = mysql.format("SELECT id FROM user WHERE name=? AND email=?", [req.body.name,req.body.emailaddress]);
                                 con.query(sqlUserId, function(err,result) {
@@ -309,7 +309,7 @@ app.post('/signup', function(req, res) {
                                         var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw,salt) VALUES (?,?,?)", [userid, saltedpw.passwordHash, saltedpw.salt]);
                                         con.query(sqlPassword, function(err, result) {
                                                 if (err) throw err;
-                                                res.redirect('/');   
+                                                return res.redirect('/');   
                                         });
                                 });
                         }
