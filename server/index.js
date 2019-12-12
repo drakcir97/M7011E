@@ -92,6 +92,7 @@ app.post('/login', function(req, res) {
                 try {
                         var userid = result[0]['id'];
                         var admin = result[0]['admin'];
+                        console.log("admin "+admin);
                 } catch(err) {
                         return res.redirect('/');
                 }
@@ -352,6 +353,7 @@ app.get('/home', (req, res) => {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
                 //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == 'true') {
                         return res.send('Admin: '+decoded.admin+" id: "+decoded.id);
                 }
