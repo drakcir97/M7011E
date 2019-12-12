@@ -143,8 +143,9 @@ io = io.listen(server);
 // Add a connect listener
 io.sockets.on('connection', function(socket)
 {
-  console.log('Client connected.');
-  socket.emit("test data "+1);
+    console.log('Client connected.');
+    socket.send("test");
+
   // Disconnect listener
   socket.on('disconnect', function() {
   console.log('Client disconnected.');
