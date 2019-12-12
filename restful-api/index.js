@@ -144,7 +144,7 @@ io = io.listen(server);
 io.sockets.on('connect', function(socket)
 {
     console.log('Client connected.');
-    socket.emit("connect response","Connected to API");
+    socket.emit("response",{response: "Connected to API"});
 
     socket.on('api/users', function(socket) {
         let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
