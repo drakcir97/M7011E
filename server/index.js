@@ -199,7 +199,7 @@ app.post('/addPicture', function(req, res) {
                 var sqlInsertPicture = mysql.format("INSERT INTO picture (userid,picture) VALUES (?,?)", [JSON.stringify(decoded.id),req.body.house]);
                 con.query(sqlInsertPicture, function(err,result) {
                         if(err){
-                                //??
+                                console.log("Error when inserting image into db");
                         } else {
                                 console.log("Inserted picture into db");
                         }
