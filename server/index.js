@@ -296,7 +296,7 @@ app.post('/signup', function(req, res) {
         console.log(req.body.usercaptcha); //test captcha
         console.log(req.body.p2); 
         if (captcha[parseInt(req.body.p2)]==req.body.usercaptcha) {
-                var sqlSignup = mysql.format("INSERT INTO user (name,email,admin) VALUES (?,?)", [req.body.name,req.body.emailaddress,false]);
+                var sqlSignup = mysql.format("INSERT INTO user (name,email,admin) VALUES (?,?,?)", [req.body.name,req.body.emailaddress,false]);
                 con.query(sqlSignup, function(err,result) {
                         if (err){
                                 res.redirect(404,'/signup');
