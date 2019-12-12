@@ -141,10 +141,10 @@ server.listen(8080);
 io = io.listen(server);
 
 // Add a connect listener
-io.sockets.on('connection', function(socket)
+io.sockets.on('connect', function(socket)
 {
     console.log('Client connected.');
-    socket.send("Connected to API");
+    socket.emit("connect response","Connected to API");
 
     socket.on('api/users', function(socket) {
         let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
