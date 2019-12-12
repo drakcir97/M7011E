@@ -186,6 +186,7 @@ app.get('/userpage', (req, res) => {
 });
 
 app.post('/addPicture', function(req, res) {
+        console.log("test begin");
         var token = req.cookies.token;
         if (!token) {
                 return res.status(401).end()
@@ -194,12 +195,13 @@ app.post('/addPicture', function(req, res) {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
                 //res.status(200).send(decoded);
+                console.log("before sqlInsertPicture");
                 var sqlInsertPicture = mysql.format("INSERT INTO picture (userid,picture) VALUES (?,?)", [JSON.stringify(decoded.id),req.body.house]);
                 con.query(sqlInsertPicture, function(err,result) {
                         if(err){
                                 //??
                         } else {
-                                //??
+                                console.log("Inserted picture into db");
                         }
                 });
         });
