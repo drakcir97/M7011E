@@ -86,7 +86,11 @@ app.post('/login', function(req, res) {
         var sqlLogin = mysql.format("SELECT id FROM user WHERE email=?", [req.body.emailaddress]);
         con.query(sqlLogin, function(err, result) {
                 if(err) throw err;
-                var userid = result[0]['id'];
+                try {
+                        var userid = result[0]['id'];
+                } catch(err) {
+                        res.redirect(404,'/');
+                }
                 var sqlUserId = mysql.format("SELECT pw,salt FROM passwords WHERE userid=?", [userid]);
                 con.query(sqlUserId, function(err, result){
                         var pw = result[0]['pw'];
@@ -203,24 +207,29 @@ app.post('/addPicture', function(req, res) {
 
 app.post('/signup', function(req, res) {
         console.log(req.body.usercaptcha); //test captcha
-        console.log(req.body.p1);
-        var sqlSignup = mysql.format("INSERT INTO user (name,email) VALUES (?,?)", [req.body.name,req.body.emailaddress]);
-        con.query(sqlSignup, function(err,result) {
-                if (err){
-                        res.redirect(404,'/signup');
-                } else {
-                        var sqlUserId = mysql.format("SELECT id FROM user WHERE name=? AND email=?", [req.body.name,req.body.emailaddress]);
-                        con.query(sqlUserId, function(err,result) {
-                                var userid = result[0]['id'];
-                                var saltedpw = HashPassword(req.body.userpassword);
-                                var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw,salt) VALUES (?,?,?)", [userid, saltedpw.passwordHash, saltedpw.salt]);
-                                con.query(sqlPassword, function(err, result) {
-                                        if (err) throw err;
-                                        res.redirect('/');   
+        console.log(req.body.p1); 
+        if (captcha[int(req.body.p1.name)]==req.body.usercaptcha) {
+                var sqlSignup = mysql.format("INSERT INTO user (name,email) VALUES (?,?)", [req.body.name,req.body.emailaddress]);
+                con.query(sqlSignup, function(err,result) {
+                        if (err){
+                                res.redirect(404,'/signup');
+                        } else {
+                                var sqlUserId = mysql.format("SELECT id FROM user WHERE name=? AND email=?", [req.body.name,req.body.emailaddress]);
+                                con.query(sqlUserId, function(err,result) {
+                                        var userid = result[0]['id'];
+                                        var saltedpw = HashPassword(req.body.userpassword);
+                                        var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw,salt) VALUES (?,?,?)", [userid, saltedpw.passwordHash, saltedpw.salt]);
+                                        con.query(sqlPassword, function(err, result) {
+                                                if (err) throw err;
+                                                res.redirect('/');   
+                                        });
                                 });
-                        });
-                }
-        });
+                        }
+                });
+        } else {
+                res.redirect(404,'/signup');
+        }
+        
 });
 
 app.get('/home', (req, res) => {
