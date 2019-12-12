@@ -89,7 +89,7 @@ app.post('/login', function(req, res) {
                 try {
                         var userid = result[0]['id'];
                 } catch(err) {
-                        res.redirect(404,'/');
+                        return res.redirect('/');
                 }
                 var sqlUserId = mysql.format("SELECT pw,salt FROM passwords WHERE userid=?", [userid]);
                 con.query(sqlUserId, function(err, result){
@@ -103,7 +103,7 @@ app.post('/login', function(req, res) {
                                 res.redirect('/home');
                         } else {
                                 //res.status(401).send({ auth: false, token: null });
-                                res.redirect(404,'/');
+                                res.redirect('/');
                         }
                 });
         }); 
