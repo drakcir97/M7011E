@@ -190,11 +190,14 @@ app.get('/userpage', (req, res) => {
                 //        socket.on('clientEvent', function (data) {
                 //                socket.emit(data);
                 //        });
+                        
                 }); 
 
-                    socket.on('message', function (message) {
+                socket.on('message', function (message) {
+                        socket.emit('api/users');
                         console.log(message);
-                      });
+                        return res.send(message);
+                });
                 console.log('3');
                 //res.status(200).send(decoded);
                 //res.sendFile('user.html', {root : './'});
