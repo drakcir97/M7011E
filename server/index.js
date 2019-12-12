@@ -10,6 +10,7 @@ var authenticator = require("../authentication/authcontrol");
 'use strict';
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
+var formidable = require('formidable');
 
 var options = {
         key: fs.readFileSync('key.pem'),
@@ -198,13 +199,23 @@ app.post('/addPicture', function(req, res) {
                 console.log("before sqlInsertPicture");
                 console.log("id "+JSON.stringify(decoded.id));
                 console.log(req.body.picture);
-                var sqlInsertPicture = mysql.format("INSERT INTO picture (userid,picture) VALUES (?,?)", [JSON.stringify(decoded.id),req.body.picture]);
-                con.query(sqlInsertPicture, function(err,result) {
-                        if(err){
-                                console.log("Error when inserting image into db");
-                        } else {
-                                console.log("Inserted picture into db");
-                        }
+                // var sqlInsertPicture = mysql.format("INSERT INTO picture (userid,picture) VALUES (?,?)", [JSON.stringify(decoded.id),req.body.picture]);
+                // con.query(sqlInsertPicture, function(err,result) {
+                //         if(err){
+                //                 console.log("Error when inserting image into db");
+                //         } else {
+                //                 console.log("Inserted picture into db");
+                //         }
+                // });
+
+                var form = new formidable.IncomingForm();
+                form.parse(req, function (err, fields, files) {
+                        var oldpath = files.picture.path;
+                        var newpath = 'server/images/userhouse' + files.picture.name;
+                        fs.rename(oldpath, newpath, function (err) {
+                                if (err) throw err;
+                                res.redirect('/');
+                        });
                 });
         });
 });
