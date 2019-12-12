@@ -176,10 +176,7 @@ app.get('/userpage', (req, res) => {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
                 //res.status(200).send(decoded);
-                var sqlSelectPicture = mysql.format("SELECT picture FROM picture WHERE userid=?", [JSON.stringify(decoded.id)]);
-                con.query(sqlInsertPicture, function(err,result) {
-                        res.sendFile('user.html', {root : './'});
-                });
+                res.sendFile('user.html', {root : './'});
         });
         //req.body.emailaddress;
         //req.body.name;
