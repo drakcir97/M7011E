@@ -180,8 +180,8 @@ app.get('/userpage', (req, res) => {
                 //res.sendFile('user.html', {root : './'});
                 var socket = new net.Socket();
                 //var host = parse('localhost/api/users/%s', JSON.stringify(decoded.id));
-                var host = 'localhost/api/users';
-                socket.connect({port: 8080,host: host}, function () {
+                var host = 'http://3.87.255.174:8080/api/users';
+                socket.connect({host: host}, function () {
                         console.log("Client: Connected to server");
                 });
 
