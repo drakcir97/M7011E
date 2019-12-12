@@ -42,7 +42,7 @@ var dir = path.join(__dirname, 'server/images/captcha');
 
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
-app.use(bodyParser({onPart: onPart}));
+//app.use(bodyParser({onPart: onPart}));
 
 //generate salt
 var genRandomString = function(length){
@@ -210,26 +210,27 @@ app.post('/addPicture', function(req, res) {
                 // });
 
                 var form = new formidable.IncomingForm();
-                form.onPart = function (part) {
-                        if(!part.filename || part.filename.match(/\.(jpg|jpeg|png)$/i)) {
-                                form.parse(req, function (err, fields, files) {
-                                        var oldpath = files.picture.path;
-                                        var newpath = './images/userhouse/' + JSON.stringify(decoded.id)+".jpg";
-                                        console.log("oldpath "+oldpath);
-                                        console.log("newpath "+newpath);
-                                        fs.rename(oldpath, newpath, function (err) {
-                                                if (err){
-                                                        console.log(err);
-                                                } else {
-                                                        res.redirect('/');
-                                                }
-                                        });
-                                });
-                        } else {
-                                console.log(part.filename + ' is not allowed');
-                                res.redirect('/');
-                        }
-                }
+                form.parse(req, function (err, fields, files) {
+                        var oldpath = files.picture.path;
+                        var newpath = './images/userhouse/' + JSON.stringify(decoded.id)+".jpg";
+                        console.log("oldpath "+oldpath);
+                        console.log("newpath "+newpath);
+                        fs.rename(oldpath, newpath, function (err) {
+                                if (err){
+                                        console.log(err);
+                                } else {
+                                        res.redirect('/');
+                                }
+                        });
+                });
+                // form.onPart = function (part) {
+                //         if(!part.filename || part.filename.match(/\.(jpg|jpeg|png)$/i)) {
+                                
+                //         } else {
+                //                 console.log(part.filename + ' is not allowed');
+                //                 res.redirect('/');
+                //         }
+                // }
         });
 });
 
