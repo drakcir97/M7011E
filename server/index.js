@@ -187,11 +187,14 @@ app.get('/userpage', (req, res) => {
                 // Add a connect listener
                 socket.on('connect', function(socket) { 
                         console.log('Connected!');
-                        socket.on('clientEvent', function (data) {
-                                socket.emit(data);
-                        });
-                });
+                //        socket.on('clientEvent', function (data) {
+                //                socket.emit(data);
+                //        });
+                }); 
 
+                    socket.on('message', function (message) {
+                        console.log(message);
+                      });
                 console.log('3');
                 //res.status(200).send(decoded);
                 //res.sendFile('user.html', {root : './'});
