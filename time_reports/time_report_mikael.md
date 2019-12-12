@@ -19,5 +19,6 @@
 | 2019-12-05  | 5       | implemented encryption and worked with frontend|
 | 2019-12-09  | 4       | more frontend and some problem with tokens |
 | 2019-12-10  | 5       | Fixed tokens, alot of trouble with images and database |
+| 2019-12-12  | 4       | Added house pictures for the users, alot of trouble with the rest api |
        
 
