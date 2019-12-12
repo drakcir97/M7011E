@@ -354,7 +354,7 @@ app.get('/home', (req, res) => {
                 
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
-                if (decoded.admin == 'true') {
+                if (decoded.admin == '1') {
                         return res.send('Admin: '+decoded.admin+" id: "+decoded.id);
                 }
         });
