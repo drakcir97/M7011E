@@ -146,17 +146,17 @@ io.sockets.on('connection', function(socket)
     console.log('Client connected.');
     socket.send("Connected to API");
 
+    socket.on('api/users', function(socket) {
+        let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
+        let query = conn.query(sql, (err, results) => {
+            if(err) throw err;
+            socket.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+        });
+    });
     // Disconnect listener
     socket.on('disconnect', function() {
         console.log('Client disconnected.');
     });
 });
 
-io.sockets.on('api/users', function(socket) {
-    let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
-    let query = conn.query(sql, (err, results) => {
-        if(err) throw err;
-        socket.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-});
 //http://35.173.230.193:3000/api/electricityconsumtion

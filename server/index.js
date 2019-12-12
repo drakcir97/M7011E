@@ -196,6 +196,11 @@ app.get('/userpage', (req, res) => {
                 socket.on('message', function (message) {
                         socket.emit('api/users');
                         console.log(message);
+                });
+                
+                socket.on('message', function (message) {
+                        socket.emit('api/users');
+                        console.log(message);
                         return res.send(message);
                 });
                 console.log('3');
