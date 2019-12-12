@@ -209,19 +209,26 @@ app.post('/addPicture', function(req, res) {
                 // });
 
                 var form = new formidable.IncomingForm();
-                form.parse(req, function (err, fields, files) {
-                        var oldpath = files.picture.path;
-                        var newpath = './images/userhouse/' + files.picture.name;
-                        console.log("oldpath "+oldpath);
-                        console.log("newpath "+newpath);
-                        fs.rename(oldpath, newpath, function (err) {
-                                if (err){
-                                        console.log(err);
-                                } else {
-                                        res.redirect('/');
-                                }
-                        });
-                });
+                form.onPart = function (part) {
+                        if(!part.filename || part.filename.match(/\.(jpg|jpeg|png)$/i)) {
+                                form.parse(req, function (err, fields, files) {
+                                        var oldpath = files.picture.path;
+                                        var newpath = './images/userhouse/' + JSON.stringify(decoded.id)+".jpg";
+                                        console.log("oldpath "+oldpath);
+                                        console.log("newpath "+newpath);
+                                        fs.rename(oldpath, newpath, function (err) {
+                                                if (err){
+                                                        console.log(err);
+                                                } else {
+                                                        res.redirect('/');
+                                                }
+                                        });
+                                });
+                        } else {
+                                console.log(part.filename + ' is not allowed');
+                                res.redirect('/');
+                        }
+                }
         });
 });
 
