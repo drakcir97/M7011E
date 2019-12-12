@@ -86,11 +86,12 @@ app.post('/login', function(req, res) {
         //res.send('you sent the name "' + req.body.username + '".');
 //        var testEncrypt = saltHashPassword(req.body.userpassword);
 //        res.send("salt: "+testEncrypt.salt+" hash: "+testEncrypt.passwordHash);
-        var sqlLogin = mysql.format("SELECT id FROM user WHERE email=?", [req.body.emailaddress]);
+        var sqlLogin = mysql.format("SELECT id,admin FROM user WHERE email=?", [req.body.emailaddress]);
         con.query(sqlLogin, function(err, result) {
                 if(err) throw err;
                 try {
                         var userid = result[0]['id'];
+                        var admin = result[0]['admin'];
                 } catch(err) {
                         return res.redirect('/');
                 }
@@ -100,7 +101,7 @@ app.post('/login', function(req, res) {
                         var salt = result[0]['salt'];
                         var saltedpw = saltHashPassword(req.body.userpassword,salt);
                         if (pw == saltedpw.passwordHash) {
-                                var token = authenticator.register(userid);
+                                var token = authenticator.register(userid,admin);
                                 res.cookie('token', token, { maxAge: 86400 })
                                 //res.status(200).send({ auth: true, token: token })
                                 res.redirect('/home');
@@ -176,9 +177,21 @@ app.get('/userpage', (req, res) => {
         jwt.verify(token, authenticator.secret, function(err, decoded) {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
+                // Connect to server
+                var io = require('socket.io-client');
+                var socket = io.connect('http://localhost:8080', {reconnect: true});
+
+                console.log('2');
+
+                // Add a connect listener
+                socket.on('connect', function(socket) { 
+                        console.log('Connected!');
+                });
+
+                console.log('3');
                 //res.status(200).send(decoded);
                 //res.sendFile('user.html', {root : './'});
-                var socket = new net.Socket();
+        /**         var socket = new net.Socket();
                 //var host = parse('localhost/api/users/%s', JSON.stringify(decoded.id));
                 var host = '3.87.255.174/api/users';
                 socket.connect({port: 8080,host: host}, function () {
@@ -195,7 +208,7 @@ app.get('/userpage', (req, res) => {
                         socket.end();
                         res.write(data);
                         return res.end();
-                });
+                }); */
         });
         //req.body.emailaddress;
         //req.body.name;
@@ -283,7 +296,7 @@ app.post('/signup', function(req, res) {
         console.log(req.body.usercaptcha); //test captcha
         console.log(req.body.p2); 
         if (captcha[parseInt(req.body.p2)]==req.body.usercaptcha) {
-                var sqlSignup = mysql.format("INSERT INTO user (name,email) VALUES (?,?)", [req.body.name,req.body.emailaddress]);
+                var sqlSignup = mysql.format("INSERT INTO user (name,email,admin) VALUES (?,?)", [req.body.name,req.body.emailaddress,false]);
                 con.query(sqlSignup, function(err,result) {
                         if (err){
                                 res.redirect(404,'/signup');
@@ -306,6 +319,28 @@ app.post('/signup', function(req, res) {
         
 });
 
+app.get('/createadmin', (req, res) => {
+        console.log(req.body.usercaptcha); //test captcha
+        console.log(req.body.p2); 
+        var sqlSignup = mysql.format("INSERT INTO user (name,email,admin) VALUES (?,?)", ['sysadmin','sysadmin@miri',true]);
+        con.query(sqlSignup, function(err,result) {
+                if (err){
+                        return res.send('Admin already exists');
+                } else {
+                        var sqlUserId = mysql.format("SELECT id FROM user WHERE name=? AND email=?", ['sysadmin','sysadmin@miri']);
+                        con.query(sqlUserId, function(err,result) {
+                                var userid = result[0]['id'];
+                                var saltedpw = HashPassword('sysadmin');
+                                var sqlPassword = mysql.format("INSERT INTO passwords (userid,pw,salt) VALUES (?,?,?)", [userid, saltedpw.passwordHash, saltedpw.salt]);
+                                con.query(sqlPassword, function(err, result) {
+                                        if (err) throw err;
+                                        return res.send('Admin was created');  
+                                });
+                        });
+                }
+        });
+});
+
 app.get('/home', (req, res) => {
         // var token = req.headers['x-access-token'];
         // if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
@@ -317,9 +352,12 @@ app.get('/home', (req, res) => {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
                 //res.status(200).send(decoded);
+                if (decoded.admin == 'true') {
+                        return res.send('Admin: '+decoded.admin+" id: "+decoded.id);
+                }
         });
         //return res.status(token.id).end();
-        res.sendFile('home.html', {root : './'});
+        return res.sendFile('home.html', {root : './'});
 });
 
 //https.createServer(options, function (req, res) {

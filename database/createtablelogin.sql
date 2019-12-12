@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS user (
     id int NOT NULL AUTO_INCREMENT,
     name char(255) NOT NULL,
     email char(255) NOT NULL UNIQUE,
+    admin boolean NOT NULL,
     PRIMARY KEY (id)
 );
 

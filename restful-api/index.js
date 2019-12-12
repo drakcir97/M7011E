@@ -11,9 +11,12 @@ var	tempAffect = 2; //Maximum affect temperature has.
 var	tempCoefficient = 0.6; //Procentage that is affected by temperature.
 var	powerCostHigh = 0.01; //Cost if powerplant
 var	powerCostLow = 0.005; //Cost if wind
+var http = require('http'),
+io = require('socket.io');
 
 // parse application/json
 app.use(bodyParser.json());
+
  
 //create database connection
 const conn = mysql.createConnection({
@@ -126,5 +129,25 @@ app.delete('/api/products/:id',(req, res) => {
 //Server listening
 app.listen(8080,() =>{
     console.log('Server started on port 8080...');
+});
+// Create server & socket
+var server = http.createServer(function(req, res)
+{
+  // Send HTML headers and message
+  res.writeHead(404, {'Content-Type': 'text/html'});
+  res.end('<h1>Aw, snap! 404</h1>');
+});
+server.listen(8080);
+io = io.listen(server);
+
+// Add a connect listener
+io.sockets.on('connection', function(socket)
+{
+  console.log('Client connected.');
+
+  // Disconnect listener
+  socket.on('disconnect', function() {
+  console.log('Client disconnected.');
+  });
 });
 //http://35.173.230.193:3000/api/electricityconsumtion
