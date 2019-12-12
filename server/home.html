@@ -3,12 +3,17 @@
 <title>Homepage</title>
 <div class="toprightcorner"><a href="/signout">Sign out</a></div>
 <body>
-<form id="userpage" method="post" action="/userpage">
+<form id="userpage" method="GET" action="/userpage">
     <button name="user" value="user">Go to userpage</button>
 </form>
-<form id="house" method="post" action="/addPicture">
+<!-- <form id="house" method="POST" action="/addPicture">
+    <p>image url:  <input type="text" name="img_url" id="img_url"></p>
     <button name="picture" value="picture">Go to userpage</button>
-</form>
+</form> -->
+<form id="house" method="POST" action="/addPicture">
+    Select a file: <input type="file" name="myFile"><br><br>
+    <input type="submit">
+  </form>
 </form>
 </body>
 </html>

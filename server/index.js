@@ -194,7 +194,7 @@ app.post('/addPicture', function(req, res) {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
                 //res.status(200).send(decoded);
-                var sqlInsertPicture = mysql.format("INSERT INTO picture (userid,picture) VALUES (?,?)", [JSON.stringify(decoded.id),req.body.picture]);
+                var sqlInsertPicture = mysql.format("INSERT INTO picture (userid,picture) VALUES (?,?)", [JSON.stringify(decoded.id),req.body.house]);
                 con.query(sqlInsertPicture, function(err,result) {
                         if(err){
                                 //??
