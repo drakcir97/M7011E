@@ -176,7 +176,25 @@ app.get('/userpage', (req, res) => {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
                 //res.status(200).send(decoded);
-                res.sendFile('user.html', {root : './'});
+                //res.sendFile('user.html', {root : './'});
+                var socket = new net.Socket();
+                //var host = parse('localhost/api/users/%s', JSON.stringify(decoded.id));
+                var host = 'localhost/api/users'
+                socket.connect(5000, host, function () {
+                        console.log("Client: Connected to server");
+                });
+
+                // Let's handle the data we get from the server
+                socket.on("data", function (data) {
+                        data = JSON.parse(data);
+                        console.log("Response from server: %s", data.response);
+                        // Respond back
+                        //socket.write(JSON.stringify({ response: "Hey there server!" }));
+                        // Close the connection
+                        socket.end();
+                        res.write(data);
+                        return res.end();
+                });
         });
         //req.body.emailaddress;
         //req.body.name;
@@ -232,7 +250,11 @@ app.post('/addPicture', function(req, res) {
                 // });
 
                 var form = new formidable.IncomingForm();
+                form.maxFileSize = 8 * 1024 * 1024;
                 form.parse(req, function (err, fields, files) {
+                        if (err) {
+                                return res.send("102: FILE TOO LARGE (8MB MAX)");
+                        }
                         var oldpath = files.picture.path;
                         var newpath = './images/userhouse/' + JSON.stringify(decoded.id)+".jpg";
                         console.log("oldpath "+oldpath);
