@@ -196,7 +196,7 @@ app.post('/addPicture', function(req, res) {
                 
                 //res.status(200).send(decoded);
                 console.log("before sqlInsertPicture");
-                var sqlInsertPicture = mysql.format("INSERT INTO picture (userid,picture) VALUES (?,?)", [JSON.stringify(decoded.id),req.body.house]);
+                var sqlInsertPicture = mysql.format("INSERT INTO picture (userid,picture) VALUES (?,?)", [JSON.stringify(decoded.id),req.body.picture]);
                 con.query(sqlInsertPicture, function(err,result) {
                         if(err){
                                 console.log("Error when inserting image into db");
