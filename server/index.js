@@ -322,7 +322,7 @@ app.post('/signup', function(req, res) {
 app.get('/createadmin', (req, res) => {
         console.log(req.body.usercaptcha); //test captcha
         console.log(req.body.p2); 
-        var sqlSignup = mysql.format("INSERT INTO user (name,email,admin) VALUES (?,?)", ['sysadmin','sysadmin@miri',true]);
+        var sqlSignup = mysql.format("INSERT INTO user (name,email,admin) VALUES (?,?,?)", ['sysadmin','sysadmin@miri',true]);
         con.query(sqlSignup, function(err,result) {
                 if (err){
                         return res.send('Admin already exists');
