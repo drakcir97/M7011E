@@ -185,13 +185,13 @@ app.get('/userpage', (req, res) => {
                 console.log('2');
 
                 // Add a connect listener
-                socket.on('connect', function(socket) { 
-                        console.log('Connected!');
-                //        socket.on('clientEvent', function (data) {
-                //                socket.emit(data);
-                //        });
+                // socket.on('connect', function(socket) { 
+                //         console.log('Connected!');
+                // //        socket.on('clientEvent', function (data) {
+                // //                socket.emit(data);
+                // //        });
                         
-                }); 
+                // }); 
 
                 socket.on('response', function (message) {
                         socket.emit('api/users',{data: "hello"});
