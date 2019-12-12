@@ -180,7 +180,7 @@ app.get('/userpage', (req, res) => {
                 
                 // Connect to server
                 var io = require('socket.io-client');
-                var socket = io.connect('http://localhost:8080/api/users', {reconnect: true});
+                var socket = io.connect('http://localhost:8080/', {reconnect: true});
 
                 console.log('2');
 
