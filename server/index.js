@@ -180,8 +180,8 @@ app.get('/userpage', (req, res) => {
                 //res.sendFile('user.html', {root : './'});
                 var socket = new net.Socket();
                 //var host = parse('localhost/api/users/%s', JSON.stringify(decoded.id));
-                var host = 'localhost/api/users'
-                socket.connect(5000, host, function () {
+                var host = 'localhost:5000/api/users'
+                socket.connect(host, function () {
                         console.log("Client: Connected to server");
                 });
 
