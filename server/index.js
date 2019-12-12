@@ -187,6 +187,9 @@ app.get('/userpage', (req, res) => {
                 // Add a connect listener
                 socket.on('connect', function(socket) { 
                         console.log('Connected!');
+                        socket.on('clientEvent', function (data) {
+                                socket.emit(data);
+                        });
                 });
 
                 console.log('3');
