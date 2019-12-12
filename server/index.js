@@ -211,7 +211,7 @@ app.post('/addPicture', function(req, res) {
                 var form = new formidable.IncomingForm();
                 form.parse(req, function (err, fields, files) {
                         var oldpath = files.picture.path;
-                        var newpath = 'server/images/userhouse' + files.picture.name;
+                        var newpath = 'home/ubuntu/M7011E/server/images/userhouse' + files.picture.name;
                         fs.rename(oldpath, newpath, function (err) {
                                 if (err) throw err;
                                 res.redirect('/');
