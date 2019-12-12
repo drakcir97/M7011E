@@ -150,7 +150,7 @@ io.sockets.on('connect', function(socket)
         let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
-            socket.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+            socket.emit('api/users',JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
     // Disconnect listener
