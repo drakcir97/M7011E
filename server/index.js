@@ -12,7 +12,7 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var formidable = require('formidable');
 var net = require("net");
-
+var io = require('socket.io-client');
 var options = {
         key: fs.readFileSync('key.pem'),
         cert: fs.readFileSync('cert.pem')
@@ -187,7 +187,7 @@ app.get('/userpage', (req, res) => {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
                 // Connect to server
-                var io = require('socket.io-client');
+                
                 var socket = io.connect('http://localhost:8080/', {reconnect: true});
 
                 console.log('2');
@@ -389,6 +389,9 @@ app.get('/home', (req, res) => {
 //      res.writeHead(200);
 //      res.end("hello");
 //}).listen(3000);
+io.on('connection', function(socket){
+        console.log('a user connected');
+      });
 https.createServer(options, app).listen(3000);
 
 
