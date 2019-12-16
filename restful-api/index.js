@@ -32,99 +32,99 @@ conn.connect((err) =>{
     console.log('Mysql Connected...');
 });
  
-//show all users
-app.get('/api/users',(req, res) => {
-    let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
-    let query = conn.query(sql, (err, results) => {
-        if(err) throw err;
-        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-});
+// //show all users
+// app.get('/api/users',(req, res) => {
+//     let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
+//     let query = conn.query(sql, (err, results) => {
+//         if(err) throw err;
+//         res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+//     });
+// });
  
-//show single user
-app.get('/api/users/:id',(req, res) => {
-    let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id="+req.params.id;
-    let query = conn.query(sql, (err, results) => {
-        if(err) throw err;
-        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-});
+// //show single user
+// app.get('/api/users/:id',(req, res) => {
+//     let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id="+req.params.id;
+//     let query = conn.query(sql, (err, results) => {
+//         if(err) throw err;
+//         res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+//     });
+// });
 
-//show windspeed & temperature
-app.get('/api/weather',(req, res) => {
-    let sql = "SELECT temperature.temperature, windspeed.windspeed, temperature.datetimeid FROM temperature INNER JOIN windspeed ON temperature.datetimeid=windspeed.locationid";
-    let query = conn.query(sql, (err, results) => {
-        if(err) throw err;
-        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-});
+// //show windspeed & temperature
+// app.get('/api/weather',(req, res) => {
+//     let sql = "SELECT temperature.temperature, windspeed.windspeed, temperature.datetimeid FROM temperature INNER JOIN windspeed ON temperature.datetimeid=windspeed.locationid";
+//     let query = conn.query(sql, (err, results) => {
+//         if(err) throw err;
+//         res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+//     });
+// });
  
-//show current electricity price
-app.get('/api/electricityprice',(req, res) => {
-    let sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
-    let query = conn.query(sql, (err, results) => {
-        if(err) throw err;
-        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-});
+// //show current electricity price
+// app.get('/api/electricityprice',(req, res) => {
+//     let sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
+//     let query = conn.query(sql, (err, results) => {
+//         if(err) throw err;
+//         res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+//     });
+// });
 
-//show current electricity price type 2
-app.get('/api/electricityprice2',(req, res) => {
-    let sql = "SELECT COUNT(id) FROM household";
-    let query = conn.query(sql, (err, results) => {
-        if(err) throw err;
-        let totalhouseholds = parseInt(JSON.stringify(results[0]['COUNT(id)']));
-        let sql = "SELECT powerin,powerout FROM powertotal ORDER BY datetimeid DESC LIMIT 1";
-        let query = conn.query(sql, (err, results) => {
-            let powerin = parseFloat(JSON.stringify(result[0]['powerin']));
-            let powerout = parseFloat(JSON.stringify(result[0]['powerout']));
-            let powercost = 0;
-            if (powerin <= powerout) {
-                powercost = powerCostHigh;    
-            } else {
-                powercost = powerCostLow;
-            }
-        });
-        res.send(JSON.stringify({"status": 200, "error": null, "response": powercost}));
-    });
-});
+// //show current electricity price type 2
+// app.get('/api/electricityprice2',(req, res) => {
+//     let sql = "SELECT COUNT(id) FROM household";
+//     let query = conn.query(sql, (err, results) => {
+//         if(err) throw err;
+//         let totalhouseholds = parseInt(JSON.stringify(results[0]['COUNT(id)']));
+//         let sql = "SELECT powerin,powerout FROM powertotal ORDER BY datetimeid DESC LIMIT 1";
+//         let query = conn.query(sql, (err, results) => {
+//             let powerin = parseFloat(JSON.stringify(result[0]['powerin']));
+//             let powerout = parseFloat(JSON.stringify(result[0]['powerout']));
+//             let powercost = 0;
+//             if (powerin <= powerout) {
+//                 powercost = powerCostHigh;    
+//             } else {
+//                 powercost = powerCostLow;
+//             }
+//         });
+//         res.send(JSON.stringify({"status": 200, "error": null, "response": powercost}));
+//     });
+// });
 
-//shows current electricity consumtion.
-app.get('/api/electricityconsumtion',(req, res) => {
-    let sql = "SELECT powerout, datetimeid FROM powertotal";
-    let query = conn.query(sql, (err, results) => {
-        if(err) throw err;
-        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-});
+// //shows current electricity consumtion.
+// app.get('/api/electricityconsumtion',(req, res) => {
+//     let sql = "SELECT powerout, datetimeid FROM powertotal";
+//     let query = conn.query(sql, (err, results) => {
+//         if(err) throw err;
+//         res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+//     });
+// });
   
-//add new product
-app.post('/api/products',(req, res) => {
-    let data = {product_name: req.body.product_name, product_price: req.body.product_price};
-    let sql = "INSERT INTO product SET ?";
-    let query = conn.query(sql, data,(err, results) => {
-        if(err) throw err;
-        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-});
+// //add new product
+// app.post('/api/products',(req, res) => {
+//     let data = {product_name: req.body.product_name, product_price: req.body.product_price};
+//     let sql = "INSERT INTO product SET ?";
+//     let query = conn.query(sql, data,(err, results) => {
+//         if(err) throw err;
+//         res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+//     });
+// });
  
-//update product
-app.put('/api/products/:id',(req, res) => {
-    let sql = "UPDATE product SET product_name='"+req.body.product_name+"', product_price='"+req.body.product_price+"' WHERE product_id="+req.params.id;
-    let query = conn.query(sql, (err, results) => {
-        if(err) throw err;
-        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-});
+// //update product
+// app.put('/api/products/:id',(req, res) => {
+//     let sql = "UPDATE product SET product_name='"+req.body.product_name+"', product_price='"+req.body.product_price+"' WHERE product_id="+req.params.id;
+//     let query = conn.query(sql, (err, results) => {
+//         if(err) throw err;
+//         res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+//     });
+// });
  
-//Delete product
-app.delete('/api/products/:id',(req, res) => {
-    let sql = "DELETE FROM product WHERE product_id="+req.params.id+"";
-    let query = conn.query(sql, (err, results) => {
-        if(err) throw err;
-        res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
-    });
-});
+// //Delete product
+// app.delete('/api/products/:id',(req, res) => {
+//     let sql = "DELETE FROM product WHERE product_id="+req.params.id+"";
+//     let query = conn.query(sql, (err, results) => {
+//         if(err) throw err;
+//         res.send(JSON.stringify({"status": 200, "error": null, "response": results}));
+//     });
+// });
  
 //Server listening
 // app.listen(8080,() =>{
@@ -146,15 +146,120 @@ io.sockets.on('connect', function(socket)
     console.log('Client connected.');
     socket.emit("response",{response: "Connected to API"});
 
-    socket.on('api/users', function(data) {
+    //show all users
+    socket.on('/api/users', function(data) {
         let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
         let query = conn.query(sql, (err, results) => {
             if(err) {
                 console.log(err);
             }
-            socket.emit('api/users',JSON.stringify({"status": 200, "error": null, "response": results}));
+            socket.emit('/api/users',JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
+    
+    //show single user
+    socket.on('/api/users/:id', function(data) {
+        let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id="+req.params.id;
+        let query = conn.query(sql, (err, results) => {
+            if(err) throw err;
+            socket.emit('/api/users/id', JSON.stringify({"status": 200, "error": null, "response": results}));
+        });
+    });
+
+    //show windspeed & temperature
+    socket.on('/api/weather', function(data) {
+        let sql = "SELECT temperature.temperature, windspeed.windspeed, temperature.datetimeid FROM temperature INNER JOIN windspeed ON temperature.datetimeid=windspeed.locationid";
+        let query = conn.query(sql, (err, results) => {
+            if(err) throw err;
+            socket.emit('/api/weather', JSON.stringify({"status": 200, "error": null, "response": results}));
+        });
+    });
+    
+    //show current electricity price
+    socket.on('/api/electricityprice', function(data) {
+        let sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
+        let query = conn.query(sql, (err, results) => {
+            if(err) throw err;
+            socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": results}));
+        });
+    });
+
+    //show current electricity price type 2
+    socket.on('/api/electricityprice2', function(data) {
+        let sql = "SELECT COUNT(id) FROM household";
+        let query = conn.query(sql, (err, results) => {
+            if(err) throw err;
+            let totalhouseholds = parseInt(JSON.stringify(results[0]['COUNT(id)']));
+            let sql = "SELECT powerin,powerout FROM powertotal ORDER BY datetimeid DESC LIMIT 1";
+            let query = conn.query(sql, (err, results) => {
+                let powerin = parseFloat(JSON.stringify(result[0]['powerin']));
+                let powerout = parseFloat(JSON.stringify(result[0]['powerout']));
+                let powercost = 0;
+                if (powerin <= powerout) {
+                    powercost = powerCostHigh;    
+                } else {
+                    powercost = powerCostLow;
+                }
+            });
+            socket.emit('/api/eletricityprice2', JSON.stringify({"status": 200, "error": null, "response": powercost}));
+        });
+    });
+
+    //shows current electricity consumtion.
+    socket.on('/api/electricityconsumtion', function(data) {
+        let sql = "SELECT powerout, datetimeid FROM powertotal";
+        let query = conn.query(sql, (err, results) => {
+            if(err) throw err;
+            socket.emit('/api/electricityconsumtion', JSON.stringify({"status": 200, "error": null, "response": results}));
+        });
+    });
+    
+    //add new product
+    socket.on('/api/products', function(data) {
+        let data = {product_name: req.body.product_name, product_price: req.body.product_price};
+        let sql = "INSERT INTO product SET ?";
+        let query = conn.query(sql, data,(err, results) => {
+            if(err) throw err;
+            socket.emit('/api/products', JSON.stringify({"status": 200, "error": null, "response": results}));
+        });
+    });
+    
+    //update product
+    socket.on('/api/products/:id', function(data) {
+        let sql = "UPDATE product SET product_name='"+req.body.product_name+"', product_price='"+req.body.product_price+"' WHERE product_id="+req.params.id;
+        let query = conn.query(sql, (err, results) => {
+            if(err) throw err;
+            socket.emit('/api/products/id', JSON.stringify({"status": 200, "error": null, "response": results}));
+        });
+    });
+    
+    //Delete product
+    socket.on('/api/products/:id', function(data) {
+        let sql = "DELETE FROM product WHERE product_id="+req.params.id+"";
+        let query = conn.query(sql, (err, results) => {
+            if(err) throw err;
+            socket.emit('/api/products/id', JSON.stringify({"status": 200, "error": null, "response": results}));
+        });
+    });
+
+    //Creates user
+    socket.on('/api/createuser', function(data) {
+        console.log(data);
+        var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?",[data[0]['location']]);
+        conn.query(sqlLocation, (err, results) => {
+            try {
+                var locationid = result[0]['id'];
+            } catch(e) {
+                //Create new location here.
+                var sqlNewHousehold = mysql.format('INSERT INTO household (locationid,housetype) VALUES (?,?)',[locationid,data[0]['housetype']]);
+                conn.query(sqlNewHousehold, (err, results) => {
+                    if (err) throw err;
+                    
+                });
+            }
+        });
+    });
+
     // Disconnect listener
     socket.on('disconnect', function() {
         console.log('Client disconnected.');
