@@ -393,10 +393,9 @@ var temp = https.createServer(options, app).listen(3000);
 
 // Connect to server
 var io = require('socket.io')(temp);
-var socketTest = io.connect('http://localhost:8080/', {reconnect: true});
 
 //check if someone logged in
-socketTest.on('connection', function(socketTest){
+io.on('connection', function(socket){
         console.log('a user connected');
 });
 //var ioTest = require('socket.io').listen(temp)
