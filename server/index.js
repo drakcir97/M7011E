@@ -82,6 +82,16 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', function(req, res) {
+        io.on('connection', function(socket){
+                var token = req.cookies.token;
+                if (!token) {
+                        return res.status(401).end()
+                }
+                jwt.verify(token, authenticator.secret, function(err, decoded) {
+                        if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                        console.log("the user with id "+JSON.stringify(decoded.id)+" is connected!");
+                });
+        });
         //res.send('you sent the name "' + req.body.username + '".');
 //        var testEncrypt = saltHashPassword(req.body.userpassword);
 //        res.send("salt: "+testEncrypt.salt+" hash: "+testEncrypt.passwordHash);
@@ -394,17 +404,6 @@ var temp = https.createServer(options, app).listen(3000);
 // Connect to server
 var io = require('socket.io')(temp);
 
-//check if someone logged in
-io.on('connection', function(socket){
-        var token = req.cookies.token;
-        if (!token) {
-                return res.status(401).end()
-        }
-        jwt.verify(token, authenticator.secret, function(err, decoded) {
-                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-                console.log("the user with id "+JSON.stringify(decoded.id)+" is connected!");
-        });
-});
 //var ioTest = require('socket.io').listen(temp)
 
 
