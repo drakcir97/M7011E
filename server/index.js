@@ -396,7 +396,14 @@ var io = require('socket.io')(temp);
 
 //check if someone logged in
 io.on('connection', function(socket){
-        console.log('a user connected');
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                console.log("the user with id "+JSON.stringify(decoded.id)+" is connected!");
+        });
 });
 //var ioTest = require('socket.io').listen(temp)
 
