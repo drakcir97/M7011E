@@ -170,6 +170,14 @@ app.get('/signout', (req, res) => {
         
 });
 
+app.get('/usersOnline', (req, res) => {
+        res.sendFile('onlineStatus.html', {root : './'});
+        //req.body.emailaddress;
+        //req.body.name;
+        //req.body.userpassword;
+        
+});
+
 app.get('/userpage', (req, res) => {
         var token = req.cookies.token;
         if (!token) {
