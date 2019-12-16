@@ -12,7 +12,6 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var formidable = require('formidable');
 var net = require("net");
-var ioTest = require('socket.io')(app)
 var options = {
         key: fs.readFileSync('key.pem'),
         cert: fs.readFileSync('cert.pem')
@@ -391,8 +390,9 @@ app.get('/home', (req, res) => {
 //}).listen(3000);
 
 https.createServer(options, app).listen(3000);
+var ioTest = require('socket.io').listen(app)
 ioTest.on('connection', function(socket){
         console.log('a user connected');
-      });
+});
 
 
