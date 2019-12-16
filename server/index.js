@@ -389,11 +389,11 @@ app.get('/home', (req, res) => {
 //      res.end("hello");
 //}).listen(3000);
 
-https.createServer(options, app).listen(3000);
+var temp = https.createServer(options, app).listen(3000);
 
 // Connect to server
-var ioTest = require('socket.io-client');
-var socketTest = ioTest.connect('http://localhost:8080/', {reconnect: true});
+var io = require('socket.io')(temp);
+var socketTest = io.connect('http://localhost:8080/', {reconnect: true});
 
 //check if someone logged in
 socketTest.on('connection', function(socketTest){
