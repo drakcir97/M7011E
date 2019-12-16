@@ -82,7 +82,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/login', function(req, res) {
-        
         //res.send('you sent the name "' + req.body.username + '".');
 //        var testEncrypt = saltHashPassword(req.body.userpassword);
 //        res.send("salt: "+testEncrypt.salt+" hash: "+testEncrypt.passwordHash);
@@ -394,12 +393,10 @@ var temp = https.createServer(options, app).listen(3000);
 
 // Connect to server
 var io = require('socket.io')(temp);
-io.on('connection', function(socket){
-        console.log("a users is connected")
-});
 
-io.on('disconnect', function(){
-        console.log('user disconnected');
+//check if someone logged in
+io.on('connection', function(socket){
+        console.log('a user connected');
 });
 //var ioTest = require('socket.io').listen(temp)
 
