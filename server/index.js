@@ -390,8 +390,8 @@ app.get('/home', (req, res) => {
 //}).listen(3000);
 
 const temp = https.createServer(options, app).listen(3000);
-var ioTest = require('socket.io').listen(temp)
-var socketTest = ioTest.connect('https://3.95.190.134:3000/', {reconnect: true});
+var io = require('socket.io').listen(temp)
+var socketTest = io.connect('https://3.95.190.134:3000/', {reconnect: true});
 ioTest.on('connection', function(socketTest){
         console.log('a user connected');
 });
