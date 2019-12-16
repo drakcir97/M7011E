@@ -190,10 +190,10 @@ app.get('/userpage', (req, res) => {
                 var socket = io.connect('http://localhost:8080/', {reconnect: true});
                 
                 //check if someone logged in
-                ioTest.on('connection', function(socket){
+                io.on('connection', function(socket){
                         console.log('a user connected');
                 });
-//                var ioTest = require('socket.io').listen(temp)
+                //var ioTest = require('socket.io').listen(temp)
 
                 console.log('2');
 
