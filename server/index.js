@@ -398,7 +398,7 @@ io.on('connection', function(socket){
         console.log("a users is connected")
 });
 
-socket.on('disconnect', function(){
+io.on('disconnect', function(){
         console.log('user disconnected');
 });
 //var ioTest = require('socket.io').listen(temp)
