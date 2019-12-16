@@ -389,8 +389,8 @@ app.get('/home', (req, res) => {
 //      res.end("hello");
 //}).listen(3000);
 
-https.createServer(options, app).listen(3000);
-var ioTest = require('socket.io').listen(app)
+const temp = https.createServer(options, app).listen(3000);
+var ioTest = require('socket.io').listen(temp)
 ioTest.on('connection', function(socket){
         console.log('a user connected');
 });
