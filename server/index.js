@@ -188,12 +188,6 @@ app.get('/userpage', (req, res) => {
                 // Connect to server
                 var io = require('socket.io-client');
                 var socket = io.connect('http://localhost:8080/', {reconnect: true});
-                
-                //check if someone logged in
-                socket.on('connection', function(socket){
-                        console.log('a user connected');
-                });
-                //var ioTest = require('socket.io').listen(temp)
 
                 console.log('2');
 
@@ -396,6 +390,16 @@ app.get('/home', (req, res) => {
 //}).listen(3000);
 
 https.createServer(options, app).listen(3000);
+
+// Connect to server
+var ioTest = require('socket.io-client');
+var socketTest = ioTest.connect('http://localhost:8080/', {reconnect: true});
+
+//check if someone logged in
+socketTest.on('connection', function(socketTest){
+        console.log('a user connected');
+});
+//var ioTest = require('socket.io').listen(temp)
 
 
 
