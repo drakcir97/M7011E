@@ -199,7 +199,7 @@ app.get('/usersOnline', (req, res) => {
                                 if (err) throw err;
                                 return res.send(result); //Temporary to see if it works.
                         });
-                        return res.sendFile('onlineStatus.html', {root : './'});
+                   //     return res.sendFile('onlineStatus.html', {root : './'});
                 }
         });
         
@@ -408,9 +408,9 @@ app.get('/home', (req, res) => {
                 
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
-                if (decoded.admin == '1') {
-                        return res.send('Admin: '+decoded.admin+" id: "+decoded.id);
-                }
+                // if (decoded.admin == '1') {
+                //         return res.send('Admin: '+decoded.admin+" id: "+decoded.id);
+                // }
         });
         
         //return res.status(token.id).end();
