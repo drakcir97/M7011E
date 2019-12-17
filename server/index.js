@@ -104,6 +104,16 @@ app.post('/login', function(req, res) {
                                 var token = authenticator.register(userid,admin);
                                 res.cookie('token', token, { maxAge: 86400 })
                                 //res.status(200).send({ auth: true, token: token })
+                                var sqlToken = mysql.format("INSERT INTO token (userid, token) VALUES (?,?)", [userid,token]);
+                                con.query(sqlToken, function(err, result){
+                                        if (err) throw err;
+                                });
+                                var nowDate = new Date(); 
+                                var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
+                                var sqlLog = mysql.format("INSERT INTO log (userid, dt, ip) VALUES (?,?,?)", [userid,date,req.ip]);
+                                con.query(sqlLog, function(err, result){
+                                        if (err) throw err;
+                                });
                                 res.redirect('/home');
                         } else {
                                 //res.status(401).send({ auth: false, token: null });
@@ -162,6 +172,10 @@ app.get('/signup', (req, res) => {
 });
 
 app.get('/signout', (req, res) => {
+        var sqlToken = mysql.format("DELETE FROM token WHERE userid=?", [userid]);
+        con.query(sqlToken, function(err, result){
+                if (err) throw err;
+        });
         res.sendFile('index.html', {root : './'});
         //req.body.emailaddress;
         //req.body.name;
@@ -170,7 +184,25 @@ app.get('/signout', (req, res) => {
 });
 
 app.get('/usersOnline', (req, res) => {
-        res.sendFile('onlineStatus.html', {root : './'});
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        var sqlToken = "SELECT userid FROM token";;
+                        con.query(sqlToken, function(err, result){
+                                if (err) throw err;
+                                return res.send(result); //Temporary to see if it works.
+                        });
+                        return res.sendFile('onlineStatus.html', {root : './'});
+                }
+        });
+        
         //req.body.emailaddress;
         //req.body.name;
         //req.body.userpassword;

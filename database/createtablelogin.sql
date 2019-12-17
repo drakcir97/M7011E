@@ -24,3 +24,20 @@ CREATE TABLE IF NOT EXISTS picture (
     PRIMARY KEY (id),
     FOREIGN KEY (userid) REFERENCES user(id)
 );
+
+CREATE TABLE IF NOT EXISTS token (
+    id int NOT NULL AUTO_INCREMENT,
+    userid int UNIQUE,
+    token MEDIUMBLOB,
+    PRIMARY KEY (id),
+    FOREIGN KEY (userid) REFERENCES user(id)
+);
+
+CREATE TABLE IF NOT EXISTS log (
+    id int NOT NULL AUTO_INCREMENT,
+    userid int NOT NULL,
+    dt datetime NOT NULL,
+    ip char(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (userid) REFERENCES user(id)
+);
