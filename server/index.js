@@ -380,6 +380,17 @@ app.get('/home', (req, res) => {
                         return res.send('Admin: '+decoded.admin+" id: "+decoded.id);
                 }
         });
+        // Connect to server
+        var io = require('socket.io')(temp);
+
+        //check if someone logged in
+        io.on('connection', function(socket){
+                console.log('a user connected');
+
+                socket.on('disconnect', function(){
+                        console.log('user disconnected');
+                });
+        });
         //return res.status(token.id).end();
         return res.sendFile('home.html', {root : './'});
 });
