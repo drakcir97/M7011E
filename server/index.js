@@ -108,9 +108,10 @@ app.post('/login', function(req, res) {
                                 con.query(sqlToken, function(err, result){
                                         if (err) throw err;
                                 });
-                                var nowDate = new Date(); 
-                                var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
-                                var sqlLog = mysql.format("INSERT INTO log (userid, dt, ip) VALUES (?,?,?)", [userid,date,req.ip]);
+                                var dateTime = require('node-datetime');
+                                var dt = dateTime.create();
+                                var formatted = dt.format('Y-m-d H:M:S');
+                                var sqlLog = mysql.format("INSERT INTO log (userid, dt, ip) VALUES (?,?,?)", [userid,formatted,req.ip]);
                                 con.query(sqlLog, function(err, result){
                                         if (err) throw err;
                                 });
@@ -202,7 +203,7 @@ app.get('/usersOnline', (req, res) => {
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
-                        var sqlToken = "SELECT userid FROM token";;
+                        var sqlToken = "SELECT user.name, user.id FROM token INNER JOIN user ON token.userid=user.id";
                         con.query(sqlToken, function(err, result){
                                 if (err) throw err;
                                 return res.send(result); //Temporary to see if it works.
