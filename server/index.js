@@ -172,9 +172,17 @@ app.get('/signup', (req, res) => {
 });
 
 app.get('/signout', (req, res) => {
-        var sqlToken = mysql.format("DELETE FROM token WHERE userid=?", [userid]);
-        con.query(sqlToken, function(err, result){
-                if (err) throw err;
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+
+                var sqlToken = mysql.format("DELETE FROM token WHERE userid=?", [decoded.id]);
+                con.query(sqlToken, function(err, result){
+                        if (err) throw err;
+                });
         });
         res.sendFile('index.html', {root : './'});
         //req.body.emailaddress;
