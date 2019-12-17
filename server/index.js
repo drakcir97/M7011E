@@ -77,8 +77,13 @@ function HashPassword(userpassword) {
 
 
 app.get('/', (req, res) => {
-      res.sendFile('index.html', {root : './'})
-      //__dirname : It will resolve to your project folder.
+        var token = req.cookies.token;
+        if (!token) {
+                return res.sendFile('index.html', {root : './'})
+        } else {
+                return res.redirect('/home');
+        }
+        //__dirname : It will resolve to your project folder.
 });
 
 app.post('/login', function(req, res) {
