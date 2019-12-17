@@ -401,7 +401,8 @@ io.on('connection', function(socket){
         socket.on('chat message', function(msg){
                 console.log('message: ' + msg);
         });
-        io.sockets.clients()
+        var srvSockets = io.sockets.sockets;
+        console.log(Object.keys(srvSockets).length);
         socket.on('disconnect', function(){
                 console.log('user disconnected');
         });
