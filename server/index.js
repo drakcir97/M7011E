@@ -184,11 +184,12 @@ app.get('/signout', (req, res) => {
         }
         jwt.verify(token, authenticator.secret, function(err, decoded) {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-
+                
                 var sqlToken = mysql.format("DELETE FROM token WHERE userid=?", [decoded.id]);
                 con.query(sqlToken, function(err, result){
                         if (err) throw err;
                 });
+                res.clearCookie("token");
         });
         res.sendFile('index.html', {root : './'});
         //req.body.emailaddress;
