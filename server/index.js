@@ -203,7 +203,7 @@ app.get('/usersOnline', (req, res) => {
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
-                        var sqlToken = "SELECT user.name, user.id FROM token INNER JOIN user ON token.userid=user.id";
+                        var sqlToken = "SELECT user.email, user.id FROM token INNER JOIN user ON token.userid=user.id";
                         con.query(sqlToken, function(err, result){
                                 if (err) throw err;
                                 return res.send(result); //Temporary to see if it works.
@@ -438,13 +438,15 @@ app.get('/home', (req, res) => {
                 
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
-                // if (decoded.admin == '1') {
-                //         return res.send('Admin: '+decoded.admin+" id: "+decoded.id);
-                // }
+                if (decoded.admin == '1') {
+                        return res.sendFile('homeadmin.html', {root : './'});
+                } else {
+                        return res.sendFile('home.html', {root : './'});
+                }
         });
         
         //return res.status(token.id).end();
-        return res.sendFile('home.html', {root : './'});
+        
 });
 
 //https.createServer(options, function (req, res) {
