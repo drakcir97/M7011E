@@ -217,6 +217,27 @@ app.get('/usersOnline', (req, res) => {
         
 });
 
+app.get('/log', (req, res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        var sqlToken = "SELECT userid,dt,ip FROM log";;
+                        con.query(sqlToken, function(err, result){
+                                if (err) throw err;
+                                return res.send(result); //Temporary to see if it works.
+                        });
+                   //     return res.sendFile('onlineStatus.html', {root : './'});
+                }
+        });
+});
+
 app.get('/userpage', (req, res) => {
         var token = req.cookies.token;
         if (!token) {
