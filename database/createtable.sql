@@ -76,6 +76,14 @@ CREATE TABLE IF NOT EXISTS powergenerated (
 	FOREIGN KEY (datetimeid) REFERENCES datet(id)
 );
 
+CREATE TABLE IF NOT EXISTS powerstored (
+	i int NOT NULL AUTO_INCREMENT,
+	householdid int NOT NULL,
+	value float NOT NULL,
+	PRIMARY KEY (i),
+	FOREIGN KEY (householdid) REFERENCES household(id)
+);
+
 CREATE TABLE IF NOT EXISTS powertotal (
 	i int NOT NULL AUTO_INCREMENT,
 	powerin float NOT NULL,

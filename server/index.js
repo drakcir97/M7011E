@@ -111,14 +111,18 @@ app.post('/login', function(req, res) {
                                 //res.status(200).send({ auth: true, token: token })
                                 var sqlToken = mysql.format("INSERT INTO token (userid, token) VALUES (?,?)", [userid,token]);
                                 con.query(sqlToken, function(err, result){
-                                        if (err) throw err;
+                                        if (err) {
+                                                console.log(err);
+                                        }
                                 });
                                 var dateTime = require('node-datetime');
                                 var dt = dateTime.create();
                                 var formatted = dt.format('Y-m-d H:M:S');
                                 var sqlLog = mysql.format("INSERT INTO log (userid, dt, ip) VALUES (?,?,?)", [userid,formatted,req.ip]);
                                 con.query(sqlLog, function(err, result){
-                                        if (err) throw err;
+                                        if (err) {
+                                                console.log(err);
+                                        }
                                 });
                                 res.redirect('/home');
                         } else {
@@ -428,6 +432,17 @@ app.get('/createadmin', (req, res) => {
                                         return res.send('Admin was created');  
                                 });
                         });
+                }
+        });
+});
+
+app.get('/purgelogin', (req, res) => { //Added so we can remove login tokens from db.
+        var sqlPurge = "DELETE FROM token";
+        con.query(sqlPurge, function(err,result) {
+                if (err) {
+                        console.log(err);
+                } else {
+                        return res.send('Tokens were removed!');
                 }
         });
 });
