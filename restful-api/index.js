@@ -270,7 +270,21 @@ io.sockets.on('connect', function(socket)
                 return socket.emit('/api/buffer', JSON.stringify({"status": 200, "error": null, "response": results}));
             }
         });
-    })
+    });
+
+    socket.on('/api/settings', function(data) {
+        var id = data.id;
+        var ratiokeep = data.ratiokeep;
+        var ratiosell = data.ratiosell;
+        var sqlSettings = mysql.format("INSERT INTO simulationsettings (userid, ratiokeep, ratiosell) VALUES (?,?,?)", [id,ratiokeep,ratiosell]);
+        conn.query(sqlSettings, (err, results) => {
+            if (err) {
+                console.log(err);
+            } else {
+                return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
+            }
+        });
+    });
 
     // Disconnect listener
     socket.on('disconnect', function() {

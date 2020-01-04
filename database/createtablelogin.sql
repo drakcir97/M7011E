@@ -8,6 +8,15 @@ CREATE TABLE IF NOT EXISTS user (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS simulationsettings (
+    id int NOT NULL AUTO_INCREMENT,
+    userid int NOT NULL UNIQUE,
+    ratiokeep float NOT NULL,
+    ratiosell float NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (userid) REFERENCES user(id)
+);
+
 CREATE TABLE IF NOT EXISTS passwords (
     id int NOT NULL AUTO_INCREMENT,
     userid int NOT NULL UNIQUE,

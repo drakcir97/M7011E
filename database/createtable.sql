@@ -102,3 +102,12 @@ CREATE TABLE IF NOT EXISTS powercosthousehold (
 	FOREIGN KEY (householdid) REFERENCES household(id),
 	FOREIGN KEY (datetimeid) REFERENCES datet(id)
 );
+
+CREATE TABLE IF NOT EXISTS simulationsettings (
+    id int NOT NULL AUTO_INCREMENT,
+    userid int NOT NULL UNIQUE,
+    ratiokeep float NOT NULL,
+    ratiosell float NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (userid) REFERENCES user(id)
+);
