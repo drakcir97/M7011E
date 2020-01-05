@@ -25,3 +25,4 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2019-12-17  | 3       | Admin startpage, active sessions, logging ips and cookie removal on logout. |
 | 2020-1-3    | 2       | Early work on buffer, added debug to remove tokens. Started on report. |
 | 2020-1-4    | 2       | Added ability to change settings in simulator using API, added function for settings in server. |
+| 2020-1-4    | 2       | Added page to change settings, not implemented fully yet. |

@@ -1,0 +1,23 @@
+<html>
+<head>
+<title>Settings</title>
+</body>
+<body>
+
+<h1>Current settings: </h1>
+
+<h1>Change settings: </h1>
+<form id="settings" method="post" action="/settings">
+    <p>Ratio to keep in buffer: </p>
+    <input type="range" name="ratiokeep" id="ratiokeep" value="0.5" min="0" max="1" step="0.1" oninput="keepOutputId.value = ratiokeep.value">
+    <output name="keepOutputName" id="keepOutputId">0.5</output>
+    <p>Ratio to sell to market: </p>
+    <input type="range" name="ratiosell" id="ratiosell" value="0.5" min="0" max="1" step="0.1" oninput="sellOutputId.value = ratiosell.value">
+    <output name="sellOutputName" id="sellOutputId">0.5</output>
+<input type="hidden" id="p2" name="p2" value="2">
+
+<p><input type="Submit" value="Submit"></p>
+</form>
+</body>
+</html>
+

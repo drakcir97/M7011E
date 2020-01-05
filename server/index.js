@@ -448,7 +448,16 @@ app.get('/purgelogin', (req, res) => { //Added so we can remove login tokens fro
 });
 
 app.get('/settings', (req, res) => {
-
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                return res.sendFile('settings.html', {root : './'});
+        });
 });
 
 app.post('/settings', function(req, res) {
@@ -460,10 +469,10 @@ app.post('/settings', function(req, res) {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
                 //res.status(200).send(decoded);
-                var ratiokeep;
-                var ratiosell;
-                var sqlSettings = mysql.format("INSERT INTO simulationsettings (userid, ratiokeep, ratiosell) VALUES (?,?,?)", [id,ratiokeep,ratiosell]);
-                con.query(sqlSettings, function(err,result) {
+                var ratiokeep = req.body.ratiokeep;
+                var ratiosell = req.body.ratiosell;
+                var sqlSettings = mysql.format("INSERT INTO simulationsettings (userid, ratiokeep, ratiosell) VALUES (?,?,?)", [decoded.id,ratiokeep,ratiosell]);
+                con.query(sqlSettings, function(err,result) { //Insert into 'local' settings.
                         if (err) {
                                 console.log(err);
                         } else {
@@ -473,7 +482,7 @@ app.post('/settings', function(req, res) {
 
                                 socket.on('response', function (message) { 
                                         //Send data to api containing new settings user set.
-                                        socket.emit('/api/settings',{id: decoded.id, ratiokeep: ratiokeep, ratiosell: ratiosell});
+                                        socket.emit('/api/settings',{id: decoded.id, ratiokeep: ratiokeep, ratiosell: ratiosell}); //Send settings to api.
                                         console.log(message);
                                 });
                                 
