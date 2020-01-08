@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS powergenerated (
 
 CREATE TABLE IF NOT EXISTS powerstored (
 	i int NOT NULL AUTO_INCREMENT,
-	householdid int NOT NULL,
+	householdid int NOT NULL UNIQUE,
 	value float NOT NULL,
 	PRIMARY KEY (i),
 	FOREIGN KEY (householdid) REFERENCES household(id)

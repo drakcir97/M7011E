@@ -305,34 +305,82 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 	var powerusage = 0;
 	var powersum = 0;
 	var powercost = 0;
-	var sqlGen = mysql.format("SELECT value FROM powergenerated WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-	con.query(sqlGen, function (err, result) {
-		powergenerated = parseFloat(JSON.stringify(result[0].value));
-		var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-		con.query(sqlUsage, function (err, result) {
-			powerusage = parseFloat(JSON.stringify(result[0].value));
-			powersum = powergenerated - powerusage;
-			if(powersum >= 0) {
-				powercost = powerCostLow*powersum;
-			} else {
-				if (totalin>totalout) {
-					powercost = -powerCostLow*powersum;
-				} else {
-					if ((powersum + totalin/totalhouseholds) > 0) {
+	var powerkeep = 0;
+	var sqlSettings = mysql.format("SELECT simulationsettings.ratiokeep,simulationsettings.ratiosell FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
+	con.query(sqlSettings, function(err,result) {
+		var ratiokeep = result[0]['simulationsettings.ratiokeep'];
+		var ratiosell = result[0]['simulationsettings.ratiosell'];
+		var sqlGen = mysql.format("SELECT value FROM powergenerated WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+		con.query(sqlGen, function (err, result) {
+			powergenerated = parseFloat(JSON.stringify(result[0].value));
+			var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+			con.query(sqlUsage, function (err, result) {
+				powerusage = parseFloat(JSON.stringify(result[0].value));
+				powersum = powergenerated - powerusage;
+				if(powersum >= 0) { //We generated excess power.
+					powerkeep = powersum * (1-ratiosell); //Keep amount of power from settings
+					await putinbuffer(householdid,powerkeep); //Put power stored into buffer. Powerkeep is positive.
+					powercost = powerCostLow*(powersum * ratiosell);
+				} else { //We need to buy power.
+					var powerneededfrombuffer = -(1-ratiokeep) * powersum;
+					var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
+					powersum += powerfrombuffer; //Add power we got from buffer, will still be negative.
+					if (totalin>totalout) {
 						powercost = powerCostLow*powersum;
 					} else {
-						var powerCheap = totalin/totalhouseholds;
-						var powerExpensive = (powersum+powerCheap);
-						powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+						if ((powersum + totalin/totalhouseholds) > 0) {
+							powercost = powerCostLow*powersum;
+						} else {
+							var powerCheap = totalin/totalhouseholds;
+							var powerExpensive = (powersum+powerCheap);
+							powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+						}
 					}
-				}
-			} 
-			var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
-			con.query(sqlCost, function(err, result) {
-				if (err) throw err;
+				} 
+				var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+				con.query(sqlCost, function(err, result) {
+					if (err) throw err;
+				});
 			});
 		});
 	});
+}
+
+//Put powertobuffer into buffer in database.
+async function putinbuffer(householdid,powertobuffer) {
+	var buffer = 0;
+	var sqlBuffer = mysql.format("SELECT value FROM powerstored WHERE householdid=?", [householdid]);
+	con.query(sqlBuffer, function(err, result) {
+		if (err) throw err;
+		buffer = result[0]['value']; //Get old value
+	});
+	var sqlBuffer = mysql.format("UPDATE powerstored SET value=? WHERE householdid=?",[buffer+powertobuffer,householdid]); //Update to new value.
+	con.query(sqlBuffer, function(err, result) {
+		if (err) throw err;
+	});
+};
+
+//Get powerneeded amount of power from buffer in database. If excess, store it. Return number of power the buffer can max supply up to powerneeded.
+async function getfrombuffer(householdid,powerneeded) {
+	var buffer = 0;
+	var sqlBuffer = mysql.format("SELECT value FROM powerstored WHERE householdid=?", [householdid]);
+	con.query(sqlBuffer, function(err, result) {
+		if (err) throw err;
+		buffer = result[0]['value']; //Get old value
+	});
+	if (buffer<powerneeded) { //There is less power then we need in buffer.
+		var sqlBuffer = mysql.format("UPDATE powerstored SET value=? WHERE householdid=?",[0,householdid]); //0 power remaining.
+		con.query(sqlBuffer, function(err, result) {
+			if (err) throw err;
+			return buffer; //Return everything we had in buffer.
+		});
+	} else {
+		var sqlBuffer = mysql.format("UPDATE powerstored SET value=? WHERE householdid=?",[buffer-powerneeded,householdid]); //Update power remaining.
+		con.query(sqlBuffer, function(err, result) {
+			if (err) throw err;
+			return powerneeded; //Return power we needed.
+		});
+	}
 }
 
 async function generatePowerTotal(dateid,callback) {
