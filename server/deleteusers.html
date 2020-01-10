@@ -15,11 +15,12 @@
 </form> -->
 <script>
     function myFunction() {
-   //   document.forms['demo'].submit();
-      var nameValue = window.frames['iframe'].document.body.outerHTML;
-      var obj = JSON.parse(nameValue);
-   //    var nameValue = document.getElementById("demo").value;
-      document.getElementById("test").innerHTML = nameValue[0].email;
+
+        //document.forms['demo'].submit();
+        var nameValue = window.frames['iframe'].document.body.outerHTML;
+        //var obj = JSON.parse(nameValue);
+        //document.getElementById("test").innerHTML = nameValue[0].email
+        document.getElementById("test").innerHTML = nameValue;
     }
     </script>
 <form id="deleteusers" method="post" action="/deleteusers">
