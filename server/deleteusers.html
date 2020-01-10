@@ -17,9 +17,9 @@
     function myFunction() {
 
         //document.forms['demo'].submit();
-        var nameValue = window.frames['iframe'].document.body.innerHTML.text();
+        var nameValue = window.frames['iframe'].document.body;
         //document.getElementById("test").innerHTML = nameValue[0].email
-        document.getElementById("test").innerHTML = nameValue;
+        document.getElementById("test").innerHTML = nameValue.innerHTML;
     }
     </script>
 <form id="deleteusers" method="post" action="/deleteusers">
