@@ -16,9 +16,8 @@
 <script>
     function myFunction() {
    //   document.forms['demo'].submit();
-      var nameValue = window.frames['iframe'].document.body.outerHTML;
+      var nameValue = window.frames['iframe'].document.body.innerHTML;
    //   var lengthnameValue = nameValue.length;
-   //   var obj = JSON.parse(nameValue)
    //   var nameValue = document.getElementById("demo").value;
       document.getElementById("test").innerHTML = nameValue;
     }
