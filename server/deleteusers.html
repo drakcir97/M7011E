@@ -18,9 +18,7 @@
 
         //document.forms['demo'].submit();
         var nameValue = window.frames['iframe'].document.body.outerHTML;
-        var obj = JSON.parse(nameValue);
         //document.getElementById("test").innerHTML = nameValue[0].email
-        //usersinfo not sending json data? cant parse it.
         document.getElementById("test").innerHTML = obj[0].email;
     }
     </script>
