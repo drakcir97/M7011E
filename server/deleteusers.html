@@ -24,7 +24,7 @@
         var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
 
         var theJson = theDoc.body.innerHTML;
-        alert(theJson);
+        alert(theJson.text());
     }
     </script>
 <form id="deleteusers" method="post" action="/deleteusers">
