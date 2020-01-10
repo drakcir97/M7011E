@@ -436,7 +436,7 @@ app.get('/createadmin', (req, res) => {
         });
 });
 
-app.get('/deleteuser', (req, res) => {
+app.get('/deleteusers', (req, res) => {
         var token = req.cookies.token;
         if (!token) {
                 return res.status(401).end()
@@ -447,12 +447,31 @@ app.get('/deleteuser', (req, res) => {
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
-                        var sqlToken = "SELECT user.email, user.id FROM use";
-                        con.query(sqlToken, function(err, result){
-                                if (err) throw err;
-                                return res.send(result); //Temporary to see if it works.
+                        return res.sendFile('deleteusers.html', {root : './'});
+                }
+        });
+});
+
+app.post('/deleteusers', function(req, res) {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        var inp = req.body.userid;
+                        var sqlDelete = mysql.format("SELECT user.id FROM user WHERE id=?", [inp]);
+                        con.query(sqlDelete, (err, results) => {
+                                if (err) {
+                                        console.log(err);
+                                } else {
+                                        return res.send(results);
+                                }
                         });
-                   //     return res.sendFile('onlineStatus.html', {root : './'});
                 }
         });
 });
