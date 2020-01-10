@@ -9,8 +9,8 @@
 <div class="topleftcorner"><a href="/settings">Settings</a></div>
 </form>
 <p id="test"> </p>
-<iframe name="formTarget" style="display:none;"></iframe>
-<form id="demo" method="GET" action="/usersinfo" name="demo" target="formTarget">
+<iframe name="iframe" width="0" height="0" tabindex="-1" class="hidden"></iframe>
+<form id="demo" method="GET" action="/usersinfo" name="demo" target="iframe">
     <button name="status" value="status">Get data</button>
 </form>
 <script>
