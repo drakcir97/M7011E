@@ -436,6 +436,27 @@ app.get('/createadmin', (req, res) => {
         });
 });
 
+app.get('/deleteuser', (req, res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        var sqlToken = "SELECT user.email, user.id FROM use";
+                        con.query(sqlToken, function(err, result){
+                                if (err) throw err;
+                                return res.send(result); //Temporary to see if it works.
+                        });
+                   //     return res.sendFile('onlineStatus.html', {root : './'});
+                }
+        });
+});
+
 app.get('/purgelogin', (req, res) => { //Added so we can remove login tokens from db.
         var sqlPurge = "DELETE FROM token";
         con.query(sqlPurge, function(err,result) {
@@ -471,29 +492,88 @@ app.post('/settings', function(req, res) {
                 //res.status(200).send(decoded);
                 var ratiokeep = req.body.ratiokeep;
                 var ratiosell = req.body.ratiosell;
-                var sqlSettings = mysql.format("INSERT INTO simulationsettings (userid, ratiokeep, ratiosell) VALUES (?,?,?)", [decoded.id,ratiokeep,ratiosell]);
-                con.query(sqlSettings, function(err,result) { //Insert into 'local' settings.
+                var sqlSettingsCount = mysql.format("SELECT COUNT(userid) FROM simulationsettings WHERE userid=?", [id]);
+                conn.query(sqlSettingsCount, (err, results) => {
                         if (err) {
                                 console.log(err);
                         } else {
-                                // Connect to server
-                                var io = require('socket.io-client');
-                                var socket = io.connect('http://localhost:8080/', {reconnect: true});
-
-                                socket.on('response', function (message) { 
-                                        //Send data to api containing new settings user set.
-                                        socket.emit('/api/settings',{id: decoded.id, ratiokeep: ratiokeep, ratiosell: ratiosell}); //Send settings to api.
-                                        console.log(message);
-                                });
-                                
-                                socket.on('/api/settings', function (message) {
-                                        //socket.emit('api/users');
-                                        console.log(message);
-                                        return res.send(message);
-                                });
-
+                                var count = parseInt(JSON.stringify(results[0]['COUNT(userid)']));
+                                if (count == 0) {
+                                        var sqlSettings = mysql.format("INSERT INTO simulationsettings (userid, ratiokeep, ratiosell) VALUES (?,?,?)", [id,ratiokeep,ratiosell]);
+                                        conn.query(sqlSettings, (err, results) => {
+                                                if (err) {
+                                                        console.log(err);
+                                                } else {
+                                                        return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                                                }
+                                        });
+                                } else {
+                                        var sqlSettings = mysql.format("UPDATE simulationsettings SET ratiokeep=?,ratiosell=? WHERE userid=?", [ratiokeep,ratiosell,id]);
+                                        conn.query(sqlSettings, (err, results) => {
+                                                if (err) {
+                                                        console.log(err);
+                                                } else {
+                                                        return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                                                }
+                                        });
+                                }
                         }
                 });
+                // Connect to server
+                var io = require('socket.io-client');
+                var socket = io.connect('http://localhost:8080/', {reconnect: true});
+
+                socket.on('response', function (message) { 
+                        //Send data to api containing new settings user set.
+                        socket.emit('/api/settings',{id: decoded.id, ratiokeep: ratiokeep, ratiosell: ratiosell}); //Send settings to api.
+                        console.log(message);
+                });
+                
+                socket.on('/api/settings', function (message) {
+                        //socket.emit('api/users');
+                        console.log(message);
+                        return res.send(message);
+                });
+        });
+});
+
+app.get('/api/:inp', (req, res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                // Connect to server
+                var io = require('socket.io-client');
+                var socket = io.connect('http://localhost:8080/', {reconnect: true});
+                var inp = req.params['inp'];
+                socket.on('response', function (message) { 
+                        socket.emit('/api/'+inp,{id: decoded.id}); //Send id to api.
+                        console.log(message);
+                });
+                
+                socket.on('/api/'+inp, function (message) {
+                        //socket.emit('api/users');
+                        console.log(message);
+                        return res.send(message);
+                });
+                socket.close();
+        }); 
+});
+
+app.get('/profile', (req, res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                return res.sendFile('profile.html', {root : './'});
         });
 });
 

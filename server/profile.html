@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>Profile</title>
+<div class="toprightcorner"><a href="/signout">Sign out</a></div>
+<body>
+<form id="userpage" method="GET" action="/userpage">
+    <button name="user" value="user">Go to userpage</button>
+</form>
+<div class="topleftcorner"><a href="/settings">Settings</a></div>
+</form>
+<script>
+    function getText(inp) {
+        document.getElementById(inp).src = 'https://3.87.255.174:3000/api/'+inp;
+    }
+</script>
+<p onload="getText('weather')" id="weather"></p>
+<p onload="getText('user')" id="user"></p>
+</body>
+</html>

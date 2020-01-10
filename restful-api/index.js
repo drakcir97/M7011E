@@ -158,8 +158,9 @@ io.sockets.on('connect', function(socket)
     });
     
     //show single user
-    socket.on('/api/users/:id', function(data) {
-        let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id="+req.params.id;
+    socket.on('/api/user', function(data) {
+        var id = data.id;
+        let sql = mysql.format("SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id=?", [id]);
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
             socket.emit('/api/users/id', JSON.stringify({"status": 200, "error": null, "response": results}));
@@ -276,12 +277,31 @@ io.sockets.on('connect', function(socket)
         var id = data.id;
         var ratiokeep = data.ratiokeep;
         var ratiosell = data.ratiosell;
-        var sqlSettings = mysql.format("INSERT INTO simulationsettings (userid, ratiokeep, ratiosell) VALUES (?,?,?)", [id,ratiokeep,ratiosell]);
-        conn.query(sqlSettings, (err, results) => {
+        var sqlSettingsCount = mysql.format("SELECT COUNT(userid) FROM simulationsettings WHERE userid=?", [id]);
+        conn.query(sqlSettingsCount, (err, results) => {
             if (err) {
                 console.log(err);
             } else {
-                return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                var count = parseInt(JSON.stringify(results[0]['COUNT(userid)']));
+                if (count == 0) {
+                    var sqlSettings = mysql.format("INSERT INTO simulationsettings (userid, ratiokeep, ratiosell) VALUES (?,?,?)", [id,ratiokeep,ratiosell]);
+                    conn.query(sqlSettings, (err, results) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                        }
+                    });
+                } else {
+                    var sqlSettings = mysql.format("UPDATE simulationsettings SET ratiokeep=?,ratiosell=? WHERE userid=?", [ratiokeep,ratiosell,id]);
+                    conn.query(sqlSettings, (err, results) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                        }
+                    });
+                }
             }
         });
     });
