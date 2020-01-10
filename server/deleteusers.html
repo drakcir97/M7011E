@@ -16,13 +16,9 @@
 <script>
     function myFunction() {
    //   document.forms['demo'].submit();
-        var txt = window.frames['iframe'].document.body.outerHTML;
+      var nameValue = window.frames['iframe'].document.body.outerHTML;
    //    var nameValue = document.getElementById("demo").value;
-   //     for(var i= 0; i < txt.length; i++) {
-   //     document.getElementById("test").innerHTML = "email: "+txt.email[i] +" id: "+txt.id[i]+"\n";
-   //     }
-        document.getElementById("test").innerHTML = txt;
-
+      document.getElementById("test").innerHTML = nameValue;
     }
     </script>
 <form id="deleteusers" method="post" action="/deleteusers">
