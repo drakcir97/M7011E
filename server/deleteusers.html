@@ -8,13 +8,14 @@
 </form>
 <div class="topleftcorner"><a href="/settings">Settings</a></div>
 </form>
-<form id="demo" method="POST" action="/usersinfo">
+<form id="demo" method="POST" action="/usersinfo" name="demo">
     <button name="status" value="status">Get data</button>
 </form>
 <script>
     function myFunction() {
       alert("Page is loaded");
-      document.getElementById("demo").innerHTML = "Hello World!";
+      document.forms['demo'].submit();
+      document.getElementById("test").innerHTML = "Hello World!";
     }
     </script>
 <form id="deleteusers" method="post" action="/deleteusers">
@@ -24,6 +25,7 @@
 <input type="hidden" id="p2" name="p2" value="2">
 
 <p><input type="Submit" value="Submit"></p>
+<p id="test"> </p>
 </form>
 </body>
 </html>
