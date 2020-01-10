@@ -469,6 +469,7 @@ app.get('/usersinfo', (req, res) => {
                                 return res.send(result); //Temporary to see if it works.
                         });
                 }
+        });
         
 });
 
