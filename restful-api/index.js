@@ -214,34 +214,6 @@ io.sockets.on('connect', function(socket)
             socket.emit('/api/electricityconsumtion', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
-    
-    //add new product
-    socket.on('/api/products', function(data) {
-        let data = {product_name: req.body.product_name, product_price: req.body.product_price};
-        let sql = "INSERT INTO product SET ?";
-        let query = conn.query(sql, data,(err, results) => {
-            if(err) throw err;
-            socket.emit('/api/products', JSON.stringify({"status": 200, "error": null, "response": results}));
-        });
-    });
-    
-    //update product
-    socket.on('/api/products/:id', function(data) {
-        let sql = "UPDATE product SET product_name='"+req.body.product_name+"', product_price='"+req.body.product_price+"' WHERE product_id="+req.params.id;
-        let query = conn.query(sql, (err, results) => {
-            if(err) throw err;
-            socket.emit('/api/products/id', JSON.stringify({"status": 200, "error": null, "response": results}));
-        });
-    });
-    
-    //Delete product
-    socket.on('/api/products/:id', function(data) {
-        let sql = "DELETE FROM product WHERE product_id="+req.params.id+"";
-        let query = conn.query(sql, (err, results) => {
-            if(err) throw err;
-            socket.emit('/api/products/id', JSON.stringify({"status": 200, "error": null, "response": results}));
-        });
-    });
 
     //Creates user
     socket.on('/api/createuser', function(data) {
