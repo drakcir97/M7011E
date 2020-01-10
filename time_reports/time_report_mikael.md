@@ -21,4 +21,4 @@
 | 2019-12-10  | 5       | Fixed tokens, alot of trouble with images and database |
 | 2019-12-12  | 6.5     | Added house pictures for the users, alot of trouble with the rest api, fixed socket connection between client and rest api |
 | 2019-12-17  | 5       | Fixed cookie create/remove signin/signout, admin page |
-
+| 2019-01-10  | 5       | worked with json data, trying to display it in a proper way |

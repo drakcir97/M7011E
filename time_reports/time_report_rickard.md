@@ -27,3 +27,4 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2020-1-4    | 2       | Added ability to change settings in simulator using API, added function for settings in server. |
 | 2020-1-4    | 2       | Added page to change settings, not implemented fully yet. |
 | 2020-1-8    | 2       | More implementation of settings in simulator, buffer added to simulator. |
+| 2020-1-10   | 5       | Work on getting JSON data on a page from database & API. |
