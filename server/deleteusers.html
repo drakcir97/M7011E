@@ -17,9 +17,14 @@
     function myFunction() {
 
         //document.forms['demo'].submit();
-        var nameValue = window.frames['iframe'].document.body;
-        var test1 = JSON.parse(nameValue.contents().text());
-        document.getElementById("test").innerHTML = nameValue.outerHTML;
+        //var nameValue = window.frames['iframe'].document.body;
+        //document.getElementById("test").innerHTML = nameValue.outerHTML;
+        var theFrame = document.getElementById('iframe');
+        var theWin = theFrame.contentWindow;
+        var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+
+        var theJson = theDoc.body.innerHTML;
+        alert(theJson);
     }
     </script>
 <form id="deleteusers" method="post" action="/deleteusers">
