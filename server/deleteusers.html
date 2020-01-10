@@ -17,7 +17,7 @@
     function myFunction() {
 
         //document.forms['demo'].submit();
-        var nameValue = window.frames['iframe'].document.body.outerHTML.text();
+        var nameValue = window.frames['iframe'].document.body.innerHTML.text();
         //document.getElementById("test").innerHTML = nameValue[0].email
         document.getElementById("test").innerHTML = nameValue;
     }
