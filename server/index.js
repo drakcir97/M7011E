@@ -463,7 +463,7 @@ app.get('/usersinfo', (req, res) => {
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
-                        var sqlToken = "SELECT user.email, user.id FROM users";
+                        var sqlToken = "SELECT user.email, user.id FROM user";
                         con.query(sqlToken, function(err, result){
                                 if (err) throw err;
                                 return res.send(result); //Temporary to see if it works.
