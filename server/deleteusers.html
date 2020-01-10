@@ -18,12 +18,7 @@
 
         //document.forms['demo'].submit();
         var nameValue = window.frames['iframe'].document.body;
-        //document.getElementById("test").innerHTML = nameValue[0].email
-        var div = document.createElement("div");
-        console.log(nameValue)
-        div.innerHTML = nameValue;
-        var text = div.textContent || div.innerText || "";
-        document.getElementById("test").innerHTML = text;
+        document.getElementById("test").innerHTML = str(nameValue.outerHTML);
     }
     </script>
 <form id="deleteusers" method="post" action="/deleteusers">
