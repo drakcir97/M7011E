@@ -8,12 +8,13 @@
 </form>
 <div class="topleftcorner"><a href="/settings">Settings</a></div>
 </form>
-<form id="demo" method="GET" action="/usersinfo" name="demo">
+<p id="test"> </p>
+<iframe name="formTarget" style="display:none;"></iframe>
+<form id="demo" method="GET" action="/usersinfo" name="demo" target="formTarget">
     <button name="status" value="status">Get data</button>
 </form>
 <script>
     function myFunction() {
-      alert("Page is loaded");
       document.forms['demo'].submit();
       var nameValue = document.getElementById("demo").value;
       document.getElementById("test").innerHTML = nameValue;
@@ -26,7 +27,7 @@
 <input type="hidden" id="p2" name="p2" value="2">
 
 <p><input type="Submit" value="Submit"></p>
-<p id="test"> </p>
+
 </form>
 </body>
 </html>

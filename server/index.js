@@ -589,13 +589,12 @@ app.get('/api/:inp', (req, res) => {
                 // Connect to server
                 var io = require('socket.io-client');
                 var socket = io.connect('http://localhost:8080/', {reconnect: true});
-                var inp = req.params['inp'];
                 socket.on('response', function (message) { 
-                        socket.emit('/api/'+inp,{id: decoded.id}); //Send id to api.
+                        socket.emit('/api/'+req.params.inp,{id: decoded.id}); //Send id to api.
                         console.log(message);
                 });
                 
-                socket.on('/api/'+inp, function (message) {
+                socket.on('/api/'+req.params.inp, function (message) {
                         //socket.emit('api/users');
                         console.log(message);
                         return res.send(message);

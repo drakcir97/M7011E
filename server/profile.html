@@ -8,19 +8,20 @@
 </form>
 <div class="topleftcorner"><a href="/settings">Settings</a></div>
 </form>
+<p onload="getText('weather')" id="weather" name="weather"></p>
+<p onload="getText('user')" id="user" name="user"></p>
 <script>
-    function getText(inp) {
-        let url = 'https://3.87.255.174:3000/api/'+inp;
-
-        fetch(url)
-        .then(res => res.json())
-        .then((out) => {
-            document.getElementById(inp).innerHTML = out;
-        })
-        .catch(err => { throw err });
-    }
-</script>
-<p onload="getText('weather')" id="weather"></p>
-<p onload="getText('user')" id="user"></p>
+        function getText(inp) {
+            console.log(inp);
+            let url = 'https://3.87.255.174:3000/api/'+inp;
+    
+            fetch(url)
+                .then(res => res.json())
+                .then((out) => {
+                    console.log(out);
+                    document.getElementById(inp).innerHTML = out;
+            }).catch(err => { throw err });
+        }
+    </script>
 </body>
 </html>
