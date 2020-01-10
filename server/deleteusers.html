@@ -17,7 +17,7 @@
     function myFunction() {
 
         //document.forms['demo'].submit();
-        var nameValue = window.frames['iframe'].document.body;
+        var nameValue = window.frames['iframe'].contentWindow.document.body.innerHTML;
         document.getElementById("test").innerHTML = nameValue.outerHTML;
     }
     </script>
