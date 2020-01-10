@@ -16,11 +16,19 @@
 <script>
     function myFunction() {
    //   document.forms['demo'].submit();
-      var nameValue = window.frames['iframe'].document.body.outerHTML;
-  //    var obj = JSON.parse(nameValue)
-   //   var lengthnameValue = nameValue.length;
+        var txt = window.frames['iframe'].document.body.outerHTML;
    //    var nameValue = document.getElementById("demo").value;
-      document.getElementById("test").innerHTML = nameValue;
+        var count = 0;
+        for (var i=0; i< txt.length; i++) {
+            if (txt[i] === "") {
+                txt[i] = "{" + count + "}";
+                count++;
+            }
+        }
+        for(var i= 0; i < txt.length; i++) {
+            document.getElementById("test").innerHTML = "email: "+txt.email[i] +" id: "+txt.id[i]+"\n";
+        }
+
     }
     </script>
 <form id="deleteusers" method="post" action="/deleteusers">
