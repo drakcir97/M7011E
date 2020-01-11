@@ -507,7 +507,7 @@ app.post('/deleteusers', function(req, res) {
                                         console.log(err);
                                 } else {                                       
                                         var d = new Date();
-                                        var time = str(d.getTime())
+                                        var time = d.getTime().toString();
                                         var dummyEmail = HashPassword(time)+"@deleted";
                                         var dummyName = "deleted";
                                         var sqldummydata = mysql.format("UPDATE user SET email=?, name=? WHERE id=?", [dummyEmail, dummyName, inp]);
