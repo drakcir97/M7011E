@@ -46,6 +46,7 @@
    //     document.getElementById("test").innerHTML = obj[0].email;
         displayjson += "Users Offline: <br>"
         for(var i = 0; i < obj2.length; i++) {
+            alert(displayjson.includes(obj2[i].email))
             if(displayjson.includes(obj2[i].email) == false){
                 displayjson += "id: "+obj[i].id+"  email: "+obj[i].email+" Offline<br>";
             }
