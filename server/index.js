@@ -521,7 +521,7 @@ app.post('/deleteusers', function(req, res) {
                                                    //     return res.send(results);
                                                 }
                                         });
-                                        return res.send(results);
+                                        return res.sendFile('deleteusers.html', {root : './'});
                                 }
                         });
                 }
