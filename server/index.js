@@ -228,7 +228,7 @@ app.get('/usersOnline', (req, res) => {
         
 });
 
-app.get('/usersstatus', (req, res) => {
+app.get('/onlinestatus', (req, res) => {
         var token = req.cookies.token;
         if (!token) {
                 return res.status(401).end()
