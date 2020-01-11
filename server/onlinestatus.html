@@ -34,7 +34,7 @@
             displayjson += "id: "+obj[i].id+"  email: "+obj[i].email+" Online<br>";
         }
 
-        var theFrame2 = document.getElementById('iframeallusers');
+/**        var theFrame2 = document.getElementById('iframeallusers');
         var theWin2 = theFrame2.contentWindow;
         var theDoc2 = theFrame2.contentDocument || theFrame.contentWindow.document;
         var theJson2 = theDoc2.body.innerHTML;
@@ -43,13 +43,13 @@
         var text2 = div2.textContent || div2.innerText || "";
         obj2 = JSON.parse(text2);
    //     document.getElementById("test").innerHTML = obj[0].email;
-        displayjson += "<br> Users Offline: <br>"
+        displayjson += "Users Offline: <br>"
         for(var i = 0; i < obj2.length; i++) {
             if(displayjson.includes(obj2[i].email) == false){
                 displayjson += "id: "+obj[i].id+"  email: "+obj[i].email+" Offline<br>";
             }
 
-        } 
+        } */
         document.getElementById("test").innerHTML = displayjson;
     }
     </script>
