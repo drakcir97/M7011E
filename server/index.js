@@ -239,6 +239,7 @@ app.get('/usersstatus', (req, res) => {
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
+                        console.log("onlinestatus.html")
                         return res.sendFile('onlinestatus.html', {root : './'});
                 }
         });
