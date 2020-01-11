@@ -41,18 +41,15 @@
         var div2 = document.createElement("div");
         div2.innerHTML = theJson2;
         var text2 = div2.textContent || div2.innerText || "";
-        alert(text2)
         obj2 = JSON.parse(text2);
    //     document.getElementById("test").innerHTML = obj[0].email;
         displayjson += "<br>Users Offline: <br>"
         for(var i = 0; i < obj2.length; i++) {
-            alert(displayjson.includes(obj2[i].email))
             if(displayjson.includes(obj2[i].email) == false){
                 displayjson += "id: "+obj2[i].id+"  email: "+obj2[i].email+" Offline<br>";
             }
 
         } 
-        alert("test")
         document.getElementById("test").innerHTML = displayjson;
     }
     </script>
