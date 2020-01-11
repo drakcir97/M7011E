@@ -508,10 +508,11 @@ app.post('/deleteusers', function(req, res) {
                                 } else {                                       
                                         var d = new Date();
                                         var time = d.getTime().toString();
+                                        //creating a unique hash
                                         var dummyEmail = HashPassword(time)+"@deleted";
                                         console.log(dummyEmail)
                                         var dummyName = "deleted";
-                                        var sqldummydata = mysql.format("UPDATE user SET email=?, name=? WHERE id=?", [dummyEmail, dummyName, inp]);
+                                        var sqldummydata = mysql.format("UPDATE user SET email=?, name=? WHERE id=?", [dummyEmail.passwordHash, dummyName, inp]);
                                         con.query(sqldummydata, (err, results) => {
                                                 if (err) {
                                                         console.log(err);
