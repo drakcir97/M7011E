@@ -33,7 +33,10 @@
 
         var displayjson = ""
         for(var i = 0; i < obj.length; i++) {
-            displayjson += "id: "+obj[i].id+"  email: "+obj[i].email+"<br>";
+            if((obj[i].email.includes("@deleted") == false)){
+                displayjson += "id: "+obj[i].id+"  email: "+obj[i].email+"<br>";
+            }
+
         }
         document.getElementById("test").innerHTML = displayjson;
     }
