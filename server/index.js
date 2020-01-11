@@ -505,7 +505,19 @@ app.post('/deleteusers', function(req, res) {
                         con.query(sqlDelete, (err, results) => {
                                 if (err) {
                                         console.log(err);
-                                } else {
+                                } else {                                       
+                                        var d = new Date();
+                                        var time = str(d.getTime())
+                                        var dummyEmail = HashPassword(time)+"@deleted";
+                                        var dummyName = "deleted";
+                                        var sqldummydata = mysql.format("UPDATE user SET email=?, name=? WHERE id=?", [dummyEmail, dummyName, inp]);
+                                        con.query(sqldummydata, (err, results) => {
+                                                if (err) {
+                                                        console.log(err);
+                                                } else {
+                                                        return res.send(results);
+                                                }
+                                        });
                                         return res.send(results);
                                 }
                         });
