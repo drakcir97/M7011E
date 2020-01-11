@@ -514,6 +514,7 @@ app.post('/deleteusers', function(req, res) {
                                         console.log(dummyEmail)
                                         var dummyName = "deleted";
                                         var sqldummydata = mysql.format("UPDATE user SET email=?, name=? WHERE id=?", [dummyEmail, dummyName, inp]);
+                                        //should delete token if the user is online?
                                         con.query(sqldummydata, (err, results) => {
                                                 if (err) {
                                                         console.log(err);
