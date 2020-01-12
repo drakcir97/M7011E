@@ -366,7 +366,7 @@ async function getfrombuffer(householdid,powerneeded) {
 	var sqlBuffer = mysql.format("SELECT value FROM powerstored WHERE householdid=?", [householdid]);
 	con.query(sqlBuffer, function(err, result) {
 		if (err) throw err;
-		buffer = result[0]['value']; //Get old value
+		buffer = parseFloat(result[0]['value']); //Get old value
 	});
 	if (buffer<powerneeded) { //There is less power then we need in buffer.
 		var sqlBuffer = mysql.format("UPDATE powerstored SET value=? WHERE householdid=?",[0,householdid]); //0 power remaining.
@@ -381,6 +381,88 @@ async function getfrombuffer(householdid,powerneeded) {
 			return powerneeded; //Return power we needed.
 		});
 	}
+}
+
+//Returns amount that could be bought from powerplant, up to amountOfPower.
+async function buyFromPlant(householdid, amountOfPower) {
+	var sqlLocationId = mysql.format("SELECT powerplant.id FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?",[householdid]);
+	con.quert(sqlLocationId, (err, results) => {
+		if (err) {
+			console.log(err);
+		} else {
+			var plantid = results[0]['powerplant.id'];
+			var sqlPower = mysql.format("SELECT status,buffer,currentpower,maxpower,ratiokeep FROM powerplant WHERE id=?", [plantid]);
+			con.query(sqlPower, (err, results) => {
+				var plantstatus = results[0]['status'];
+				var plantbuffer = parseFloat(results[0]['buffer']);
+				var plantcurrentpower = parseFloat(results[0]['currentpower']);
+				var plantmaxpower = parseFloat(results[0]['maxpower']);
+				var plantratiokeep = parseFloat(results[0]['ratiokeep']);
+				if (plantstatus == 'running') {
+					if (plantcurrentpower < amountOfPower) {
+						var sqlSet0 = mysql.format("UPDATE powerplant SET plantcurrentpower=0 WHERE id=?", [plantid]);
+						con.query(sqlSet0, (err, results) => {
+							if (err) {
+								console.log(err);
+							}
+							return plantcurrentpower;
+						});
+					} else {
+						var sqlReduce = mysql.format("UPDATE powerplant SET plantcurrentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
+						con.query(sqlReduce, (err, results) => {
+							if (err) {
+								console.log(err);
+							}
+							return amountOfPower;
+						});
+					}
+				} else {
+					if (plantbuffer < amountOfPower) {
+						var sqlSet0 = mysql.format("UPDATE powerplant SET buffer=0 WHERE id=?", [plantid]);
+						con.query(sqlSet0, (err, results) => {
+							if (err) {
+								console.log(err);
+							}
+							return plantbuffer;
+						});
+					} else {
+						var sqlReduce = mysql.format("UPDATE powerplant SET buffer=? WHERE id=?", [plantbuffer-amountOfPower,plantid]);
+						con.query(sqlReduce, (err, results) => {
+							if (err) {
+								console.log(err);
+							}
+							return amountOfPower;
+						});
+					}
+				}
+			});
+		}
+	});
+}
+
+//Updates all powerplants that exist in simulator.
+async function updatePowerPlant() {
+	var sql = "SELECT id FROM powerplant";
+	con.query(sql, function (err, result) {
+		if (err) throw err;  
+		for(val of result) {
+			var sqlPower = mysql.format("SELECT status,buffer,currentpower,maxpower,ratiokeep FROM powerplant WHERE id=?", [val.id]);
+			con.query(sqlPower, (err, results) => {
+				var plantstatus = results[0]['status'];
+				var plantbuffer = parseFloat(results[0]['buffer']);
+				var plantcurrentpower = parseFloat(results[0]['currentpower']);
+				var plantmaxpower = parseFloat(results[0]['maxpower']);
+				var plantratiokeep = parseFloat(results[0]['ratiokeep']);
+
+				if (plantstatus == 'running') {
+					var newBuffer = plantmaxpower * plantratiokeep + plantbuffer + plantcurrentpower; //We send all power that is not sold to buffer.
+					var newCurrent = plantmaxpower * (1-plantratiokeep);
+
+					var sqlPlant = mysql.format("UPDATE powerplant SET buffer=?, plantcurrentpower=? WHERE id=?", [newBuffer,newCurrent,val.id])
+				}
+			});
+		}
+	});
 }
 
 async function generatePowerTotal(dateid,callback) {
