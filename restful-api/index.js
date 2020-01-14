@@ -245,6 +245,44 @@ io.sockets.on('connect', function(socket)
         });
     });
 
+    socket.on('/api/checkblock', function(data) {
+        var id = data.id;
+        var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhouseholds INNER JOIN user ON blockedhouseholds.householdid=user.householdid WHERE user.id=?", [id]);
+        con.query(sqlBanned, function(err, results) {
+            if (err) {
+                console.log(err);
+            } else {
+                var num = parseInt(results[0]['COUNT(dt)']);
+                if (num != 0) {
+                    var sqlBanned = mysql.format("SELECT dt FROM blockedhouseholds INNER JOIN user ON blockedhouseholds.householdid=user.householdid WHERE user.id=?", [id]);
+                    con.query(sqlBanned, function(err, results) {
+                        if (err) {
+                            console.log(err);
+                        }
+                        return socket.emit('/api/checkblock', JSON.stringify({"status": 200, "error": null, "response": results}));
+                    });
+                } else {
+                    return socket.emit('/api/checkblock', JSON.stringify({"status": 200, "error": null, "response": 'dt: 0'}));
+                }
+            }
+        });
+    });
+
+    socket.on('/api/blockusers', function(data) {
+        //res.status(200).send(decoded);
+        console.log("id "+data.id);
+        var d = new Date();
+        var inp = data.id;
+        var secondsblock = data.secondsblock;
+
+        var sqlsettime = mysql.format("INSERT INTO blockedhousehold (householdid, dt) VALUES (SELECT householdid FROM user WHERE id=?,?)", [inp, secondsblock]);
+        con.query(sqlPassword, function(err, results) {
+            if (err) throw err;
+            return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
+        });   
+
+    });
+
     socket.on('/api/settings', function(data) {
         var id = data.id;
         var ratiokeep = data.ratiokeep;

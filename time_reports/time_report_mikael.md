@@ -22,3 +22,5 @@
 | 2019-12-12  | 6.5     | Added house pictures for the users, alot of trouble with the rest api, fixed socket connection between client and rest api |
 | 2019-12-17  | 5       | Fixed cookie create/remove signin/signout, admin page |
 | 2019-01-10  | 5       | worked with json data, trying to display it in a proper way |
+| 2019-01-11  | 4       | fixed json data, now display it correctly |
+| 2019-01-14  | 3       | working with the api and block user to sell |

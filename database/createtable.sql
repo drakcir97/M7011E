@@ -111,3 +111,23 @@ CREATE TABLE IF NOT EXISTS simulationsettings (
     PRIMARY KEY (id),
     FOREIGN KEY (userid) REFERENCES user(id)
 );
+
+CREATE TABLE IF NOT EXISTS powerplant (
+	id int NOT NULL AUTO_INCREMENT,
+	locationid int NOT NULL UNIQUE,
+	maxpower float NOT NULL,
+	currentpower float NOT NULL,
+	buffer float NOT NULL,
+	ratiokeep float NOT NULL,
+	status char(255) NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (locationid) REFERENCES location(id)
+);
+
+CREATE TABLE IF NOT EXISTS blockedhousehold (
+	id int NOT NULL AUTO_INCREMENT,
+	householdid int NOT NULL UNIQUE,
+	dt bigint NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (householdid) REFERENCES household(id)
+);
