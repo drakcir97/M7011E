@@ -511,34 +511,48 @@ app.post('/blockusers', function(req, res) {
                         con.query(sqlDelete, (err, results) => {
                                 if (err) {
                                         console.log(err);
-                                } else {                                       
-                                        var sqltimeblocked = mysql.format("SELECT dt FROM blockedhousehold WHERE id=?", [inp]);
-                                        //should delete token if the user is online?
-                                        con.query(sqltimeblocked, (err, results) => {
-                                                if (err) {
-                                                        console.log(err);
-                                                } else {
-                                                        timeblocked = result[0]['dt'];
-                                                        if(timeblocked <= currenttime){
-                                                                var sqlsettime = mysql.format("INSERT INTO blockedhousehold (dt) VALUES (?)", [secondsblock]);
-                                                                con.query(sqlPassword, function(err, result) {
-                                                                        if (err) throw err;
-                                                                        return res.send('User with id: '+inp+" is blocked for "+secondsblock+ "seconds");  
-                                                                });   
-                                                        }
-                                                        else{
-                                                                return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
-                                                        }
+                                } else {
+                                        // Connect to server
+                                        var io = require('socket.io-client');
+                                        var socket = io.connect('http://localhost:8080/', {reconnect: true});
+                                        socket.on('response', function (message) { 
+                                                //Send data to api containing new settings user set.
+                                                socket.emit('/api/checkblock',{id: inp}); //Send settings to api.
+                                                console.log(message);
+                                        });
+                                        
+                                        socket.on('/api/checkblock', function (message) {
+                                                //socket.emit('api/users');
+                                                console.log(message);
+                                                timeblocked = message.response.dt;
+                                        });                                       
+                                        if(timeblocked <= currenttime){
+
+
+                                                socket.on('response', function (message) { 
+                                                        //Send data to api containing new settings user set.
+                                                        socket.emit('/api/blockusers',{id: inp, secondsblock: secondsblock}); //Send settings to api.
+                                                        console.log(message);
+                                                });
+                                                
+                                                socket.on('/api/blockedusers', function (message) {
+                                                        //socket.emit('api/users');
+                                                        console.log(message);
+                                                });
+                                                socket.close();
+                                        }
+                                        else{
+                                                return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
+                                        }
 
                                                    //     return res.send(results);
-                                                }
-                                        });
-                                        return res.sendFile('blockusers.html', {root : './'});
                                 }
                         });
+                        return res.sendFile('blockusers.html', {root : './'});
                 }
         });
 });
+
 
 app.get('/usersinfo', (req, res) => {
         var token = req.cookies.token;
