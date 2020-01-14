@@ -123,3 +123,11 @@ CREATE TABLE IF NOT EXISTS powerplant (
 	PRIMARY KEY (id),
 	FOREIGN KEY locationid REFERENCES location(id)
 );
+
+CREATE TABLE IF NOT EXISTS blockedhousehold (
+	id int NOT NULL AUTO_INCREMENT,
+	householdid int NOT NULL UNIQUE,
+	dt bigint NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (householdid) REFERENCES household(id)
+);

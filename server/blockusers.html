@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>Homepage</title>
+<div class="toprightcorner"><a href="/signout">Sign out</a></div>
+<body onload="myFunction()">
+<form id="userpage" method="GET" action="/userpage">
+    <button name="user" value="user">Go to userpage</button>
+</form>
+<div class="topleftcorner"><a href="/settings">Settings</a></div>
+</form>
+<p id="test"> </p>
+<iframe src="https://3.95.190.134:3000/usersinfo" name="iframe" id="iframe" style="display: none;"></iframe> 
+<form id="demo" method="GET" action="/usersinfo" name="demo" target="iframe">
+    <button name="status" value="status">Get data</button>
+</form>
+<script>
+    function myFunction() {
+
+        //två raderna nedanför skriver ut all data, med html taggar
+        //var nameValue = window.frames['iframe'].document.body;
+        //document.getElementById("test").innerHTML = nameValue.outerHTML;
+
+        //remove all html tags and change the iframe/html object to json 
+        var theFrame = document.getElementById('iframe');
+        var theWin = theFrame.contentWindow;
+        var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+        var theJson = theDoc.body.innerHTML;
+        var div = document.createElement("div");
+        div.innerHTML = theJson;
+        var text = div.textContent || div.innerText || "";
+        obj = JSON.parse(text);
+ //       document.getElementById("test").innerHTML = obj[0].email;
+
+        var displayjson = ""
+        for(var i = 0; i < obj.length; i++) {
+            if((obj[i].email.includes("@deleted") == false)){
+                displayjson += "id: "+obj[i].id+"  email: "+obj[i].email+"<br>";
+            }
+
+        }
+        document.getElementById("test").innerHTML = displayjson;
+    }
+    </script>
+<form id="deleteusers" method="post" action="/blockusers">
+    User id to to block: <br>
+    <input type="text" name="userid">
+    <br>
+    Time to block the user to sell (20-100 seconds):<br>
+    <input type="text" name="block" id="block">
+    <br>
+    
+<input type="hidden" id="p2" name="p2" value="2">
+
+<p><input type="Submit" value="Submit"></p>
+
+</form>
+</body>
+</html>

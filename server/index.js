@@ -468,6 +468,78 @@ app.get('/deleteusers', (req, res) => {
         });
 });
 
+app.get('/blockusers', (req, res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        return res.sendFile('blockusers.html', {root : './'});
+                }
+        });
+});
+
+app.post('/blockusers', function(req, res) {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        var d = new Date();
+                        var inp = req.body.userid;
+                        var secondsblock = req.body.block;
+                        var currenttime = d.getTime()/1000;
+                        if(secondsblock < 10){
+                                secondsblock = 10;
+                        }
+                        else if(secondsblock > 100){
+                                secondsblock = 100;
+                        }
+                        secondsblock = d.getTime()/1000+secondsblock;
+
+                        var sqlDelete = mysql.format("SELECT user.id FROM user WHERE id=?", [inp]);
+                        con.query(sqlDelete, (err, results) => {
+                                if (err) {
+                                        console.log(err);
+                                } else {                                       
+                                        var sqltimeblocked = mysql.format("SELECT dt FROM blockedhousehold WHERE id=?", [inp]);
+                                        //should delete token if the user is online?
+                                        con.query(sqltimeblocked, (err, results) => {
+                                                if (err) {
+                                                        console.log(err);
+                                                } else {
+                                                        timeblocked = result[0]['dt'];
+                                                        if(timeblocked <= currenttime){
+                                                                var sqlsettime = mysql.format("INSERT INTO blockedhousehold (dt) VALUES (?)", [secondsblock]);
+                                                                con.query(sqlPassword, function(err, result) {
+                                                                        if (err) throw err;
+                                                                        return res.send('User with id: '+inp+" is blocked for "+secondsblock+ "seconds");  
+                                                                });   
+                                                        }
+                                                        else{
+                                                                return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
+                                                        }
+
+                                                   //     return res.send(results);
+                                                }
+                                        });
+                                        return res.sendFile('blockusers.html', {root : './'});
+                                }
+                        });
+                }
+        });
+});
+
 app.get('/usersinfo', (req, res) => {
         var token = req.cookies.token;
         if (!token) {

@@ -259,6 +259,25 @@ async function createLocation(location){
     });
 }
 
+async function createPowerplant(location) {
+	var sql = mysql.format("SELECT COUNT(powerplant.id) FROM powerplant INNER JOIN location ON powerplant.locationid=location.id WHERE location.name=?",[location]);
+	con.query(sql, function(err, results) {
+		if (err) {
+			console.log(err);
+		} else {
+			var count = parseInt(results[0]['COUNT(powerplant.id)']);
+			if (count == 0) {
+				var sqlInsert = mysql.format("INSERT INTO powerplant (locationid, maxpower, currentpower, buffer, ratiokeep, status) VALUES (SELECT id FROM location WHERE name=?,?,?,?,?,?)", [location,20000.0,0,0,0.1,'stopped']);
+				con.query(sqlInsert, function(err, results) {
+					if (err) {
+						console.log(err);
+					}
+				});
+			}
+		}
+	});
+}
+
 function getPowerTotalIn(dateid,callback) {
 	var sql = mysql.format("SELECT powerin FROM powertotal WHERE datetimeid=?", [dateid]);
 	con.query(sql, function (err, result) {
@@ -333,6 +352,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 						} else {
 							var powerCheap = totalin/totalhouseholds;
 							var powerExpensive = (powersum+powerCheap);
+							await buyFromPlant(householdid, powerExpensive);
 							powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
 						}
 					}
@@ -385,57 +405,100 @@ async function getfrombuffer(householdid,powerneeded) {
 
 //Returns amount that could be bought from powerplant, up to amountOfPower.
 async function buyFromPlant(householdid, amountOfPower) {
-	var sqlLocationId = mysql.format("SELECT powerplant.id FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?",[householdid]);
-	con.quert(sqlLocationId, (err, results) => {
+	var blocked = await checkIfBlocked(householdid);
+	if (!blocked) {
+		var sqlLocationId = mysql.format("SELECT powerplant.id FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?",[householdid]);
+		con.query(sqlLocationId, (err, results) => {
+			if (err) {
+				console.log(err);
+			} else {
+				var plantid = results[0]['powerplant.id'];
+				var sqlPower = mysql.format("SELECT status,buffer,currentpower,maxpower,ratiokeep FROM powerplant WHERE id=?", [plantid]);
+				con.query(sqlPower, (err, results) => {
+					var plantstatus = results[0]['status'];
+					var plantbuffer = parseFloat(results[0]['buffer']);
+					var plantcurrentpower = parseFloat(results[0]['currentpower']);
+					var plantmaxpower = parseFloat(results[0]['maxpower']);
+					var plantratiokeep = parseFloat(results[0]['ratiokeep']);
+					if (plantstatus == 'running') {
+						if (plantcurrentpower < amountOfPower) {
+							var sqlSet0 = mysql.format("UPDATE powerplant SET plantcurrentpower=0 WHERE id=?", [plantid]);
+							con.query(sqlSet0, (err, results) => {
+								if (err) {
+									console.log(err);
+								}
+								return plantcurrentpower;
+							});
+						} else {
+							var sqlReduce = mysql.format("UPDATE powerplant SET plantcurrentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
+							con.query(sqlReduce, (err, results) => {
+								if (err) {
+									console.log(err);
+								}
+								return amountOfPower;
+							});
+						}
+					} else {
+						if (plantbuffer < amountOfPower) {
+							var sqlSet0 = mysql.format("UPDATE powerplant SET buffer=0 WHERE id=?", [plantid]);
+							con.query(sqlSet0, (err, results) => {
+								if (err) {
+									console.log(err);
+								}
+								return plantbuffer;
+							});
+						} else {
+							var sqlReduce = mysql.format("UPDATE powerplant SET buffer=? WHERE id=?", [plantbuffer-amountOfPower,plantid]);
+							con.query(sqlReduce, (err, results) => {
+								if (err) {
+									console.log(err);
+								}
+								return amountOfPower;
+							});
+						}
+					}
+				});
+			}
+		});
+	} else {
+		return 0;
+	}
+	
+}
+
+async function checkIfBlocked(householdid) {
+	var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhouseholds WHERE householdid=?", [householdid]);
+	con.query(sqlBanned, function(err, results) {
 		if (err) {
 			console.log(err);
 		} else {
-			var plantid = results[0]['powerplant.id'];
-			var sqlPower = mysql.format("SELECT status,buffer,currentpower,maxpower,ratiokeep FROM powerplant WHERE id=?", [plantid]);
-			con.query(sqlPower, (err, results) => {
-				var plantstatus = results[0]['status'];
-				var plantbuffer = parseFloat(results[0]['buffer']);
-				var plantcurrentpower = parseFloat(results[0]['currentpower']);
-				var plantmaxpower = parseFloat(results[0]['maxpower']);
-				var plantratiokeep = parseFloat(results[0]['ratiokeep']);
-				if (plantstatus == 'running') {
-					if (plantcurrentpower < amountOfPower) {
-						var sqlSet0 = mysql.format("UPDATE powerplant SET plantcurrentpower=0 WHERE id=?", [plantid]);
-						con.query(sqlSet0, (err, results) => {
-							if (err) {
-								console.log(err);
-							}
-							return plantcurrentpower;
-						});
+			var num = parseInt(results[0]['COUNT(dt)']);
+			if (num != 0) {
+				var sqlBanned = mysql.format("SELECT dt FROM blockedhouseholds WHERE householdid=?", [householdid]);
+				con.query(sqlBanned, function(err, results) {
+					if (err) {
+						console.log(err);
 					} else {
-						var sqlReduce = mysql.format("UPDATE powerplant SET plantcurrentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
-						con.query(sqlReduce, (err, results) => {
-							if (err) {
-								console.log(err);
-							}
-							return amountOfPower;
-						});
+						var banned = parseInt(results[0]['dt']);
+						var d = new Date();
+						var currenttime = d.getTime()/1000;
+						if (banned <= currentime) {
+							var sqlRemove = mysql.format("DELETE FROM blockedhouseholds WHERE householdid=?", [householdid]);
+							con.query(sqlRemove, function(err, results) {
+								if (err) {
+									console.log(err);
+								} else {
+									return false;
+								}
+							});
+						} else {
+							return true;
+						}
 					}
-				} else {
-					if (plantbuffer < amountOfPower) {
-						var sqlSet0 = mysql.format("UPDATE powerplant SET buffer=0 WHERE id=?", [plantid]);
-						con.query(sqlSet0, (err, results) => {
-							if (err) {
-								console.log(err);
-							}
-							return plantbuffer;
-						});
-					} else {
-						var sqlReduce = mysql.format("UPDATE powerplant SET buffer=? WHERE id=?", [plantbuffer-amountOfPower,plantid]);
-						con.query(sqlReduce, (err, results) => {
-							if (err) {
-								console.log(err);
-							}
-							return amountOfPower;
-						});
-					}
-				}
-			});
+				});
+			} else {
+				return false;
+			}
 		}
 	});
 }
@@ -651,6 +714,8 @@ async function update() {
 	var nowDate = new Date(); 
 	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
 	await createLocation(location);
+	await createPowerplant(location);
+	await updatePowerPlant();
 	await checkTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	await genWindAndTemp(location,date);
