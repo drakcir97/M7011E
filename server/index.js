@@ -274,10 +274,10 @@ app.get('/userpage', (req, res) => {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
                 
                 // Connect to server
-                var io = require('socket.io-client');
-                var socket = io.connect('http://localhost:8080/', {reconnect: true});
+                // var io = require('socket.io-client');
+                // var socket = io.connect('http://localhost:8080/', {reconnect: true});
 
-                console.log('2');
+                // console.log('2');
 
                 // Add a connect listener
                 // socket.on('connect', function(socket) { 
@@ -288,20 +288,20 @@ app.get('/userpage', (req, res) => {
                         
                 // }); 
 
-                socket.on('response', function (message) {
-                        socket.emit('/api/users',{data: "hello"});
-                        console.log(message);
-                });
+                // socket.on('response', function (message) {
+                //         socket.emit('/api/users',{data: "hello"});
+                //         console.log(message);
+                // });
                 
-                socket.on('/api/users', function (message) {
-                        //socket.emit('api/users');
-                        console.log(message);
-                        return res.send(message);
-                });
+                // socket.on('/api/users', function (message) {
+                //         //socket.emit('api/users');
+                //         console.log(message);
+                //         return res.send(message);
+                // });
 
-                console.log('3');
+                // console.log('3');
                 //res.status(200).send(decoded);
-                //res.sendFile('user.html', {root : './'});
+                res.sendFile('user.html', {root : './'});
         /**         var socket = new net.Socket();
                 //var host = parse('localhost/api/users/%s', JSON.stringify(decoded.id));
                 var host = '3.87.255.174/api/users';
