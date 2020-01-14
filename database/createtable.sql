@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS powerplant (
 	ratiokeep float NOT NULL,
 	status char(255) NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY locationid REFERENCES location(id)
+	FOREIGN KEY (locationid) REFERENCES location(id)
 );
 
 CREATE TABLE IF NOT EXISTS blockedhousehold (
