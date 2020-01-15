@@ -668,15 +668,14 @@ app.post('/changepassword', function(req, res) {
                                                 console.log(err);
                                         }
                                         else{
-                                                console.log("Password changed")
+                                                console.log("Password changed");
+                                                return res.redirect('/'); 
                                         }
                                 });
+                        } else {
+                                return res.send("Current password was wrong");
                         }
-                        else{
-                                return res.send("Current password was wrong")
-                        }
-                });  
-                return res.sendFile('home.html', {root : './'});     
+                });     
         });
 });
 
