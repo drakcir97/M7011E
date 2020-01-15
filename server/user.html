@@ -11,7 +11,7 @@
   <picture>
       <img src="https://3.95.190.134:3000/userimage" source media="(min-width: 465px max-width: 1280px)" srcset="https://3.95.190.134:3000/userimage">
     </picture>
-<iframe src="https://3.95.190.134:3000/api/user" name="iframe_currentwind" id="iframe_currentwind" style="display: none;"></iframe>
+<iframe src="https://3.95.190.134:3000/api/weather" name="iframe_currentwind" id="iframe_currentwind" style="display: none;"></iframe>
 
 <script>
     function myFunction() {
@@ -33,7 +33,7 @@
 
         var displayjson = ""
         for(var i = 0; i < obj.length; i++) {
-          displayjson += "id: "+obj[i]['household.id'];
+          displayjson += "id: "+obj[i]['temperature.temperature'];
         }
         document.getElementById("test").innerHTML = displayjson;
     }
