@@ -769,21 +769,25 @@ app.get('/api/:inp', (req, res) => {
                 var io = require('socket.io-client');
                 var socket = io.connect('http://localhost:8080/');
 
+                socket.on('message', function (message) {
+                        console.log(message);
+                });
+
                 // socket.on('response', function (message) { 
                 //         console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id)
                 //         console.log("after first emit")
                 //         socket.emit('/api/weather', {id: decoded.id}); //Send id to api.
                 //         console.log(message);
                 // });
-                console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id);
-                socket.emit('test', {id: decoded.id}); //Send id to api.
-                console.log("after first emit");
+                // console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id);
+                // socket.emit('test', {id: decoded.id}); //Send id to api.
+                // console.log("after first emit");
                 
-                socket.on('test', function (message) {
-                        //socket.emit('api/users');
-                        console.log(message);
-                        return res.send(message);
-                });
+                // socket.on('test', function (message) {
+                //         //socket.emit('api/users');
+                //         console.log(message);
+                //         return res.send(message);
+                // });
                 socket.close();
         }); 
 });

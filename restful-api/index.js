@@ -147,6 +147,7 @@ io.sockets.on('connection', function(socket)
 {
     console.log('Client connected.');
  //   socket.emit('response', {response: "Connected to API"});
+    socket.send("Hello, test 123");
 
     socket.on('test', function(data) {
         console.log("test");
