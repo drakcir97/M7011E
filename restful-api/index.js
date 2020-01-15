@@ -169,9 +169,11 @@ io.sockets.on('connect', function(socket)
 
     //show windspeed & temperature
     socket.on('/api/weather', function(data) {
+        console.log("Entered weather");
         let sql = "SELECT temperature.temperature, windspeed.windspeed, temperature.datetimeid FROM temperature INNER JOIN windspeed ON temperature.datetimeid=windspeed.datetimeid";
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
+            console.log("Emit");
             socket.emit('/api/weather', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
