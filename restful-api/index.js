@@ -152,7 +152,7 @@ io.sockets.on('connect', function(socket)
 
     socket.on('/api/test', function(data) {
         console.log("test");
-        socket.emit('testServer2', {data: 'Hello, its working'});
+        return socket.emit('testServer2', {data: 'Hello, its working'});
     });
 
     //show all users
@@ -162,7 +162,7 @@ io.sockets.on('connect', function(socket)
             if(err) {
                 console.log(err);
             }
-            socket.emit('/api/users',JSON.stringify({"status": 200, "error": null, "response": results}));
+            return socket.emit('/api/users',JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
     
@@ -172,7 +172,7 @@ io.sockets.on('connect', function(socket)
         let sql = mysql.format("SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id=? ORDER BY datetimeid DESC LIMIT 1", [id]);
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
-            socket.emit('/api/user', JSON.stringify({"status": 200, "error": null, "response": results}));
+            return socket.emit('/api/user', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
 
@@ -183,7 +183,7 @@ io.sockets.on('connect', function(socket)
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
             console.log("Emit");
-            socket.emit('/api/weather', JSON.stringify({"status": 200, "error": null, "response": results}));
+            return socket.emit('/api/weather', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
     
@@ -192,7 +192,7 @@ io.sockets.on('connect', function(socket)
         let sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
-            socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": {result: results}}));
+            return socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": {result: results}}));
         });
     });
 
@@ -213,7 +213,7 @@ io.sockets.on('connect', function(socket)
                     powercost = powerCostLow;
                 }
             });
-            socket.emit('/api/eletricityprice2', JSON.stringify({"status": 200, "error": null, "response": powercost}));
+            return socket.emit('/api/eletricityprice2', JSON.stringify({"status": 200, "error": null, "response": powercost}));
         });
     });
 
@@ -222,7 +222,7 @@ io.sockets.on('connect', function(socket)
         let sql = "SELECT powerout, datetimeid FROM powertotal";
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
-            socket.emit('/api/electricityconsumtion', JSON.stringify({"status": 200, "error": null, "response": results}));
+            return socket.emit('/api/electricityconsumtion', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
 
@@ -253,7 +253,7 @@ io.sockets.on('connect', function(socket)
                                     if (err) {
                                         console.log(err);
                                     } else {
-                                        socket.emit('api/createuser', JSON.stringify({"status": 200, "error": null, "response": results}));
+                                        return socket.emit('api/createuser', JSON.stringify({"status": 200, "error": null, "response": results}));
                                     }
                                 })
                             });
@@ -277,7 +277,7 @@ io.sockets.on('connect', function(socket)
                                 if (err) {
                                     console.log(err);
                                 } else {
-                                    socket.emit('api/createuser', JSON.stringify({"status": 200, "error": null, "response": results}));
+                                    return socket.emit('api/createuser', JSON.stringify({"status": 200, "error": null, "response": results}));
                                 }
                             })
                         });
@@ -294,7 +294,7 @@ io.sockets.on('connect', function(socket)
             if (err) {
                 console.log(err);
             } else {
-                socket.emit('/api/buffer', JSON.stringify({"status": 200, "error": null, "response": results}));
+                return socket.emit('/api/buffer', JSON.stringify({"status": 200, "error": null, "response": results}));
             }
         });
     });
