@@ -294,7 +294,7 @@ io.sockets.on('connect', function(socket)
             if (err) {
                 console.log(err);
             } else {
-                return socket.emit('/api/buffer', JSON.stringify({"status": 200, "error": null, "response": results}));
+                socket.emit('/api/buffer', JSON.stringify({"status": 200, "error": null, "response": results}));
             }
         });
     });
