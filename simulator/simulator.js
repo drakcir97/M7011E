@@ -749,7 +749,7 @@ con.connect(async function(err) {
 	console.log("Connected to db");
 	while(true) {
 		update();
-		await sleep(100);
+		await sleep(10000);
 	}
 	// var location = "Kiruna";
 	// createLocation(location);
