@@ -117,7 +117,7 @@ async function testWindForDay(location,date, callback) {
 				console.log("Can't run");
 			}
 		}
-		var count = result[0]['COUNT(i)'];
+		var count = parseInt(result[0]['COUNT(i)']);
 		console.log("this is the result of wind for today already exists ",count);
 		if (count == 0) {
 			try {
@@ -148,18 +148,17 @@ async function generateWindForDay(location,date){
 			if(data == false){
 				var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 				con.query(sqlLocation, function (err, result) {
-        				if (err) throw err;
+        			if (err) throw err;
 					var meanWind = getNormValues(7, 2);
 					var locationId = result[0]['id'];
-        				var sql = mysql.format("INSERT INTO averagewindspeed (locationid, windspeed, dt) VALUES (?,?,?)", [locationId, meanWind, date]);
-    					con.query(sql, function (err, result) {
-            					if (err) throw err;
-            					console.log("1 record inserted");
+        			var sql = mysql.format("INSERT INTO averagewindspeed (locationid, windspeed, dt) VALUES (?,?,?)", [locationId, meanWind, date]);
+    				con.query(sql, function (err, result) {
+            			if (err) throw err;
+            			console.log("1 record inserted");
 					});
-//			return date;
 				});
 			}
-			else{
+			else {
 				console.log("already has a wind for today");
 			}
 		}
