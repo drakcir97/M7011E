@@ -140,13 +140,13 @@ conn.connect((err) =>{
 // server.listen(8080);
 //io.listen(server);
 
-var io = require('socket.io').listen(80);
+var io = require('socket.io').listen(8080);
 
 // Add a connect listener
 io.sockets.on('connection', function(socket)
 {
     console.log('Client connected.');
-    socket.emit('response', {response: "Connected to API"});
+ //   socket.emit('response', {response: "Connected to API"});
 
     //show all users
     socket.on('/api/users', function(data) {
