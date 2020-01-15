@@ -11,8 +11,8 @@ var	tempAffect = 2; //Maximum affect temperature has.
 var	tempCoefficient = 0.6; //Procentage that is affected by temperature.
 var	powerCostHigh = 0.01; //Cost if powerplant
 var	powerCostLow = 0.005; //Cost if wind
-var http = require('http'),
-io = require('socket.io');
+var http = require('http');
+var io = require('socket.io');
 
 // parse application/json
 app.use(bodyParser.json());
@@ -138,7 +138,7 @@ var server = http.createServer(function(req, res)
   res.end('<h1>Aw, snap! 404</h1>');
 });
 server.listen(8080);
-io = io.listen(server);
+io.listen(server);
 
 // Add a connect listener
 io.sockets.on('connect', function(socket)
