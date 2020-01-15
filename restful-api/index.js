@@ -144,7 +144,7 @@ io.listen(server);
 io.sockets.on('connection', function(socket)
 {
     console.log('Client connected.');
-    socket.emit('response', {response: "Connected to API"});
+    io.sockets.emit('response', {response: "Connected to API"});
 
     //show all users
     socket.on('/api/users', function(data) {
@@ -153,7 +153,7 @@ io.sockets.on('connection', function(socket)
             if(err) {
                 console.log(err);
             }
-            socket.emit('/api/users',JSON.stringify({"status": 200, "error": null, "response": results}));
+            io.sockets.emit('/api/users',JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
     
@@ -174,7 +174,7 @@ io.sockets.on('connection', function(socket)
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
             console.log("Emit");
-            socket.emit('/api/weather', JSON.stringify({"status": 200, "error": null, "response": results}));
+            io.sockets.emit('/api/weather', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
     
