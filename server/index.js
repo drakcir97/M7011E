@@ -765,6 +765,8 @@ app.get('/api/:inp', (req, res) => {
                 var socket = io.connect('http://localhost:8080/', {reconnect: true});
                 socket.on('response', function (message) { 
                         console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id)
+                        socket.emit('/api/weather');
+                        console.log("after first emit")
                         socket.emit('/api/'+req.params.inp,{id: decoded.id}); //Send id to api.
                         console.log(message);
                 });
