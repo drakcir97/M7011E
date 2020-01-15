@@ -754,10 +754,14 @@ app.get('/api/:inp', (req, res) => {
         console.log('/api/'+req.params.inp);
         var token = req.cookies.token;
         if (!token) {
+                console.log("Token failed, is missing!");
                 return res.status(401).end()
         }
         jwt.verify(token, authenticator.secret, function(err, decoded) {
-                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                if (err) {
+                        console.log("Failed to verify!");
+                        return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                }
                 
                 //res.status(200).send(decoded);
                 // Connect to server
@@ -765,7 +769,6 @@ app.get('/api/:inp', (req, res) => {
                 var socket = io.connect('http://localhost:8080/', {reconnect: true});
                 socket.on('response', function (message) { 
                         console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id)
-                        socket.emit('/api/weather');
                         console.log("after first emit")
                         socket.emit('/api/'+req.params.inp,{id: decoded.id}); //Send id to api.
                         console.log(message);
