@@ -770,6 +770,11 @@ app.get('/api/:inp', (req, res) => {
                 var socket = io.connect('http://localhost:8080/');
 
                 socket.on('testServer', function (message) {
+                        socket.emit('/api/test', {data: 'asd'});
+                        console.log(message);
+                });
+
+                socket.on('testServer2', function (message) {
                         console.log(message);
                 });
 
