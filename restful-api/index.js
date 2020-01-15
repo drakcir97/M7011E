@@ -127,9 +127,9 @@ conn.connect((err) =>{
 // });
  
 //Server listening
-// app.listen(8080,() =>{
-//     console.log('Server started on port 8080...');
-// });
+app.listen(8080,() =>{
+    console.log('Server started on port 8080...');
+});
 // Create server & socket
 var server = http.createServer(function(req, res)
 {
