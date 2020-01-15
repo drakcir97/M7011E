@@ -11,7 +11,10 @@
   <picture>
       <img src="https://3.95.190.134:3000/userimage" source media="(min-width: 465px max-width: 1280px)" srcset="https://3.95.190.134:3000/userimage">
     </picture>
-<iframe src="https://3.95.190.134:3000/api/weather" name="iframe_currentwind" id="iframe_currentwind" style="display: none;"></iframe>
+<iframe src="https://3.95.190.134:3000/api/weather" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
+<iframe src="https://3.95.190.134:3000/api/user" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
+<iframe src="https://3.95.190.134:3000/api/electricityprice2" name="iframe_electricityprice2" id="iframe_electricityprice2" style="display: none;"></iframe>
+<iframe src="https://3.95.190.134:3000/api/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
 
 <script>
     function myFunction() {
@@ -21,21 +24,62 @@
         //document.getElementById("test").innerHTML = nameValue.outerHTML;
 
         //remove all html tags and change the iframe/html object to json 
-        var theFrame = document.getElementById('iframe');
+        var theFrame = document.getElementById('iframe_weather');
         var theWin = theFrame.contentWindow;
         var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
         var theJson = theDoc.body.innerHTML;
         var div = document.createElement("div");
         div.innerHTML = theJson;
         var text = div.textContent || div.innerText || "";
-        obj = JSON.parse(text);
+        var weather = JSON.parse(text);
+
+        var theFrame2 = document.getElementById('iframe_user');
+        var theWin2 = theFrame2.contentWindow;
+        var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
+        var theJson2 = theDoc2.body.innerHTML;
+        var div2 = document.createElement("div");
+        div2.innerHTML = theJson2;
+        var text2 = div2.textContent || div2.innerText || "";
+        var user = JSON.parse(text2);
+
+        var theFrame3 = document.getElementById('iframe_electricityprice2');
+        var theWin3 = theFrame3.contentWindow;
+        var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
+        var theJson3 = theDoc3.body.innerHTML;
+        var div3 = document.createElement("div");
+        div3.innerHTML = theJson3;
+        var text3 = div3.textContent || div3.innerText || "";
+        var electricityprice2 = JSON.parse(text);
+
+        var theFrame4 = document.getElementById('iframe_buffer');
+        var theWin4 = theFrame4.contentWindow;
+        var theDoc4 = theFrame4.contentDocument || theFrame4.contentWindow.document;
+        var theJson4 = theDoc4.body.innerHTML;
+        var div4 = document.createElement("div");
+        div4.innerHTML = theJson3;
+        var text3 = div4.textContent || div4.innerText || "";
+        var buffer = JSON.parse(text);
  //       document.getElementById("test").innerHTML = obj[0].email;
 
         var displayjson = ""
         document.getElementById("test").innerHTML = "before forloop";
-        for(var i = 0; i < obj.length; i++) {
-          displayjson += "id: "+obj[i]['temperature.temperature'];
+        for(var i = 0; i < weather.length; i++) {
+          displayjson += " windspeed: "+weather[i]['windspeed.windspeed'];
         }
+        displayjson += '<br>';
+        for(var i = 0; i < user.length; i++) {
+          var netprod = parseFloat(user[i]['powergenerated.value']) - parseFloat(user[i]['powerusage.value']);
+          displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
+        }
+        displayjson += '<br>';
+        for(var i = 0; i < electricityprice2.length; i++) {
+          displayjson += " buffer: "+buffer[i]['value'];
+        }
+        displayjson += '<br>';
+        for(var i = 0; i < electricityprice2.length; i++) {
+          displayjson += " electricity price: "+electricityprice2[i];
+        }
+        displayjson += '<br>';
         document.getElementById("test").innerHTML = displayjson;
     }
     </script>
