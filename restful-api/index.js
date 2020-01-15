@@ -163,7 +163,7 @@ io.sockets.on('connect', function(socket)
         let sql = mysql.format("SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id=?", [id]);
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
-            socket.emit('/api/users/id', JSON.stringify({"status": 200, "error": null, "response": results}));
+            socket.emit('/api/user', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
 
