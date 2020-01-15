@@ -76,24 +76,24 @@ async function generateDate(callback) {
 		if (err) throw err;
 		console.log("date was inserted");
 		console.log(lookupDate);
-	});
-	var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
-	//var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
-	con.query(sqlLookup, function (err, result) {
-		if (err) {
-			try {
-				callback(err, null);
-			} catch (e) {
-				console.log("Can't run");
+		var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
+		//var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
+		con.query(sqlLookup, function (err, result) {
+			if (err) {
+				try {
+					callback(err, null);
+				} catch (e) {
+					console.log("Can't run");
+				}
+			} else {
+				try {
+					console.log("should return ",result[0]['id']);
+					callback(null, result[0]['id']);
+				} catch (e) {
+					console.log("Can't run");
+				}
 			}
-		} else {
-			try {
-				console.log("should return ",result[0]['id']);
-				callback(null, result[0]['id']);
-			} catch (e) {
-				console.log("Can't run");
-			}
-		}
+		});
 	});
 //		console.log("testDate",result[0]['id']);
 //		dateid = result[0]['id'];
