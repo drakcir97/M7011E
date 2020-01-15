@@ -769,31 +769,28 @@ app.get('/api/:inp', (req, res) => {
                 var io = require('socket.io-client');
                 var socket = io.connect('http://localhost:8080/');
 
-                socket.on('testServer', function (message) {
-                        socket.emit('/api/test', {data: 'asd'});
-                        console.log(message);
-                });
-
-                socket.on('testServer2', function (message) {
-                        console.log(message);
-                });
-
-                // socket.on('response', function (message) { 
-                //         console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id)
-                //         console.log("after first emit")
-                //         socket.emit('/api/weather', {id: decoded.id}); //Send id to api.
+                // socket.on('testServer', function (message) {
+                //         socket.emit('/api/test', {data: 'asd'});
                 //         console.log(message);
                 // });
-                // console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id);
-                // socket.emit('test', {id: decoded.id}); //Send id to api.
-                // console.log("after first emit");
+
+                // socket.on('testServer2', function (message) {
+                //         console.log(message);
+                // });
+
+                socket.on('response', function (message) { 
+                        console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id)
+                        console.log("after first emit")
+                        socket.emit('/api/weather', {id: decoded.id}); //Send id to api.
+                        console.log(message);
+                });
                 
-                // socket.on('test', function (message) {
-                //         //socket.emit('api/users');
-                //         console.log(message);
-                //         return res.send(message);
-                // });
-                socket.close();
+                socket.on('/api/weather', function (message) {
+                        //socket.emit('api/users');
+                        console.log(message);
+                        return res.send(message);
+                });
+                
         }); 
 });
 
