@@ -793,7 +793,7 @@ app.get('/api/:inp', (req, res) => {
                 //         console.log(message);
                 //         return res.send(message);
                 // });
-        //        socket.close();
+                socket.close();
         }); 
 });
 
