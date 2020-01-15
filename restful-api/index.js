@@ -218,30 +218,44 @@ io.sockets.on('connect', function(socket)
     //Creates user
     socket.on('/api/createuser', function(data) {
         console.log(data);
-        var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?",[data.location]);
+        var locationid = -1;
+        var sqlLocation = mysql.format("SELECT COUNT(id) FROM location WHERE name=?",[data.location]);
         conn.query(sqlLocation, (err, results) => {
-            try {
-                var locationid = result[0]['id'];
-            } catch(e) {
-                //Create new location here.
-                var sqlNewHousehold = mysql.format('INSERT INTO household (locationid,housetype) VALUES (?,?)',[locationid,data.housetype);
-                conn.query(sqlNewHousehold, (err, results) => {
+            var count = parseInt(results[0]['COUNT(id)']);
+            if (count == 0) {
+                var sqlCreateLocation = mysql.format("INSERT INTO location (name) VALUES (?)", [data.location]);
+                conn.query(sqlCreateLocation, (err, results) => {
                     if (err) throw err;
-                    var sqlHouseholdId = "SELECT LAST_INSERT_ID()";
-                    conn.query(sqlHouseholdId, function(err, results) {
+                    var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?",[data.location]);
+                    conn.query(sqlLocation, (err, results) => {
                         if (err) throw err;
-                        var householdid = results[0]['LAST_INSERT_ID()'];
-                        var sqlNewUser = mysql.format("INSERT INTRO user (id, householdid) VALUES (?,?)", [data.id, householdid]);
-                        conn.query(sqlNewUser, function(err, results) {
-                            if (err) {
-                                console.log(err);
-                            } else {
-                                socket.emit('api/createuser', JSON.stringify({"status": 200, "error": null, "response": results}));
-                            }
-                        })
+                        locationid = results[0]['id'];
                     });
                 });
+            } else {
+                var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?",[data.location]);
+                conn.query(sqlLocation, (err, results) => {
+                    if (err) throw err;
+                    locationid = results[0]['id'];
+                });
             }
+            var sqlNewHousehold = mysql.format('INSERT INTO household (locationid,housetype) VALUES (?,?)',[locationid,data.housetype);
+            conn.query(sqlNewHousehold, (err, results) => {
+                if (err) throw err;
+                var sqlHouseholdId = "SELECT LAST_INSERT_ID()";
+                conn.query(sqlHouseholdId, function(err, results) {
+                    if (err) throw err;
+                    var householdid = results[0]['LAST_INSERT_ID()'];
+                    var sqlNewUser = mysql.format("INSERT INTRO user (id, householdid) VALUES (?,?)", [data.id, householdid]);
+                    conn.query(sqlNewUser, function(err, results) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            socket.emit('api/createuser', JSON.stringify({"status": 200, "error": null, "response": results}));
+                        }
+                    })
+                });
+            });
         });
     });
 

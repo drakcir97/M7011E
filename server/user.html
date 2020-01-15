@@ -4,13 +4,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
-<body>
+<body onload="myFunction()">
   <div class="toprightcorner"><a href="/signout">Sign out</a></div>
   <div class="topleftcorner"><a href="/home">Home</a></div>
   <div class="topleftcorner"><a href="/settings">Settings</a></div>
 <picture>
   <img src="https://3.95.190.134:3000/userimage" source media="(min-width: 465px max-width: 1280px)" srcset="https://3.95.190.134:3000/userimage">
 </picture>
+<p id="test"> </p>
+<iframe src="https://3.95.190.134:3000/usersinfo" name="iframe" id="iframe" style="display: none;"></iframe> 
+<script>
+    function myFunction() {
+
+        //två raderna nedanför skriver ut all data, med html taggar
+        //var nameValue = window.frames['iframe'].document.body;
+        //document.getElementById("test").innerHTML = nameValue.outerHTML;
+
+        //remove all html tags and change the iframe/html object to json 
+        var theFrame = document.getElementById('iframe');
+        var theWin = theFrame.contentWindow;
+        var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+        var theJson = theDoc.body.innerHTML;
+        var div = document.createElement("div");
+        div.innerHTML = theJson;
+        var text = div.textContent || div.innerText || "";
+        obj = JSON.parse(text);
+ //       document.getElementById("test").innerHTML = obj[0].email;
+
+        var displayjson = ""
+        for(var i = 0; i < obj.length; i++) {
+            if((obj[i].email.includes("@deleted") == false)){
+                displayjson += "id: "+obj[i].id+"  email: "+obj[i].email+"<br>";
+            }
+
+        }
+        document.getElementById("test").innerHTML = displayjson;
+    }
+    </script>
 
 <p>Resize the browser to see different versions of the picture loading at different viewport sizes.
 The browser looks for the first source element where the media query matches the user's current viewport width,
