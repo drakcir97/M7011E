@@ -291,7 +291,7 @@ io.sockets.on('connect', function(socket)
 
     socket.on('/api/buffer', function(data) {
         var id = data.id;
-        var sqlBuffer = mysql.format("SELECT value FROM poweredstored WHERE householdid=?", [id]);
+        var sqlBuffer = mysql.format("SELECT value FROM powerstored WHERE householdid=?", [id]);
         conn.query(sqlBuffer, (err, results) => {
             if (err) {
                 console.log(err);
