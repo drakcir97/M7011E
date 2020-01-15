@@ -657,8 +657,9 @@ app.post('/changepassword', function(req, res) {
                 con.query(sqlUserId, function(err, result){
                         var pw = result[0]['pw'];
                         var salt = result[0]['salt'];
-                        var saltedpw = saltHashPassword(req.body.currentpassword,salt);
+                        var saltedpw = saltHashPassword(req.body.newpassword,salt);
                         if (pw == saltedpw.passwordHash) {
+                                saltedpw = HashPassword(req.body.newpassword);
                                 pw = saltedpw.passwordHash;
                                 salt = saltedpw.salt;
                                 var sqlToken = mysql.format("UPDATE passwords SET salt=?, pw=? WHERE userid=?", [salt, pw, userid]);
@@ -667,7 +668,7 @@ app.post('/changepassword', function(req, res) {
                                                 console.log(err);
                                         }
                                         else{
-                                                console.log("has pass sql query update without error")
+                                                console.log("Password changed")
                                         }
                                 });
                         }
