@@ -140,7 +140,7 @@ conn.connect((err) =>{
 // server.listen(8080);
 //io.listen(server);
 
-var io = require('socket.io').listen(8080);
+var io = require('socket.io').listen(80);
 
 // Add a connect listener
 io.sockets.on('connection', function(socket)
