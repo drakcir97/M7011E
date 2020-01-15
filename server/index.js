@@ -668,7 +668,6 @@ app.post('/changepassword', function(req, res) {
                                         }
                                         else{
                                                 console.log("has pass sql query update without error")
-                                                return res.send("Password changed!")
                                         }
                                 });
                         }
