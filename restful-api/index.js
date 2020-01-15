@@ -141,7 +141,7 @@ server.listen(8080);
 io.listen(server);
 
 // Add a connect listener
-io.sockets.on('connect', function(socket)
+io.sockets.on('connection', function(socket)
 {
     console.log('Client connected.');
     socket.emit('response', {response: "Connected to API"});
