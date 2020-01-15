@@ -206,8 +206,8 @@ io.sockets.on('connect', function(socket)
             let sql = "SELECT powerin,powerout FROM powertotal ORDER BY datetimeid DESC LIMIT 1";
             var powercost = 0;
             let query = conn.query(sql, (err, results) => {
-                let powerin = parseFloat(JSON.stringify(result[0]['powerin']));
-                let powerout = parseFloat(JSON.stringify(result[0]['powerout']));
+                let powerin = parseFloat(JSON.stringify(results[0]['powerin']));
+                let powerout = parseFloat(JSON.stringify(results[0]['powerout']));
                 
                 if (powerin <= powerout) {
                     powercost = powerCostHigh;    
