@@ -32,6 +32,7 @@
  //       document.getElementById("test").innerHTML = obj[0].email;
 
         var displayjson = ""
+        document.getElementById("test").innerHTML = "before forloop";
         for(var i = 0; i < obj.length; i++) {
           displayjson += "id: "+obj[i]['temperature.temperature'];
         }

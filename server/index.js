@@ -749,6 +749,9 @@ app.post('/settings', function(req, res) {
 });
 
 app.get('/api/:inp', (req, res) => {
+        console.log("start '/api/:inp");
+        console.log(req.params.inp);
+        console.log('/api/'+req.params.inp);
         var token = req.cookies.token;
         if (!token) {
                 return res.status(401).end()
