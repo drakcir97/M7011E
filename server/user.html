@@ -11,7 +11,6 @@
 <picture>
   <img src="https://3.95.190.134:3000/userimage" source media="(min-width: 465px max-width: 1280px)" srcset="https://3.95.190.134:3000/userimage">
 </picture>
-<p id="test"> </p>
 <iframe src="https://3.95.190.134:3000/usersinfo" name="iframe" id="iframe" style="display: none;"></iframe> 
 <form id="demo" method="GET" action="/usersinfo" name="demo" target="iframe">
   <button name="status" value="status">Get data</button>
@@ -45,15 +44,7 @@
     }
     </script>
 
-<p>Resize the browser to see different versions of the picture loading at different viewport sizes.
-The browser looks for the first source element where the media query matches the user's current viewport width,
-and fetches the image specified in the srcset attribute.</p>
-
-<p>The img element is required as the last child tag of the picture declaration block.
-The img element is used to provide backward compatibility for browsers that do not support the picture element, or if none of the source tags matched.
-</p>
-
-<p><strong>Note:</strong> The picture element is not supported in IE12 and earlier or Safari 9.0 and earlier.</p>
+<p id="test"> </p>
 
 </body>
 </html>
