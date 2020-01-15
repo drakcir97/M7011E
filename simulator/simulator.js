@@ -738,7 +738,7 @@ async function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-con.connect(function(err) {
+con.connect(async function(err) {
 	if (err) throw err;
 	console.log("Connected to db");
 	while(true) {
