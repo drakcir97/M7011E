@@ -266,12 +266,19 @@ async function createPowerplant(location) {
 		} else {
 			var count = parseInt(results[0]['COUNT(powerplant.id)']);
 			if (count == 0) {
-				var sqlInsert = mysql.format("INSERT INTO powerplant (locationid, maxpower, currentpower, buffer, ratiokeep, status) VALUES (SELECT id FROM location WHERE name=?,?,?,?,?,?)", [location,20000,0,0,0.1,'stopped']);
-				con.query(sqlInsert, function(err, results) {
+				var sqlLocationId = mysql.format("SELECT id FROM location WHERE name=?", [location]);
+				con.query(sqlLocationId, function(err, results) {
 					if (err) {
-						console.log(err);
+						console.log(err)
 					}
-				});
+					var locationid = results[0]['id'];
+					var sqlInsert = mysql.format("INSERT INTO powerplant (locationid, maxpower, currentpower, buffer, ratiokeep, status) VALUES (?,?,?,?,?,?)", [locationid,20000,0,0,0.1,'stopped']);
+					con.query(sqlInsert, function(err, results) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				})
 			}
 		}
 	});
