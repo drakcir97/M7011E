@@ -148,6 +148,10 @@ io.sockets.on('connection', function(socket)
     console.log('Client connected.');
  //   socket.emit('response', {response: "Connected to API"});
 
+    socket.on('test', function(data) {
+        socket.emit('test', {data: 'Hello'});
+    });
+
     //show all users
     socket.on('/api/users', function(data) {
         let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
