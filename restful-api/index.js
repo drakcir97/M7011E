@@ -12,7 +12,7 @@ var	tempCoefficient = 0.6; //Procentage that is affected by temperature.
 var	powerCostHigh = 0.01; //Cost if powerplant
 var	powerCostLow = 0.005; //Cost if wind
 var http = require('http');
-//var io = require('socket.io');
+var io = require('socket.io');
 
 // parse application/json
 app.use(bodyParser.json());
@@ -130,17 +130,17 @@ conn.connect((err) =>{
 // app.listen(8080,() =>{
 //     console.log('Server started on port 8080...');
 // });
-// // Create server & socket
-// var server = http.createServer(function(req, res)
-// {
-//   // Send HTML headers and message
-//   res.writeHead(404, {'Content-Type': 'text/html'});
-//   res.end('<h1>Aw, snap! 404</h1>');
-// });
-// server.listen(8080);
-// io.listen(server);
+// Create server & socket
+var server = http.createServer(function(req, res)
+{
+  // Send HTML headers and message
+  res.writeHead(404, {'Content-Type': 'text/html'});
+  res.end('<h1>Aw, snap! 404</h1>');
+});
+server.listen(8080);
+io.listen(server);
 
-var io = require('socket.io').listen(8080);
+//var io = require('socket.io').listen(8080);
 
 // Add a connect listener
 io.sockets.on('connect', function(socket)
@@ -151,7 +151,7 @@ io.sockets.on('connect', function(socket)
 
     socket.on('test', function(data) {
         console.log("test");
-        socket.emit('test', {data: 'Hello'});
+        socket.emit('testServer', {data: 'Hello'});
     });
 
     //show all users

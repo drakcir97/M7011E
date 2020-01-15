@@ -769,7 +769,7 @@ app.get('/api/:inp', (req, res) => {
                 var io = require('socket.io-client');
                 var socket = io.connect('http://localhost:8080/');
 
-                socket.on('message', function (message) {
+                socket.on('testServer', function (message) {
                         console.log(message);
                 });
 
