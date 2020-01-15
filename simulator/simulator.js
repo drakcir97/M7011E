@@ -734,7 +734,7 @@ async function update() {
 	//generateWindForTime(location,date,dateid);
 }
 
-function sleep(ms) {
+async function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
   }
 
