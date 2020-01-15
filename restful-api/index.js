@@ -192,7 +192,7 @@ io.sockets.on('connect', function(socket)
         let sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
-            socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": results}));
+            socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": {result: results}}));
         });
     });
 
