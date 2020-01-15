@@ -169,7 +169,7 @@ io.sockets.on('connect', function(socket)
     //show single user
     socket.on('/api/user', function(data) {
         var id = data.id;
-        let sql = mysql.format("SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id=?", [id]);
+        let sql = mysql.format("SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id=? ORDER BY datetimeid DESC LIMIT 1", [id]);
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
             socket.emit('/api/user', JSON.stringify({"status": 200, "error": null, "response": results}));
@@ -179,7 +179,7 @@ io.sockets.on('connect', function(socket)
     //show windspeed & temperature
     socket.on('/api/weather', function(data) {
         console.log("Entered weather");
-        let sql = "SELECT temperature.temperature, windspeed.windspeed, temperature.datetimeid FROM temperature INNER JOIN windspeed ON temperature.datetimeid=windspeed.datetimeid";
+        let sql = "SELECT temperature.temperature, windspeed.windspeed, temperature.datetimeid FROM temperature INNER JOIN windspeed ON temperature.datetimeid=windspeed.datetimeid ORDER BY datetimeid DESC LIMIT 1";
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
             console.log("Emit");
