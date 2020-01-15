@@ -144,7 +144,7 @@ io = io.listen(server);
 io.sockets.on('connect', function(socket)
 {
     console.log('Client connected.');
-    socket.emit("response",{response: "Connected to API"});
+    socket.emit('response', {response: "Connected to API"});
 
     //show all users
     socket.on('/api/users', function(data) {

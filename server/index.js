@@ -768,6 +768,7 @@ app.get('/api/:inp', (req, res) => {
                 // Connect to server
                 var io = require('socket.io-client');
                 var socket = io.connect('http://localhost:8080/', {reconnect: true});
+
                 socket.on('response', function (message) { 
                         console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id)
                         console.log("after first emit")
