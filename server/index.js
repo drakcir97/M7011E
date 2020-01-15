@@ -627,6 +627,55 @@ app.get('/purgelogin', (req, res) => { //Added so we can remove login tokens fro
         });
 });
 
+app.get('/changepassword', (req, res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                return res.sendFile('changepassword.html', {root : './'});
+        });
+});
+
+app.post('/changepassword', function(req, res) {
+        var token = req.cookies.token;
+        var newpassword = req.body.newpassword;
+        var newpassword2 = req.body.newpassword2;
+        if(newpassword != newpassword2){
+                return res.send("wrong")
+        }
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                var userid = decoded.id;
+                var sqlUserId = mysql.format("SELECT pw,salt FROM passwords WHERE userid=?", [userid]);
+                con.query(sqlUserId, function(err, result){
+                        var pw = result[0]['pw'];
+                        var salt = result[0]['salt'];
+                        var saltedpw = saltHashPassword(req.body.currentpassword,salt);
+                        if (pw == saltedpw.passwordHash) {
+                                pw = saltedpw.passwordHash;
+                                salt = saltedpw.salt;
+                                var sqlToken = mysql.format("UPDATE passwords SET salt=?, pw=? WHERE userid=?", [salt, pw, userid]);
+                                con.query(sqlToken, function(err, result){
+                                        if (err) {
+                                                console.log(err);
+                                        }
+                                        else{
+                                                return res.send("Password changed!")
+                                        }
+                                });
+                        }
+                });  
+                return res.sendFile('changepassword.html', {root : './'});     
+        });
+});
+
 app.get('/settings', (req, res) => {
         var token = req.cookies.token;
         if (!token) {
