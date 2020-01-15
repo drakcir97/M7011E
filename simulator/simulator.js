@@ -363,14 +363,14 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 	var powercost = 0;
 	var powerkeep = 0;
 	var sqlSettings = mysql.format("SELECT simulationsettings.ratiokeep,simulationsettings.ratiosell FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
-	con.query(sqlSettings, function(err,result) {
+	con.query(sqlSettings, async function(err,result) {
 		var ratiokeep = result[0]['simulationsettings.ratiokeep'];
 		var ratiosell = result[0]['simulationsettings.ratiosell'];
 		var sqlGen = mysql.format("SELECT value FROM powergenerated WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-		con.query(sqlGen, function (err, result) {
+		con.query(sqlGen, async function (err, result) {
 			powergenerated = parseFloat(JSON.stringify(result[0].value));
 			var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-			con.query(sqlUsage, function (err, result) {
+			con.query(sqlUsage, async function (err, result) {
 				powerusage = parseFloat(JSON.stringify(result[0].value));
 				powersum = powergenerated - powerusage;
 				if(powersum >= 0) { //We generated excess power.
@@ -395,7 +395,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 					}
 				} 
 				var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
-				con.query(sqlCost, function(err, result) {
+				con.query(sqlCost, async function(err, result) {
 					if (err) throw err;
 				});
 			});
