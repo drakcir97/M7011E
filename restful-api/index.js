@@ -149,7 +149,7 @@ io.sockets.on('connect', function(socket)
  //   socket.emit('response', {response: "Connected to API"});
     socket.send("Hello, test 123");
 
-    socket.on('test', function(data) {
+    socket.on('/api/test', function(data) {
         console.log("test");
         socket.emit('testServer', {data: 'Hello'});
     });
