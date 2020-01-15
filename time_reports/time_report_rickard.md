@@ -30,3 +30,4 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2020-1-10   | 5       | Work on getting JSON data on a page from database & API. |
 | 2020-1-12   | 2       | Added powerplant including functions in simulator to update and buy power. |
 | 2020-1-14   | 3       | More work on powerplant, including ability to block users from buying. |
+| 2020-1-15   | 8       | Fixed issues with API, trying to fix user page, currently able to send data and format it. |
