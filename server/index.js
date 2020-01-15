@@ -791,7 +791,8 @@ app.get('/api/:inp', (req, res) => {
                         return res.send(message);
                 });
                 
-        }); 
+        });
+        socket.close(); 
 });
 
 app.get('/profile', (req, res) => {
