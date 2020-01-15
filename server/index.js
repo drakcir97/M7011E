@@ -645,7 +645,7 @@ app.post('/changepassword', function(req, res) {
         var newpassword = req.body.newpassword;
         var newpassword2 = req.body.newpassword2;
         if(newpassword != newpassword2){
-                return res.send("wrong")
+                return res.send("You wrote two different passwords as newpassword")
         }
         if (!token) {
                 return res.status(401).end()
@@ -666,6 +666,7 @@ app.post('/changepassword', function(req, res) {
                                 con.query(sqlToken, function(err, result){
                                         if (err) {
                                                 console.log(err);
+                                                return res.send("Current password was wrong")
                                         }
                                         else{
                                                 console.log("Password changed")
@@ -673,7 +674,7 @@ app.post('/changepassword', function(req, res) {
                                 });
                         }
                 });  
-                return res.sendFile('changepassword.html', {root : './'});     
+                return res.sendFile('home.html', {root : './'});     
         });
 });
 
