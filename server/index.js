@@ -655,10 +655,6 @@ app.post('/changepassword', function(req, res) {
                 var userid = decoded.id;
                 var sqlUserId = mysql.format("SELECT pw,salt FROM passwords WHERE userid=?", [userid]);
                 con.query(sqlUserId, function(err, result){
-                        if(err) {
-                                console.log(err);
-                                return res.send("Current password was wrong")
-                        }
                         var pw = result[0]['pw'];
                         var salt = result[0]['salt'];
                         var saltedpw = saltHashPassword(req.body.currentpassword,salt);
@@ -675,6 +671,9 @@ app.post('/changepassword', function(req, res) {
                                                 console.log("Password changed")
                                         }
                                 });
+                        }
+                        else{
+                                return res.send("Current password was wrong")
                         }
                 });  
                 return res.sendFile('home.html', {root : './'});     
