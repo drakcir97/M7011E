@@ -540,7 +540,7 @@ app.post('/blockusers', function(req, res) {
                                                         //socket.emit('api/users');
                                                         console.log(message);
                                                 });
-                                                socket.close();
+                                         //       socket.close();
                                         }
                                         else{
                                                 return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
@@ -788,7 +788,7 @@ app.get('/api/:inp', (req, res) => {
                 //         console.log(message);
                 //         return res.send(message);
                 // });
-                socket.close();
+        //        socket.close();
         }); 
 });
 
