@@ -34,14 +34,14 @@
         var weather = JSON.parse(text);
         
 
-        // var theFrame2 = document.getElementById('iframe_user');
-        // var theWin2 = theFrame2.contentWindow;
-        // var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
-        // var theJson2 = theDoc2.body.innerHTML;
-        // var div2 = document.createElement("div");
-        // div2.innerHTML = theJson2;
-        // var text2 = div2.textContent || div2.innerText || "";
-        // var user = JSON.parse(text2);
+        var theFrame2 = document.getElementById('iframe_user');
+        var theWin2 = theFrame2.contentWindow;
+        var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
+        var theJson2 = theDoc2.body.innerHTML;
+        var div2 = document.createElement("div");
+        div2.innerHTML = theJson2;
+        var text2 = div2.textContent || div2.innerText || "";
+        var user = JSON.parse(text2);
 
         // var theFrame3 = document.getElementById('iframe_electricityprice2');
         // var theWin3 = theFrame3.contentWindow;
@@ -62,16 +62,17 @@
         // var buffer = JSON.parse(text4);
  //       document.getElementById("test").innerHTML = obj[0].email;
 
-        var displayjson = ""
-        document.getElementById("test").innerHTML = "before forloop";
-        alert(weather.response[0].windspeed)
-        alert(weather.length)
-        for(var i = 0; i < weather.length; i++) {
-          alert(weather.response[0].windspeed)
-          displayjson += " windspeed: "+weather.response[i].windspeed;
-          alert(displayjson)
-        }
+        var displayjson = " windspeed: "+weather.response[0].windspeed;
+        // length is undefined.
+        // for(var i = 0; i < weather.length; i++) {
+        //   alert(weather.response[0].windspeed)
+        //   displayjson += " windspeed: "+weather.response[i].windspeed;
+        //   alert(displayjson)
+        // }
         displayjson += '<br>';
+        alert(user[0]['powergenerated.value']);
+        var netprod = parseFloat(user[0]['powergenerated.value']) - parseFloat(user[0]['powerusage.value']);
+        displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
         // for(var i = 0; i < user.length; i++) {
         //   var netprod = parseFloat(user[i]['powergenerated.value']) - parseFloat(user[i]['powerusage.value']);
         //   displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
