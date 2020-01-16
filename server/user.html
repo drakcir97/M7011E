@@ -31,9 +31,7 @@
         var div = document.createElement("div");
         div.innerHTML = theJson;
         var text = div.textContent || div.innerText || "";
-        alert(text)
         var weather = JSON.parse(text);
-        alert(weather)
         
 
         // var theFrame2 = document.getElementById('iframe_user');
@@ -67,7 +65,7 @@
         var displayjson = ""
         document.getElementById("test").innerHTML = "before forloop";
         for(var i = 0; i < weather.length; i++) {
-          displayjson += " windspeed: "+weather[i].response[i].windspeed;
+          displayjson += " windspeed: "+weather.response[i].windspeed;
         }
         displayjson += '<br>';
         // for(var i = 0; i < user.length; i++) {
