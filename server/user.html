@@ -65,7 +65,7 @@
         var displayjson = ""
         document.getElementById("test").innerHTML = "before forloop";
         for(var i = 0; i < weather.length; i++) {
-         // displayjson += " windspeed: "+weather[i].response.windspeed;
+          displayjson += " windspeed: "+weather[i].windspeed;
         }
         displayjson += '<br>';
         // for(var i = 0; i < user.length; i++) {
@@ -81,7 +81,7 @@
         //   displayjson += " electricity price: "+electricityprice2[i]['result'];
         // }
         // displayjson += '<br>';
-        document.getElementById("test").innerHTML = weather[0].response.windspeed;
+        document.getElementById("test").innerHTML = displayjson;
     }
     </script>
 
