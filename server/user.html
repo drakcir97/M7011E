@@ -31,6 +31,7 @@
         var div = document.createElement("div");
         div.innerHTML = theJson;
         var text = div.textContent || div.innerText || "";
+        alert(text)
         var weather = JSON.parse(text);
         alert(weather)
         
