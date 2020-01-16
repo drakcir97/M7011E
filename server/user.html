@@ -24,7 +24,7 @@
         //document.getElementById("test").innerHTML = nameValue.outerHTML;
 
         //remove all html tags and change the iframe/html object to json 
-        
+        document.getElementById("test").innerHTML = "test";
         var theFrame = document.getElementById('iframe_weather');       
         var theWin = theFrame.contentWindow;
         var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
@@ -32,18 +32,17 @@
         var div = document.createElement("div");
         div.innerHTML = theJson;
         var text = div.textContent || div.innerText || "";
-        document.getElementById("test").innerHTML = text;
         var weather = JSON.parse(text);
         
 
-        var theFrame2 = document.getElementById('iframe_user');
-        var theWin2 = theFrame2.contentWindow;
-        var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
-        var theJson2 = theDoc2.body.innerHTML;
-        var div2 = document.createElement("div");
-        div2.innerHTML = theJson2;
-        var text2 = div2.textContent || div2.innerText || "";
-        var user = JSON.parse(text2);
+        // var theFrame2 = document.getElementById('iframe_user');
+        // var theWin2 = theFrame2.contentWindow;
+        // var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
+        // var theJson2 = theDoc2.body.innerHTML;
+        // var div2 = document.createElement("div");
+        // div2.innerHTML = theJson2;
+        // var text2 = div2.textContent || div2.innerText || "";
+        // var user = JSON.parse(text2);
 
         // var theFrame3 = document.getElementById('iframe_electricityprice2');
         // var theWin3 = theFrame3.contentWindow;
@@ -64,17 +63,17 @@
         // var buffer = JSON.parse(text4);
  //       document.getElementById("test").innerHTML = obj[0].email;
 
-        var displayjson = ""
-        document.getElementById("test").innerHTML = "before forloop";
-        for(var i = 0; i < weather.length; i++) {
-          displayjson += " windspeed: "+weather[i]['windspeed.windspeed'];
-        }
-        displayjson += '<br>';
-        for(var i = 0; i < user.length; i++) {
-          var netprod = parseFloat(user[i]['powergenerated.value']) - parseFloat(user[i]['powerusage.value']);
-          displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
-        }
-        displayjson += '<br>';
+        // var displayjson = ""
+        // document.getElementById("test").innerHTML = "before forloop";
+        // for(var i = 0; i < weather.length; i++) {
+        //   displayjson += " windspeed: "+weather[i]['windspeed.windspeed'];
+        // }
+        // displayjson += '<br>';
+        // for(var i = 0; i < user.length; i++) {
+        //   var netprod = parseFloat(user[i]['powergenerated.value']) - parseFloat(user[i]['powerusage.value']);
+        //   displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
+        // }
+        // displayjson += '<br>';
         // for(var i = 0; i < buffer.length; i++) {
         //   displayjson += " buffer: "+buffer[i]['value'];
         // }
@@ -82,8 +81,8 @@
         // for(var i = 0; i < electricityprice2.length; i++) {
         //   displayjson += " electricity price: "+electricityprice2[i]['result'];
         // }
-        displayjson += '<br>';
-        document.getElementById("test").innerHTML = displayjson;
+        // displayjson += '<br>';
+        // document.getElementById("test").innerHTML = displayjson;
     }
     </script>
 
