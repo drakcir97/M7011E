@@ -24,7 +24,6 @@
         //document.getElementById("test").innerHTML = nameValue.outerHTML;
 
         //remove all html tags and change the iframe/html object to json 
-        document.getElementById("test").innerHTML = "test";
         var theFrame = document.getElementById('iframe_weather');       
         var theWin = theFrame.contentWindow;
         var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
@@ -32,7 +31,8 @@
         var div = document.createElement("div");
         div.innerHTML = theJson;
         var text = div.textContent || div.innerText || "";
-        var weather = JSON.parse(text);
+        document.getElementById("test").innerHTML = text;
+    //    var weather = JSON.parse(text);
         
 
         // var theFrame2 = document.getElementById('iframe_user');
