@@ -24,8 +24,9 @@
         //document.getElementById("test").innerHTML = nameValue.outerHTML;
 
         //remove all html tags and change the iframe/html object to json 
-        document.getElementById("test").innerHTML = text;
+        
         var theFrame = document.getElementById('iframe_weather');
+        document.getElementById("test").innerHTML = theFrame;
         var theWin = theFrame.contentWindow;
         var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
         var theJson = theDoc.body.innerHTML;
