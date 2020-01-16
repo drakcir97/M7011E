@@ -43,23 +43,23 @@
         var text2 = div2.textContent || div2.innerText || "";
         var user = JSON.parse(text2);
 
-        var theFrame3 = document.getElementById('iframe_electricityprice2');
-        var theWin3 = theFrame3.contentWindow;
-        var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
-        var theJson3 = theDoc3.body.innerHTML;
-        var div3 = document.createElement("div");
-        div3.innerHTML = theJson3;
-        var text3 = div3.textContent || div3.innerText || "";
-        var electricityprice2 = JSON.parse(text3);
+        // var theFrame3 = document.getElementById('iframe_electricityprice2');
+        // var theWin3 = theFrame3.contentWindow;
+        // var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
+        // var theJson3 = theDoc3.body.innerHTML;
+        // var div3 = document.createElement("div");
+        // div3.innerHTML = theJson3;
+        // var text3 = div3.textContent || div3.innerText || "";
+        // var electricityprice2 = JSON.parse(text3);
 
-        var theFrame4 = document.getElementById('iframe_buffer');
-        var theWin4 = theFrame4.contentWindow;
-        var theDoc4 = theFrame4.contentDocument || theFrame4.contentWindow.document;
-        var theJson4 = theDoc4.body.innerHTML;
-        var div4 = document.createElement("div");
-        div4.innerHTML = theJson3;
-        var text4 = div4.textContent || div4.innerText || "";
-        var buffer = JSON.parse(text4);
+        // var theFrame4 = document.getElementById('iframe_buffer');
+        // var theWin4 = theFrame4.contentWindow;
+        // var theDoc4 = theFrame4.contentDocument || theFrame4.contentWindow.document;
+        // var theJson4 = theDoc4.body.innerHTML;
+        // var div4 = document.createElement("div");
+        // div4.innerHTML = theJson3;
+        // var text4 = div4.textContent || div4.innerText || "";
+        // var buffer = JSON.parse(text4);
  //       document.getElementById("test").innerHTML = obj[0].email;
 
         var displayjson = ""
@@ -73,13 +73,13 @@
           displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
         }
         displayjson += '<br>';
-        for(var i = 0; i < buffer.length; i++) {
-          displayjson += " buffer: "+buffer[i]['value'];
-        }
-        displayjson += '<br>';
-        for(var i = 0; i < electricityprice2.length; i++) {
-          displayjson += " electricity price: "+electricityprice2[i]['result'];
-        }
+        // for(var i = 0; i < buffer.length; i++) {
+        //   displayjson += " buffer: "+buffer[i]['value'];
+        // }
+        // displayjson += '<br>';
+        // for(var i = 0; i < electricityprice2.length; i++) {
+        //   displayjson += " electricity price: "+electricityprice2[i]['result'];
+        // }
         displayjson += '<br>';
         document.getElementById("test").innerHTML = displayjson;
     }
