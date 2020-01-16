@@ -569,6 +569,7 @@ app.get('/usersinfo', (req, res) => {
                         var sqlToken = "SELECT user.email, user.id FROM user";
                         con.query(sqlToken, function(err, result){
                                 if (err) throw err;
+                                console.log(result)
                                 return res.send(result); //Temporary to see if it works.
                         });
                 }
