@@ -64,7 +64,7 @@
 
         var displayjson = ""
         document.getElementById("test").innerHTML = "before forloop";
-        alert(weather.response)
+        alert(weather.response[0].windspeed)
         for(var i = 0; i < weather.length; i++) {
           alert(weather.response[0].windspeed)
           displayjson += " windspeed: "+weather.response[i].windspeed;
