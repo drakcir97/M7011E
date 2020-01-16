@@ -25,14 +25,14 @@
 
         //remove all html tags and change the iframe/html object to json 
         
-        var theFrame = document.getElementById('iframe_weather');
-        document.getElementById("test").innerHTML = theFrame;
+        var theFrame = document.getElementById('iframe_weather');       
         var theWin = theFrame.contentWindow;
         var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
         var theJson = theDoc.body.innerHTML;
         var div = document.createElement("div");
         div.innerHTML = theJson;
         var text = div.textContent || div.innerText || "";
+        document.getElementById("test").innerHTML = text;
         var weather = JSON.parse(text);
         
 
