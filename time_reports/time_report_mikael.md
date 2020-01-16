@@ -25,3 +25,4 @@
 | 2019-01-11  | 4       | fixed json data, now display it correctly |
 | 2019-01-14  | 3       | working with the api and block user to sell |
 | 2019-01-15  | 8       | fixed rest-api, userpage, still some problems. |
+| 2019-01-16  | 6       | writing report, trying to display values from the restapi to clientside in a proper way |
