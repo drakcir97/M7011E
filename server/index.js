@@ -678,7 +678,7 @@ app.post('/settings', function(req, res) {
                                                 }
                                         });
                                 } else {
-                                        var sqlSettings = mysql.format("UPDATE simulationsettings SET ratiokeep=?,ratiosell=? WHERE userid=?", [ratiokeep,ratiosell,id]);
+                                        var sqlSettings = mysql.format("UPDATE simulationsettings SET ratiokeep=?,ratiosell=? WHERE userid=?", [ratiokeep,ratiosell,decoded.id]);
                                         con.query(sqlSettings, (err, results) => {
                                                 if (err) {
                                                         console.log(err);
