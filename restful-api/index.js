@@ -485,60 +485,6 @@ io.sockets.on('connect', function(socket)
         });
     });
 
-    socket.on('/api/plantstatus', function(data) {
-        var id = data.id;
-        var start = data.start;
-        if (start) {
-            var sqlSettingsCount = mysql.format("SELECT COUNT(powerplant.ratiokeep) FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?", [id]);
-            conn.query(sqlSettingsCount, (err, results) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    var count = parseInt(JSON.stringify(results[0]['COUNT(powerplant.ratiokeep)']));
-                    if (count == 0) {
-                        return socket.emit('/api/plantsettings', JSON.stringify({"status": 200, "error": true, "response": "No power plant found"}));
-                    } else {
-                        var sqlLocationId = mysql.format("SELECT location.id FROM location INNER JOIN household ON location.id=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?",[id]);
-                        conn.query(sqlLocationId, (err, results) => {
-                            var locationid = results[0]['id'];
-                            var sqlSettings = mysql.format("UPDATE powerplant SET status='starting' WHERE locationid=?", [locationid]);
-                            conn.query(sqlSettings, (err, results) => {
-                                if (err) {
-                                    console.log(err);
-                                }
-                                return socket.emit('/api/plantsettings', JSON.stringify({"status": 200, "error": null, "response": results}));
-                            });
-                        });
-                    }
-                }
-            });
-        } else {
-            var sqlSettingsCount = mysql.format("SELECT COUNT(powerplant.ratiokeep) FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?", [id]);
-            conn.query(sqlSettingsCount, (err, results) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    var count = parseInt(JSON.stringify(results[0]['COUNT(powerplant.ratiokeep)']));
-                    if (count == 0) {
-                        return socket.emit('/api/plantsettings', JSON.stringify({"status": 200, "error": true, "response": "No power plant found"}));
-                    } else {
-                        var sqlLocationId = mysql.format("SELECT location.id FROM location INNER JOIN household ON location.id=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?",[id]);
-                        conn.query(sqlLocationId, (err, results) => {
-                            var locationid = results[0]['id'];
-                            var sqlSettings = mysql.format("UPDATE powerplant SET status='stopped' WHERE locationid=?", [locationid]);
-                            conn.query(sqlSettings, (err, results) => {
-                                if (err) {
-                                    console.log(err);
-                                }
-                                return socket.emit('/api/plantsettings', JSON.stringify({"status": 200, "error": null, "response": results}));
-                            });
-                        });
-                    }
-                }
-            });
-        }
-    })
-
     // Disconnect listener
     socket.on('disconnect', function() {
         console.log('Client disconnected.');
