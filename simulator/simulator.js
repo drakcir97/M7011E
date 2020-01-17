@@ -737,12 +737,12 @@ async function createTestUsers() {
 				if (err) {
 					console.log(err);
 				}
-				var sqlSettings = mysql.format('INSERT INTO simulationsettings (userid) VALUES (?)', [i]);
-				con.query(sqlSettings, function(err, results) {
-					if (err) {
-						console.log(err);
-					}
-				});
+				// var sqlSettings = mysql.format('INSERT INTO simulationsettings (userid) VALUES (?)', [i]);
+				// con.query(sqlSettings, function(err, results) {
+				// 	if (err) {
+				// 		console.log(err);
+				// 	}
+				// });
 			});
 		}
 	});
