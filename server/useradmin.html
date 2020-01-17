@@ -7,7 +7,6 @@
 <body onload="myFunction()">
   <div class="toprightcorner"><a href="/signout">Sign out</a></div>
   <div class="topleftcorner"><a href="/home">Home</a></div>
-  <div class="topleftcorner"><a href="/settings">Settings</a></div>
   <picture>
       <img src="https://3.95.190.134:3000/userimage" width="350" height="200" srcset="https://3.95.190.134:3000/userimage">
     </picture>
@@ -51,6 +50,15 @@
     </script>
 
 <p id="test"> </p>
+
+<h2>Change settings: </h2>
+<form id="settings" method="post" action="/plantsettings">
+    <p>Ratio to keep in buffer: </p>
+    <input type="range" name="ratiokeep" id="ratiokeep" value="0.5" min="0" max="1" step="0.1" oninput="keepOutputId.value = ratiokeep.value">
+    <output name="keepOutputName" id="keepOutputId">0.5</output>
+<input type="hidden" id="p2" name="p2" value="2">
+
+<p><input type="Submit" value="Submit"></p>
 
 </body>
 </html>
