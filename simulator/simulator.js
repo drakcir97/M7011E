@@ -432,9 +432,9 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 	var powerkeep = 0;
 	var sqlSettingsCheck = mysql.format("SELECT COUNT(simulationsettings.ratiokeep) FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
 	con.query(sqlSettingsCheck, async function(err, result) {
-		var count = parseInt(result[0]['COUNT(simulationsettings.ratiokeep']);
+		var count = result[0]['COUNT(simulationsettings.ratiokeep'];
 		console.log("Count in powercost: "+count);
-		if (count != 0) {
+		if (count != "") {
 			var sqlSettings = mysql.format("SELECT simulationsettings.ratiokeep,simulationsettings.ratiosell FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
 			con.query(sqlSettings, async function(err,result) {
 				var ratiokeep = result[0]['simulationsettings.ratiokeep'];
