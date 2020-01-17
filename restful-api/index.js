@@ -402,7 +402,7 @@ io.sockets.on('connect', function(socket)
             } else {
                 var count = parseInt(JSON.stringify(results[0]['COUNT(powerplant.ratiokeep)']));
                 if (count == 0) {
-                    return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": true, "response": "No power plant found"}));
+                    return socket.emit('/api/plantsettings', JSON.stringify({"status": 200, "error": true, "response": "No power plant found"}));
                 } else {
                     var sqlLocationId = mysql.format("SELECT location.id FROM location INNER JOIN household ON location.id=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?",[id]);
                     conn.query(sqlLocationId, (err, results) => {
@@ -412,7 +412,7 @@ io.sockets.on('connect', function(socket)
                             if (err) {
                                 console.log(err);
                             }
-                            return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                            return socket.emit('/api/plantsettings', JSON.stringify({"status": 200, "error": null, "response": results}));
                         });
                     });
                 }

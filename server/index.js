@@ -716,7 +716,6 @@ app.post('/plantsettings', function(req, res) {
                 //res.status(200).send(decoded);
                 if (decoded.admin == '1') {
                         var ratiokeep = req.body.ratiokeep;
-                        var ratiosell = req.body.ratiosell;
                         // Connect to server
                         var io = require('socket.io-client');
                         var socket = io.connect('http://localhost:8080/', {reconnect: true});
