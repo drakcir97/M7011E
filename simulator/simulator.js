@@ -827,7 +827,6 @@ async function update() {
 	await createLocation(location);
 	await createPowerplant(location);
 	await updatePowerPlant();
-	await checkTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	await genWindAndTemp(location,date);
 	//await genTotalPower();
@@ -853,10 +852,12 @@ con.connect(async function(err) {
 	if (err) {
 		console.log(err);
 	};
+	await checkTestHouseholds(location);
+	await sleep(250);
 	console.log("Connected to db");
 	while(true) {
 		update();
-		await sleep(1000);
+		await sleep(10000);
 	}
 	// var location = "Kiruna";
 	// createLocation(location);
