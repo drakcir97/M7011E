@@ -720,8 +720,8 @@ async function createTestHouseholds(location) {
 				if (err) {
 					console.log(err);
 				};
-				i=i+1;
 			});
+			i=i+1;
 		}
 		var j = 0;
 		while (j<2) {
@@ -731,8 +731,8 @@ async function createTestHouseholds(location) {
 				if (err) {
 					console.log(err);
 				};
-				j=j+1;
 			});
+			j=j+1;
 		}
 		var sqlHousehold = "SELECT COUNT(*) FROM household";
 		con.query(sqlHousehold, function (err, result) {
