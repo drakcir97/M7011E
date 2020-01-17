@@ -294,7 +294,7 @@ async function createPowerplant(location) {
 		if (err) {
 			console.log(err);
 		} else {
-			var count = parseInt(results[0]['COUNT(powerplant.id)']);
+			var count = parseInt(results[0]['COUNT(id)']);
 			if (count == 0) {
 				var sqlLocationId = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 				con.query(sqlLocationId, function(err, results) {
