@@ -732,6 +732,9 @@ async function createTestUsers() {
 		var numberOfHouseholds = parseInt(results[0]['COUNT(*)']);
 		var i = 1;
 		while(i<=numberOfHouseholds) {
+			if (i>numberOfHouseholds) {
+				break;
+			}
 			console.log("Householdid & userid: "+i)
 			var sql = mysql.format("INSERT INTO user (householdid) VALUES (?)", [i]);
 			con.query(sql, function(err, results) {
