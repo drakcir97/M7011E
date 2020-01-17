@@ -664,14 +664,14 @@ app.post('/settings', function(req, res) {
                 //res.status(200).send(decoded);
                 var ratiokeep = req.body.ratiokeep;
                 var ratiosell = req.body.ratiosell;
-                var sqlSettingsCount = mysql.format("SELECT COUNT(userid) FROM simulationsettings WHERE userid=?", [id]);
+                var sqlSettingsCount = mysql.format("SELECT COUNT(userid) FROM simulationsettings WHERE userid=?", [decoded.id]);
                 conn.query(sqlSettingsCount, (err, results) => {
                         if (err) {
                                 console.log(err);
                         } else {
                                 var count = parseInt(JSON.stringify(results[0]['COUNT(userid)']));
                                 if (count == 0) {
-                                        var sqlSettings = mysql.format("INSERT INTO simulationsettings (userid, ratiokeep, ratiosell) VALUES (?,?,?)", [id,ratiokeep,ratiosell]);
+                                        var sqlSettings = mysql.format("INSERT INTO simulationsettings (userid, ratiokeep, ratiosell) VALUES (?,?,?)", [decoded.id,ratiokeep,ratiosell]);
                                         conn.query(sqlSettings, (err, results) => {
                                                 if (err) {
                                                         console.log(err);
