@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS user (
 CREATE TABLE IF NOT EXISTS simulationsettings (
     id int NOT NULL AUTO_INCREMENT,
     userid int NOT NULL UNIQUE,
-    ratiokeep float NOT NULL,
-    ratiosell float NOT NULL,
+    ratiokeep float DEFAULT '0.5',
+    ratiosell float DEFAULT '0.5',
     PRIMARY KEY (id),
     FOREIGN KEY (userid) REFERENCES user(id)
 );
