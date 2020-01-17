@@ -698,9 +698,9 @@ async function createTestUsers() {
 					if (err) {
 						console.log(err);
 					}
-					i=i+1;
 				});
 			});
+			i=i+1;
 		}
 	});
 }
