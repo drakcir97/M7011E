@@ -700,7 +700,7 @@ app.post('/settings', function(req, res) {
                 socket.on('/api/settings', function (message) {
                         //socket.emit('api/users');
                         console.log(message);
-                        return res.send(message);
+                        return res.redirect('/');
                 });
         });
 });
