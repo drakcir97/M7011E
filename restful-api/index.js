@@ -216,7 +216,7 @@ io.sockets.on('connect', function(socket)
             if(err) throw err;
             var totalhouseholds = parseInt(JSON.stringify(results[0]['COUNT(id)']));
             var powercost = 0;
-            var sqlPower = "SELECT powerin,powerout FROM powertotal ORDER BY id DESC LIMIT 1";
+            var sqlPower = "SELECT powerin,powerout FROM powertotal ORDER BY i DESC LIMIT 1";
             conn.query(sqlPower, (err, results) => {
                 if(err) throw err;
                 var powerin = parseFloat(JSON.stringify(results[0]['powerin']));
