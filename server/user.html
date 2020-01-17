@@ -64,15 +64,15 @@
         // var price = JSON.parse(text4);
         
 
-        var theFrame5 = document.getElementById('iframe_buffer');
-        var theWin5 = theFrame5.contentWindow;
-        var theDoc5 = theFrame5.contentDocument || theFrame5.contentWindow.document;
-        var theJson5 = theDoc5.body.innerHTML;
-        var div5 = document.createElement("div");
-        div5.innerHTML = theJson5;
-        var text5 = div5.textContent || div5.innerText || "";
-        alert(text5)
-        var buffer = JSON.parse(text5);
+        // var theFrame5 = document.getElementById('iframe_buffer');
+        // var theWin5 = theFrame5.contentWindow;
+        // var theDoc5 = theFrame5.contentDocument || theFrame5.contentWindow.document;
+        // var theJson5 = theDoc5.body.innerHTML;
+        // var div5 = document.createElement("div");
+        // div5.innerHTML = theJson5;
+        // var text5 = div5.textContent || div5.innerText || "";
+        // alert(text5)
+        // var buffer = JSON.parse(text5);
         
         //document.getElementById("test").innerHTML = obj[0].email;
 
@@ -87,7 +87,7 @@
         alert(text3)
         var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
         displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
-        displayjson += "<br> buffer: "+buffer.response;
+        //displayjson += "<br> buffer: "+buffer.response;
         //var netprod = parseFloat(user[0]['powergenerated.value']) - parseFloat(user[0]['powerusage.value']);
         //displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
         // for(var i = 0; i < user.length; i++) {
