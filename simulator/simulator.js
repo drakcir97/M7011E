@@ -582,14 +582,14 @@ async function buyFromPlant(householdid, amountOfPower) {
 }
 
 async function checkIfBlocked(householdid) {
-	var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhouseholds WHERE householdid=?", [householdid]);
+	var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhousehold WHERE householdid=?", [householdid]);
 	con.query(sqlBanned, function(err, results) {
 		if (err) {
 			console.log(err);
 		} else {
 			var num = parseInt(results[0]['COUNT(dt)']);
 			if (num != 0) {
-				var sqlBanned = mysql.format("SELECT dt FROM blockedhouseholds WHERE householdid=?", [householdid]);
+				var sqlBanned = mysql.format("SELECT dt FROM blockedhousehold WHERE householdid=?", [householdid]);
 				con.query(sqlBanned, function(err, results) {
 					if (err) {
 						console.log(err);
@@ -598,7 +598,7 @@ async function checkIfBlocked(householdid) {
 						var d = new Date();
 						var currenttime = d.getTime()/1000;
 						if (banned <= currentime) {
-							var sqlRemove = mysql.format("DELETE FROM blockedhouseholds WHERE householdid=?", [householdid]);
+							var sqlRemove = mysql.format("DELETE FROM blockedhousehold WHERE householdid=?", [householdid]);
 							con.query(sqlRemove, function(err, results) {
 								if (err) {
 									console.log(err);
