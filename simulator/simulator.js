@@ -678,6 +678,7 @@ async function checkTestHouseholds(location) {
 } 
 
 async function createTestUsers() {
+	console.log("Creating users");
 	var sqlHousehold = "SELECT COUNT(*) FROM household";
 	con.query(sqlHousehold, function (err, results) {
 		if (err) {
@@ -686,6 +687,7 @@ async function createTestUsers() {
 		var numberOfHouseholds = parseInt(results[0]['COUNT(*)']);
 		var i = 1;
 		while(i<=numberOfHouseholds) {
+			console.log("Householdid & userid: "+i)
 			var sql = mysql.format("INSERT INTO user (householdid) VALUES (?)", [i]);
 			con.query(sql, function(err, results) {
 				if (err) {
