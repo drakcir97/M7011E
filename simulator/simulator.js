@@ -515,6 +515,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 						var powerneededfrombuffer = -(1-ratiokeep) * powersum;
 						var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
 						powersum += powerfrombuffer; //Add power we got from buffer, will still be negative.
+						console.log("POWERSUM  "+powersum);
 						if (totalin>totalout) {
 							powercost = powerCostLow*powersum;
 						} else {
