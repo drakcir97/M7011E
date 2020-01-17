@@ -31,3 +31,5 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2020-1-12   | 2       | Added powerplant including functions in simulator to update and buy power. |
 | 2020-1-14   | 3       | More work on powerplant, including ability to block users from buying. |
 | 2020-1-15   | 8       | Fixed issues with API, trying to fix user page, currently able to send data and format it. |
+| 2020-1-16   | 6       | Began work on the report, also trying to send data from the API and formatting. |
+| 2020-1-17   | 8       | More on report, fixed issues and features in the simulator and API and server. |
