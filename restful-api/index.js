@@ -227,7 +227,7 @@ io.sockets.on('connect', function(socket)
                 } else {
                     powercost = powerCostLow;
                 }
-                return socket.emit('/api/electricityprice2', JSON.stringify({"status": 200, "error": null, "response": powercost}));
+                return socket.emit('/api/electricityprice2', JSON.stringify({"status": 200, "error": null, "response": {result: powercost}}));
             });
             
         });
