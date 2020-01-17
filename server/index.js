@@ -789,7 +789,7 @@ app.get('/api/:inp', (req, res) => {
                 socket.on(inp, function (message) {
                         //socket.emit('api/users');
                         console.log(message);
-                        return res.send(message);
+                        res.send(message);
                 });
                 
         });
