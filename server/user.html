@@ -9,7 +9,7 @@
   <div class="topleftcorner"><a href="/home">Home</a></div>
   <div class="topleftcorner"><a href="/settings">Settings</a></div>
   <picture>
-      <img src="https://3.95.190.134:3000/userimage" source media="(min-width: 465px max-width: 1280px)" srcset="https://3.95.190.134:3000/userimage">
+      <img src="https://3.95.190.134:3000/userimage" width="350" height="200" srcset="https://3.95.190.134:3000/userimage">
     </picture>
 <iframe src="https://3.95.190.134:3000/api/weather" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
 <iframe src="https://3.95.190.134:3000/api/user" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
@@ -19,12 +19,6 @@
 
 <script>
     function myFunction() {
-
-        //två raderna nedanför skriver ut all data, med html taggar
-        //var nameValue = window.frames['iframe'].document.body;
-        //document.getElementById("test").innerHTML = nameValue.outerHTML;
-
-        //remove all html tags and change the iframe/html object to json 
         var theFrame = document.getElementById('iframe_weather');       
         var theWin = theFrame.contentWindow;
         var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
@@ -72,35 +66,12 @@
         div5.innerHTML = theJson5;
         var text5 = div5.textContent || div5.innerText || "";
         var buffer = JSON.parse(text5);
-        
-        //document.getElementById("test").innerHTML = obj[0].email;
 
         var displayjson = " windspeed: "+weather.response[0].windspeed;
-        // length is undefined.
-        // for(var i = 0; i < weather.length; i++) {
-        //   alert(weather.response[0].windspeed)
-        //   displayjson += " windspeed: "+weather.response[i].windspeed;
-        //   alert(displayjson)
-        // }
         displayjson += '<br>';
         var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
         displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
         displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
-        //var netprod = parseFloat(user[0]['powergenerated.value']) - parseFloat(user[0]['powerusage.value']);
-        //displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
-        // for(var i = 0; i < user.length; i++) {
-        //   var netprod = parseFloat(user[i]['powergenerated.value']) - parseFloat(user[i]['powerusage.value']);
-        //   displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
-        // }
-        // displayjson += '<br>';
-        // for(var i = 0; i < buffer.length; i++) {
-        //   displayjson += " buffer: "+buffer[i]['value'];
-        // }
-        // displayjson += '<br>';
-        // for(var i = 0; i < electricityprice2.length; i++) {
-        //   displayjson += " electricity price: "+electricityprice2[i]['result'];
-        // }
-        // displayjson += '<br>';
         document.getElementById("test").innerHTML = displayjson;
     }
     </script>

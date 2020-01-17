@@ -365,21 +365,30 @@ io.sockets.on('connect', function(socket)
                     conn.query(sqlSettings, (err, results) => {
                         if (err) {
                             console.log(err);
-                        } else {
-                            return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
                         }
+                        return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
                     });
                 } else {
                     var sqlSettings = mysql.format("UPDATE simulationsettings SET ratiokeep=?,ratiosell=? WHERE userid=?", [ratiokeep,ratiosell,id]);
                     conn.query(sqlSettings, (err, results) => {
                         if (err) {
                             console.log(err);
-                        } else {
-                            return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
                         }
+                        return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
                     });
                 }
             }
+        });
+    });
+
+    socket.on('/api/plantstatus', function(data) {
+        var id = data.id;
+        var sqlPlant = mysql.format("SELECT powerplant.maxpower, powerplant.buffer, powerplant.ratiokeep, powerplant.status FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?", [id]);
+        con.query(sqlPlant, function(err, results) {
+            if (err) {
+                console.log(err);
+            }
+            return socket.emit('/api/plantstatus', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
 

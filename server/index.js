@@ -272,54 +272,14 @@ app.get('/userpage', (req, res) => {
         }
         jwt.verify(token, authenticator.secret, function(err, decoded) {
                 if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                        if(decoded.admin == '1'){
+                                return res.sendFile('useradmin.html', {root : './'});
+                        }
+                        else{
+                                return res.sendFile('user.html', {root : './'});
+                        }
                 
-                // Connect to server
-                // var io = require('socket.io-client');
-                // var socket = io.connect('http://localhost:8080/', {reconnect: true});
 
-                // console.log('2');
-
-                // Add a connect listener
-                // socket.on('connect', function(socket) { 
-                //         console.log('Connected!');
-                // //        socket.on('clientEvent', function (data) {
-                // //                socket.emit(data);
-                // //        });
-                        
-                // }); 
-
-                // socket.on('response', function (message) {
-                //         socket.emit('/api/users',{data: "hello"});
-                //         console.log(message);
-                // });
-                
-                // socket.on('/api/users', function (message) {
-                //         //socket.emit('api/users');
-                //         console.log(message);
-                //         return res.send(message);
-                // });
-
-                // console.log('3');
-                //res.status(200).send(decoded);
-                return res.sendFile('user.html', {root : './'});
-        /**         var socket = new net.Socket();
-                //var host = parse('localhost/api/users/%s', JSON.stringify(decoded.id));
-                var host = '3.87.255.174/api/users';
-                socket.connect({port: 8080,host: host}, function () {
-                        console.log("Client: Connected to server");
-                });
-
-                // Let's handle the data we get from the server
-                socket.on("data", function (data) {
-                        data = JSON.parse(data);
-                        console.log("Response from server: %s", data.response);
-                        // Respond back
-                        //socket.write(JSON.stringify({ response: "Hey there server!" }));
-                        // Close the connection
-                        socket.end();
-                        res.write(data);
-                        return res.end();
-                }); */
         });
         //req.body.emailaddress;
         //req.body.name;
