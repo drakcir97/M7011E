@@ -301,7 +301,7 @@ app.get('/userpage', (req, res) => {
 
                 // console.log('3');
                 //res.status(200).send(decoded);
-                res.sendFile('user.html', {root : './'});
+                return res.sendFile('user.html', {root : './'});
         /**         var socket = new net.Socket();
                 //var host = parse('localhost/api/users/%s', JSON.stringify(decoded.id));
                 var host = '3.87.255.174/api/users';
