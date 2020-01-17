@@ -408,7 +408,7 @@ async function putinbuffer(householdid,powertobuffer) {
 async function getfrombuffer(householdid,powerneeded) {
 	var buffer = 0;
 	var sqlCheckBuffer = mysql.format("SELECT COUNT(value) FROM powerstored WHERE householdid=?", [householdid]);
-	con.query(sqlCheckBuffer, function(err, results) {
+	con.query(sqlCheckBuffer, async function(err, results) {
 		if (err) {
 			console.log(err);
 		}
@@ -418,14 +418,14 @@ async function getfrombuffer(householdid,powerneeded) {
 			return 0;
 		} else {
 			var sqlBuffer = mysql.format("SELECT value FROM powerstored WHERE householdid=?", [householdid]);
-			con.query(sqlBuffer, function(err, result) {
+			con.query(sqlBuffer, async function(err, result) {
 				if (err) {
 					console.log(err);
 				};
 				buffer = parseFloat(result[0]['value']); //Get old value
 				if (buffer<powerneeded) { //There is less power then we need in buffer.
 					var sqlBuffer = mysql.format("UPDATE powerstored SET value=? WHERE householdid=?",[0,householdid]); //0 power remaining.
-					con.query(sqlBuffer, function(err, result) {
+					con.query(sqlBuffer, async function(err, result) {
 						if (err) {
 							console.log(err);
 						};
@@ -434,7 +434,7 @@ async function getfrombuffer(householdid,powerneeded) {
 					});
 				} else {
 					var sqlBuffer = mysql.format("UPDATE powerstored SET value=? WHERE householdid=?",[buffer-powerneeded,householdid]); //Update power remaining.
-					con.query(sqlBuffer, function(err, result) {
+					con.query(sqlBuffer, async function(err, result) {
 						if (err) {
 							console.log(err);
 						};
