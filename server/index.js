@@ -675,8 +675,6 @@ app.post('/settings', function(req, res) {
                                         con.query(sqlSettings, (err, results) => {
                                                 if (err) {
                                                         console.log(err);
-                                                } else {
-                                                        return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
                                                 }
                                         });
                                 } else {
@@ -684,8 +682,6 @@ app.post('/settings', function(req, res) {
                                         con.query(sqlSettings, (err, results) => {
                                                 if (err) {
                                                         console.log(err);
-                                                } else {
-                                                        return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
                                                 }
                                         });
                                 }
