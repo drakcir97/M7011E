@@ -405,7 +405,7 @@ async function putinbuffer(householdid,powertobuffer) {
 };
 
 //Get powerneeded amount of power from buffer in database. If excess, store it. Return number of power the buffer can max supply up to powerneeded.
-async function getfrombuffer(householdid,powerneeded) {
+async function getfrombuffer(householdid,powerneeded,callback) {
 	var buffer = 0;
 	var sqlCheckBuffer = mysql.format("SELECT COUNT(value) FROM powerstored WHERE householdid=?", [householdid]);
 	con.query(sqlCheckBuffer, async function(err, results) {
@@ -415,7 +415,12 @@ async function getfrombuffer(householdid,powerneeded) {
 		var count = parseInt(results[0]['COUNT(value)']);
 		if (count == 0) {
 			console.log("RETURN VALUE 0  ");
-			return 0;
+			try {
+				callback(null, 0);
+			} catch (e) {
+				console.log("Can't run");
+			}
+			//return 0;
 		} else {
 			var sqlBuffer = mysql.format("SELECT value FROM powerstored WHERE householdid=?", [householdid]);
 			con.query(sqlBuffer, async function(err, result) {
@@ -430,7 +435,12 @@ async function getfrombuffer(householdid,powerneeded) {
 							console.log(err);
 						};
 						console.log("RETURN VALUE BUFFER  "+buffer);
-						return buffer; //Return everything we had in buffer.
+						try {
+							callback(null, buffer);
+						} catch (e) {
+							console.log("Can't run");
+						}
+						//return buffer; //Return everything we had in buffer.
 					});
 				} else {
 					var sqlBuffer = mysql.format("UPDATE powerstored SET value=? WHERE householdid=?",[buffer-powerneeded,householdid]); //Update power remaining.
@@ -439,7 +449,12 @@ async function getfrombuffer(householdid,powerneeded) {
 							console.log(err);
 						};
 						console.log("RETURN VALUE POWERNEEDED  "+buffer);
-						return powerneeded; //Return power we needed.
+						try {
+							callback(null, powerneeded);
+						} catch (e) {
+							console.log("Can't run");
+						}
+						//return powerneeded; //Return power we needed.
 					});
 				}
 			});
@@ -476,20 +491,29 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 							powercost = powerCostLow*(powersum * ratiosell);
 						} else { //We need to buy power.
 							var powerneededfrombuffer = -(1-ratiokeep) * powersum;
-							var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
-							powersum += powerfrombuffer; //Add power we got from buffer, will still be negative.
-							if (totalin>totalout) {
-								powercost = powerCostLow*powersum;
-							} else {
-								if ((powersum + totalin/totalhouseholds) > 0) {
-									powercost = powerCostLow*powersum;
+							await getfrombuffer(householdid, powerneededfrombuffer, async function(err,dataBuffer) {
+								if (err) {
+									console.log("error");
 								} else {
-									var powerCheap = totalin/totalhouseholds;
-									var powerExpensive = (powersum+powerCheap);
-									await buyFromPlant(householdid, powerExpensive);
-									powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+									// var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
+									// console.log("BUFFER POWER  "+powerfrombuffer);
+									// console.log("POWERSUM BEFORE  "+powersum);
+									powersum += dataBuffer; //Add power we got from buffer, will still be negative.
+									//console.log("POWERSUM AFTER  "+powersum);
+									if (totalin>totalout) {
+										powercost = powerCostLow*powersum;
+									} else {
+										if ((powersum + totalin/totalhouseholds) > 0) {
+											powercost = powerCostLow*powersum;
+										} else {
+											var powerCheap = totalin/totalhouseholds;
+											var powerExpensive = (powersum+powerCheap);
+											await buyFromPlant(householdid, powerExpensive);
+											powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+										}
+									}
 								}
-							}
+							});
 						} 
 						var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
 						con.query(sqlCost, async function(err, result) {
@@ -516,23 +540,29 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 						powercost = powerCostLow*(powersum * ratiosell);
 					} else { //We need to buy power.
 						var powerneededfrombuffer = -(1-ratiokeep) * powersum;
-						var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
-						console.log("BUFFER POWER  "+powerfrombuffer);
-						console.log("POWERSUM BEFORE  "+powersum);
-						powersum += powerfrombuffer; //Add power we got from buffer, will still be negative.
-						console.log("POWERSUM AFTER  "+powersum);
-						if (totalin>totalout) {
-							powercost = powerCostLow*powersum;
-						} else {
-							if ((powersum + totalin/totalhouseholds) > 0) {
-								powercost = powerCostLow*powersum;
+						await getfrombuffer(householdid, powerneededfrombuffer, async function(err,dataBuffer) {
+							if (err) {
+								console.log("error");
 							} else {
-								var powerCheap = totalin/totalhouseholds;
-								var powerExpensive = (powersum+powerCheap);
-								await buyFromPlant(householdid, powerExpensive);
-								powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+								// var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
+								// console.log("BUFFER POWER  "+powerfrombuffer);
+								// console.log("POWERSUM BEFORE  "+powersum);
+								powersum += dataBuffer; //Add power we got from buffer, will still be negative.
+								//console.log("POWERSUM AFTER  "+powersum);
+								if (totalin>totalout) {
+									powercost = powerCostLow*powersum;
+								} else {
+									if ((powersum + totalin/totalhouseholds) > 0) {
+										powercost = powerCostLow*powersum;
+									} else {
+										var powerCheap = totalin/totalhouseholds;
+										var powerExpensive = (powersum+powerCheap);
+										await buyFromPlant(householdid, powerExpensive);
+										powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+									}
+								}
 							}
-						}
+						});
 					} 
 					var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
 					con.query(sqlCost, async function(err, result) {
