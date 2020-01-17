@@ -430,46 +430,90 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 	var powersum = 0;
 	var powercost = 0;
 	var powerkeep = 0;
-	var sqlSettings = mysql.format("SELECT simulationsettings.ratiokeep,simulationsettings.ratiosell FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
-	con.query(sqlSettings, async function(err,result) {
-		var ratiokeep = result[0]['simulationsettings.ratiokeep'];
-		var ratiosell = result[0]['simulationsettings.ratiosell'];
-		var sqlGen = mysql.format("SELECT value FROM powergenerated WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-		con.query(sqlGen, async function (err, result) {
-			powergenerated = parseFloat(JSON.stringify(result[0].value));
-			var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-			con.query(sqlUsage, async function (err, result) {
-				powerusage = parseFloat(JSON.stringify(result[0].value));
-				powersum = powergenerated - powerusage;
-				if(powersum >= 0) { //We generated excess power.
-					powerkeep = powersum * (1-ratiosell); //Keep amount of power from settings
-					await putinbuffer(householdid,powerkeep); //Put power stored into buffer. Powerkeep is positive.
-					powercost = powerCostLow*(powersum * ratiosell);
-				} else { //We need to buy power.
-					var powerneededfrombuffer = -(1-ratiokeep) * powersum;
-					var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
-					powersum += powerfrombuffer; //Add power we got from buffer, will still be negative.
-					if (totalin>totalout) {
-						powercost = powerCostLow*powersum;
-					} else {
-						if ((powersum + totalin/totalhouseholds) > 0) {
+	var sqlSettingsCheck = mysql.format("SELECT COUNT(simulationsettings.ratiokeep) FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
+	con.query(sqlSettingsCheck, async function(err, result) {
+		var count = parseInt(result[0]['COUNT(simulationsettings.ratiokeep']);
+		if (count != 0) {
+			var sqlSettings = mysql.format("SELECT simulationsettings.ratiokeep,simulationsettings.ratiosell FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
+			con.query(sqlSettings, async function(err,result) {
+				var ratiokeep = result[0]['simulationsettings.ratiokeep'];
+				var ratiosell = result[0]['simulationsettings.ratiosell'];
+				con.query(sqlGen, async function (err, result) {
+					powergenerated = parseFloat(JSON.stringify(result[0].value));
+					var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+					con.query(sqlUsage, async function (err, result) {
+						powerusage = parseFloat(JSON.stringify(result[0].value));
+						powersum = powergenerated - powerusage;
+						if(powersum >= 0) { //We generated excess power.
+							powerkeep = powersum * (1-ratiosell); //Keep amount of power from settings
+							await putinbuffer(householdid,powerkeep); //Put power stored into buffer. Powerkeep is positive.
+							powercost = powerCostLow*(powersum * ratiosell);
+						} else { //We need to buy power.
+							var powerneededfrombuffer = -(1-ratiokeep) * powersum;
+							var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
+							powersum += powerfrombuffer; //Add power we got from buffer, will still be negative.
+							if (totalin>totalout) {
+								powercost = powerCostLow*powersum;
+							} else {
+								if ((powersum + totalin/totalhouseholds) > 0) {
+									powercost = powerCostLow*powersum;
+								} else {
+									var powerCheap = totalin/totalhouseholds;
+									var powerExpensive = (powersum+powerCheap);
+									await buyFromPlant(householdid, powerExpensive);
+									powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+								}
+							}
+						} 
+						var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+						con.query(sqlCost, async function(err, result) {
+							if (err) {
+								console.log(err);
+							};
+						});
+					});
+				});
+			});	
+		} else {
+			var ratiokeep = 0.5;
+			var ratiosell = 0.5;
+			var sqlGen = mysql.format("SELECT value FROM powergenerated WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+			con.query(sqlGen, async function (err, result) {
+				powergenerated = parseFloat(JSON.stringify(result[0].value));
+				var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+				con.query(sqlUsage, async function (err, result) {
+					powerusage = parseFloat(JSON.stringify(result[0].value));
+					powersum = powergenerated - powerusage;
+					if(powersum >= 0) { //We generated excess power.
+						powerkeep = powersum * (1-ratiosell); //Keep amount of power from settings
+						await putinbuffer(householdid,powerkeep); //Put power stored into buffer. Powerkeep is positive.
+						powercost = powerCostLow*(powersum * ratiosell);
+					} else { //We need to buy power.
+						var powerneededfrombuffer = -(1-ratiokeep) * powersum;
+						var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
+						powersum += powerfrombuffer; //Add power we got from buffer, will still be negative.
+						if (totalin>totalout) {
 							powercost = powerCostLow*powersum;
 						} else {
-							var powerCheap = totalin/totalhouseholds;
-							var powerExpensive = (powersum+powerCheap);
-							await buyFromPlant(householdid, powerExpensive);
-							powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+							if ((powersum + totalin/totalhouseholds) > 0) {
+								powercost = powerCostLow*powersum;
+							} else {
+								var powerCheap = totalin/totalhouseholds;
+								var powerExpensive = (powersum+powerCheap);
+								await buyFromPlant(householdid, powerExpensive);
+								powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+							}
 						}
-					}
-				} 
-				var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
-				con.query(sqlCost, async function(err, result) {
-					if (err) {
-						console.log(err);
-					};
+					} 
+					var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+					con.query(sqlCost, async function(err, result) {
+						if (err) {
+							console.log(err);
+						};
+					});
 				});
 			});
-		});
+		}
 	});
 }
 
