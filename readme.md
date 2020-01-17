@@ -7,7 +7,7 @@ Project is created with:
 --HTML version: 5
 --MySQL version: 5.7.28
 
-npm installs:
+Requirements: Node.js 13.0.1 with following npm installs:
 -cookie-parser@1.4.4
 -express@4.17.1
 -formidable@1.2.1
