@@ -720,8 +720,8 @@ async function createTestHouseholds(location) {
 				if (err) {
 					console.log(err);
 				};
+				i=i+1;
 			});
-			i=i+1;
 		}
 		var j = 0;
 		while (j<2) {
@@ -731,16 +731,16 @@ async function createTestHouseholds(location) {
 				if (err) {
 					console.log(err);
 				};
+				j=j+1;
 			});
-			j=j+1;
 		}
 		var sqlHousehold = "SELECT COUNT(*) FROM household";
 		con.query(sqlHousehold, function (err, result) {
 		//	console.log(result[0]['COUNT(*)']);
 		});
 		console.log("Inserted households to test");
+		await createTestUsers();
 	});
-	await createTestUsers();
 }
 
 async function genWindAndTemp(location,date) {
@@ -827,6 +827,7 @@ async function update() {
 	await createLocation(location);
 	await createPowerplant(location);
 	await updatePowerPlant();
+	await checkTestHouseholds(location);
 	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
 	await genWindAndTemp(location,date);
 	//await genTotalPower();
@@ -852,8 +853,6 @@ con.connect(async function(err) {
 	if (err) {
 		console.log(err);
 	};
-	await checkTestHouseholds(location);
-	await sleep(250);
 	console.log("Connected to db");
 	while(true) {
 		update();
