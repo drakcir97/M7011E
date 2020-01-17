@@ -51,6 +51,7 @@
         var div3 = document.createElement("div");
         div3.innerHTML = theJson3;
         var text3 = div3.textContent || div3.innerText || "";
+        alert(text3);
         var powgen = JSON.parse(text3);
 
         // var theFrame4 = document.getElementById('iframe_buffer');
@@ -72,7 +73,7 @@
         // }
         displayjson += '<br>';
         alert(text3)
-        displayjson += " used: " + user.response[0].value+" production: "+powgen.response[0].value;
+        displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value;
         //var netprod = parseFloat(user[0]['powergenerated.value']) - parseFloat(user[0]['powerusage.value']);
         //displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
         // for(var i = 0; i < user.length; i++) {

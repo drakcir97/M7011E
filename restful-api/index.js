@@ -210,11 +210,12 @@ io.sockets.on('connect', function(socket)
 
     //show current electricity price type 2
     socket.on('/api/electricityprice2', function(data) {
+        console.log("electricityprice2")
         let sql = "SELECT COUNT(id) FROM household";
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
             let totalhouseholds = parseInt(JSON.stringify(results[0]['COUNT(id)']));
-            let sql = "SELECT powerin,powerout FROM powertotal ORDER BY datetimeid DESC LIMIT 1";
+            let sql = "SELECT powerin,powerout FROM powertotal ORDER BY id DESC LIMIT 1";
             var powercost = 0;
             let query = conn.query(sql, (err, results) => {
                 let powerin = parseFloat(JSON.stringify(results[0]['powerin']));
@@ -225,8 +226,9 @@ io.sockets.on('connect', function(socket)
                 } else {
                     powercost = powerCostLow;
                 }
+                return socket.emit('/api/eletricityprice2', JSON.stringify({"status": 200, "error": null, "response": powercost}));
             });
-            return socket.emit('/api/eletricityprice2', JSON.stringify({"status": 200, "error": null, "response": powercost}));
+            
         });
     });
 
