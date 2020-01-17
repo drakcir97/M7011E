@@ -406,7 +406,7 @@ io.sockets.on('connect', function(socket)
                 } else {
                     var sqlLocationId = mysql.format("SELECT location.id FROM location INNER JOIN household ON location.id=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?",[id]);
                     conn.query(sqlLocationId, (err, results) => {
-                        var locationid = results[0]['location.id'];
+                        var locationid = results[0]['id'];
                         var sqlSettings = mysql.format("UPDATE powerplant SET ratiokeep=? WHERE locationid=?", [ratiokeep,locationid]);
                         conn.query(sqlSettings, (err, results) => {
                             if (err) {
