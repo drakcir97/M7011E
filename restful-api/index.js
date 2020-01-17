@@ -184,7 +184,7 @@ io.sockets.on('connect', function(socket)
         //order by datetimeid fungerar inte i queryn ovanför, bytte till bara id, bör förmodligen vara datetimeid i SELECT
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
-            return socket.emit('/api/user', JSON.stringify({"status": 200, "error": null, "response": results}));
+            return socket.emit('/api/powergenerated', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
 
