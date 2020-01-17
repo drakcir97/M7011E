@@ -44,14 +44,14 @@
         var text2 = div2.textContent || div2.innerText || "";
         var user = JSON.parse(text2);
 
-        var theFrame3 = document.getElementById('iframe_electricityprice2');
+        var theFrame3 = document.getElementById('iframe_powgen');
         var theWin3 = theFrame3.contentWindow;
         var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
         var theJson3 = theDoc3.body.innerHTML;
         var div3 = document.createElement("div");
         div3.innerHTML = theJson3;
         var text3 = div3.textContent || div3.innerText || "";
-        var electricityprice2 = JSON.parse(text3);
+        var powgen = JSON.parse(text3);
 
         // var theFrame4 = document.getElementById('iframe_buffer');
         // var theWin4 = theFrame4.contentWindow;
@@ -71,8 +71,8 @@
         //   alert(displayjson)
         // }
         displayjson += '<br>';
-        alert(text2)
-        displayjson += " used: " + user.response[0].value;
+        alert(text3)
+        displayjson += " used: " + user.response[0].value+" production: "+powgen.response[0].value;
         //var netprod = parseFloat(user[0]['powergenerated.value']) - parseFloat(user[0]['powerusage.value']);
         //displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
         // for(var i = 0; i < user.length; i++) {

@@ -181,7 +181,6 @@ io.sockets.on('connect', function(socket)
     socket.on('/api/powergenerated', function(data) {
         var id = data.id;
         let sql = mysql.format("SELECT powergenerated.value FROM powergenerated WHERE householdid=? ORDER BY householdid DESC LIMIT 1",[id]);
-            , [id]);
         //order by datetimeid fungerar inte i queryn ovanför, bytte till bara id, bör förmodligen vara datetimeid i SELECT
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
