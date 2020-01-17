@@ -585,7 +585,7 @@ async function buyFromPlant(householdid, amountOfPower) {
 			if (err) {
 				console.log(err);
 			} else {
-				var plantid = results[0]['powerplant.id'];
+				var plantid = results[0]['id'];
 				console.log("POWERPLANT ID  "+plantid);
 				var sqlPower = mysql.format("SELECT status,buffer,currentpower,maxpower,ratiokeep FROM powerplant WHERE id=?", [plantid]);
 				con.query(sqlPower, (err, results) => {
