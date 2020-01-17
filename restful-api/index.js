@@ -384,7 +384,7 @@ io.sockets.on('connect', function(socket)
     socket.on('/api/plantstatus', function(data) {
         var id = data.id;
         var sqlPlant = mysql.format("SELECT powerplant.maxpower, powerplant.buffer, powerplant.ratiokeep, powerplant.status FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?", [id]);
-        con.query(sqlPlant, function(err, results) {
+        conn.query(sqlPlant, function(err, results) {
             if (err) {
                 console.log(err);
             }
