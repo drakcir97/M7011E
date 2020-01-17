@@ -157,8 +157,8 @@ io.sockets.on('connect', function(socket)
 
     //show all users
     socket.on('/api/users', function(data) {
-        let sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
-        let query = conn.query(sql, (err, results) => {
+        var sql = "SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid";
+        conn.query(sql, (err, results) => {
             if(err) {
                 console.log(err);
             }
@@ -169,9 +169,9 @@ io.sockets.on('connect', function(socket)
     //show single user
     socket.on('/api/user', function(data) {
         var id = data.id;
-        let sql = mysql.format("SELECT household.id,household.locationid,household.housetype,powerusage.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid WHERE household.id=? ORDER BY id DESC LIMIT 1", [id]);
+        var sql = mysql.format("SELECT household.id,household.locationid,household.housetype,powerusage.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid WHERE household.id=? ORDER BY id DESC LIMIT 1", [id]);
         //order by datetimeid fungerar inte i queryn ovanför, bytte till bara id, bör förmodligen vara datetimeid i SELECT
-        let query = conn.query(sql, (err, results) => {
+        conn.query(sql, (err, results) => {
             if(err) throw err;
             return socket.emit('/api/user', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
@@ -180,9 +180,9 @@ io.sockets.on('connect', function(socket)
     //show powergenerated
     socket.on('/api/powergenerated', function(data) {
         var id = data.id;
-        let sql = mysql.format("SELECT powergenerated.value FROM powergenerated WHERE householdid=? ORDER BY householdid DESC LIMIT 1",[id]);
+        var sql = mysql.format("SELECT powergenerated.value FROM powergenerated WHERE householdid=? ORDER BY householdid DESC LIMIT 1",[id]);
         //order by datetimeid fungerar inte i queryn ovanför, bytte till bara id, bör förmodligen vara datetimeid i SELECT
-        let query = conn.query(sql, (err, results) => {
+        conn.query(sql, (err, results) => {
             if(err) throw err;
             return socket.emit('/api/powergenerated', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
@@ -191,8 +191,8 @@ io.sockets.on('connect', function(socket)
     //show windspeed & temperature
     socket.on('/api/weather', function(data) {
         console.log("Entered weather");
-        let sql = "SELECT temperature.temperature, windspeed.windspeed, temperature.datetimeid FROM temperature INNER JOIN windspeed ON temperature.datetimeid=windspeed.datetimeid ORDER BY datetimeid DESC LIMIT 1";
-        let query = conn.query(sql, (err, results) => {
+        var sql = "SELECT temperature.temperature, windspeed.windspeed, temperature.datetimeid FROM temperature INNER JOIN windspeed ON temperature.datetimeid=windspeed.datetimeid ORDER BY datetimeid DESC LIMIT 1";
+        conn.query(sql, (err, results) => {
             if(err) throw err;
             console.log("Emit");
             return socket.emit('/api/weather', JSON.stringify({"status": 200, "error": null, "response": results}));
@@ -201,8 +201,8 @@ io.sockets.on('connect', function(socket)
     
     //show current electricity price
     socket.on('/api/electricityprice', function(data) {
-        let sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
-        let query = conn.query(sql, (err, results) => {
+        var sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
+        conn.query(sql, (err, results) => {
             if(err) throw err;
             return socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": {result: results}}));
         });
@@ -211,15 +211,16 @@ io.sockets.on('connect', function(socket)
     //show current electricity price type 2
     socket.on('/api/electricityprice2', function(data) {
         console.log("electricityprice2")
-        let sql = "SELECT COUNT(id) FROM household";
-        let query = conn.query(sql, (err, results) => {
+        var sql = "SELECT COUNT(id) FROM household";
+        conn.query(sql, (err, results) => {
             if(err) throw err;
-            let totalhouseholds = parseInt(JSON.stringify(results[0]['COUNT(id)']));
-            let sql = "SELECT powerin,powerout FROM powertotal ORDER BY id DESC LIMIT 1";
+            var totalhouseholds = parseInt(JSON.stringify(results[0]['COUNT(id)']));
             var powercost = 0;
-            let query = conn.query(sql, (err, results) => {
-                let powerin = parseFloat(JSON.stringify(results[0]['powerin']));
-                let powerout = parseFloat(JSON.stringify(results[0]['powerout']));
+            var sqlPower = "SELECT powerin,powerout FROM powertotal ORDER BY id DESC LIMIT 1";
+            conn.query(sqlPower, (err, results) => {
+                if(err) throw err;
+                var powerin = parseFloat(JSON.stringify(results[0]['powerin']));
+                var powerout = parseFloat(JSON.stringify(results[0]['powerout']));
                 
                 if (powerin <= powerout) {
                     powercost = powerCostHigh;    
@@ -234,8 +235,8 @@ io.sockets.on('connect', function(socket)
 
     //shows current electricity consumtion.
     socket.on('/api/electricityconsumtion', function(data) {
-        let sql = "SELECT powerout, datetimeid FROM powertotal";
-        let query = conn.query(sql, (err, results) => {
+        var sql = "SELECT powerout, datetimeid FROM powertotal";
+        conn.query(sql, (err, results) => {
             if(err) throw err;
             return socket.emit('/api/electricityconsumtion', JSON.stringify({"status": 200, "error": null, "response": results}));
         });

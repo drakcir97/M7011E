@@ -14,7 +14,7 @@
 <iframe src="https://3.95.190.134:3000/api/weather" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
 <iframe src="https://3.95.190.134:3000/api/user" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
 <iframe src="https://3.95.190.134:3000/api/powergenerated" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
-<!--<iframe src="https://3.95.190.134:3000/api/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe> -->
+<iframe src="https://3.95.190.134:3000/api/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
 <iframe src="https://3.95.190.134:3000/api/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
 
 <script>
@@ -53,15 +53,15 @@
         var text3 = div3.textContent || div3.innerText || "";
         var powgen = JSON.parse(text3);
 
-        // var theFrame4 = document.getElementById('iframe_price');
-        // var theWin4 = theFrame4.contentWindow;
-        // var theDoc4 = theFrame4.contentDocument || theFrame4.contentWindow.document;
-        // var theJson4 = theDoc4.body.innerHTML;
-        // var div4 = document.createElement("div");
-        // div4.innerHTML = theJson4;
-        // var text4 = div4.textContent || div4.innerText || "";
-        // alert(text4);
-        // var price = JSON.parse(text4);
+        var theFrame4 = document.getElementById('iframe_price');
+        var theWin4 = theFrame4.contentWindow;
+        var theDoc4 = theFrame4.contentDocument || theFrame4.contentWindow.document;
+        var theJson4 = theDoc4.body.innerHTML;
+        var div4 = document.createElement("div");
+        div4.innerHTML = theJson4;
+        var text4 = div4.textContent || div4.innerText || "";
+        alert(text4);
+        var price = JSON.parse(text4);
         
 
         var theFrame5 = document.getElementById('iframe_buffer');
@@ -71,7 +71,6 @@
         var div5 = document.createElement("div");
         div5.innerHTML = theJson5;
         var text5 = div5.textContent || div5.innerText || "";
-        alert(text5)
         var buffer = JSON.parse(text5);
         
         //document.getElementById("test").innerHTML = obj[0].email;
@@ -86,7 +85,7 @@
         displayjson += '<br>';
         var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
         displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
-        displayjson += "<br> buffer: "+buffer.response[0].value;
+        displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response[0];
         //var netprod = parseFloat(user[0]['powergenerated.value']) - parseFloat(user[0]['powerusage.value']);
         //displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
         // for(var i = 0; i < user.length; i++) {
