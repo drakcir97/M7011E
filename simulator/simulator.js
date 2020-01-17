@@ -414,6 +414,7 @@ async function getfrombuffer(householdid,powerneeded) {
 		}
 		var count = parseInt(results[0]['COUNT(value)']);
 		if (count == 0) {
+			console.log("RETURN VALUE 0  ");
 			return 0;
 		} else {
 			var sqlBuffer = mysql.format("SELECT value FROM powerstored WHERE householdid=?", [householdid]);
@@ -428,6 +429,7 @@ async function getfrombuffer(householdid,powerneeded) {
 						if (err) {
 							console.log(err);
 						};
+						console.log("RETURN VALUE BUFFER  "+buffer);
 						return buffer; //Return everything we had in buffer.
 					});
 				} else {
@@ -436,6 +438,7 @@ async function getfrombuffer(householdid,powerneeded) {
 						if (err) {
 							console.log(err);
 						};
+						console.log("RETURN VALUE POWERNEEDED  "+buffer);
 						return powerneeded; //Return power we needed.
 					});
 				}
