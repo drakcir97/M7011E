@@ -679,7 +679,7 @@ async function checkTestHouseholds(location) {
 
 async function createTestUsers() {
 	var sqlHousehold = "SELECT COUNT(*) FROM household";
-	con.query(sqlHousehold, function (err, result) {
+	con.query(sqlHousehold, function (err, results) {
 		if (err) {
 			console.log(err);
 		}
