@@ -306,9 +306,7 @@ io.sockets.on('connect', function(socket)
         var id = data.id;
         var sqlBuffer = mysql.format("SELECT value FROM powerstored INNER JOIN user ON powerstored.householdid=user.householdid WHERE user.id=?", [id]);
         conn.query(sqlBuffer, (err, results) => {
-            if (err) {
-                console.log(err);
-            }
+            if (err) throw err;
             return socket.emit('/api/buffer', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
