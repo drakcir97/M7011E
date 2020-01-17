@@ -557,7 +557,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 									} else {
 										var powerCheap = totalin/totalhouseholds;
 										var powerExpensive = (powersum+powerCheap);
-										await buyFromPlant(householdid, powerExpensive);
+										await buyFromPlant(householdid, -powerExpensive);
 										powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
 									}
 								}
@@ -697,7 +697,19 @@ async function updatePowerPlant() {
 					var newBuffer = plantmaxpower * plantratiokeep + plantbuffer + plantcurrentpower; //We send all power that is not sold to buffer.
 					var newCurrent = plantmaxpower * (1-plantratiokeep);
 
-					var sqlPlant = mysql.format("UPDATE powerplant SET buffer=?, plantcurrentpower=? WHERE id=?", [newBuffer,newCurrent,val.id])
+					var sqlPlant = mysql.format("UPDATE powerplant SET buffer=?, plantcurrentpower=? WHERE id=?", [newBuffer,newCurrent,val.id]);
+					con.query(sqlPlant, (err, results) => {
+						if (err) {
+							console.log(err);
+						};
+					});
+				} else if (plantstatus == 'starting') {
+					var sqlUpdate = mysql.format("UPDATE powerplant SET status='running' WHERE id=?", [val.id]);
+					con.query(sqlUpdate, (err, results) => {
+						if (err) {
+							console.log(err);
+						};
+					});
 				}
 			});
 		}

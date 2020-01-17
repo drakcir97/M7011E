@@ -737,6 +737,68 @@ app.post('/plantsettings', function(req, res) {
         });
 });
 
+app.post('/planton', function(req, res) {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                if (decoded.admin == '1') {
+                        // Connect to server
+                        var io = require('socket.io-client');
+                        var socket = io.connect('http://localhost:8080/', {reconnect: true});
+
+                        socket.on('response', function (message) { 
+                                //Send data to api containing new settings user set.
+                                socket.emit('/api/planton',{id: decoded.id}); //Send settings to api.
+                                console.log(message);
+                        });
+                        
+                        socket.on('/api/planton', function (message) {
+                                //socket.emit('api/users');
+                                console.log(message);
+                                return res.redirect('/');
+                        });
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+});
+
+app.post('/plantoff', function(req, res) {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                if (decoded.admin == '1') {
+                        // Connect to server
+                        var io = require('socket.io-client');
+                        var socket = io.connect('http://localhost:8080/', {reconnect: true});
+
+                        socket.on('response', function (message) { 
+                                //Send data to api containing new settings user set.
+                                socket.emit('/api/plantoff',{id: decoded.id}); //Send settings to api.
+                                console.log(message);
+                        });
+                        
+                        socket.on('/api/plantoff', function (message) {
+                                //socket.emit('api/users');
+                                console.log(message);
+                                return res.redirect('/');
+                        });
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+});
+
 app.get('/api/:inp', (req, res) => {
         console.log("start '/api/:inp");
         console.log(req.params.inp);
