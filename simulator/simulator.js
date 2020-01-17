@@ -710,7 +710,7 @@ async function createTestHouseholds(location) {
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
 	var apartment = "apartment";
 	var house = "house";
-	con.query(sqlLocation, function (err, result) {
+	con.query(sqlLocation, async function (err, result) {
 		var locationid = result[0]['id'];
 		var i = 0;
 		console.log("locationid ",locationid);
