@@ -124,10 +124,10 @@ app.post('/login', function(req, res) {
                                                 console.log(err);
                                         }
                                 });
-                                res.redirect('/home');
+                                return res.redirect('/home');
                         } else {
                                 //res.status(401).send({ auth: false, token: null });
-                                res.redirect('/');
+                                return res.redirect('/');
                         }
                 });
         }); 
@@ -174,7 +174,7 @@ app.get('/signup', (req, res) => {
         //         res.set('Content-Type', 'text/plain');
         //         res.status(404).end('Not found');
         // });
-        res.sendFile('signup.html', {root : './'});
+        return res.sendFile('signup.html', {root : './'});
         //req.body.emailaddress;
         //req.body.name;
         //req.body.userpassword;
@@ -195,7 +195,7 @@ app.get('/signout', (req, res) => {
                 });
                 res.clearCookie("token");
         });
-        res.sendFile('index.html', {root : './'});
+        return res.sendFile('index.html', {root : './'});
         //req.body.emailaddress;
         //req.body.name;
         //req.body.userpassword;

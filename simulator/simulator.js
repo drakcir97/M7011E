@@ -677,6 +677,26 @@ async function checkTestHouseholds(location) {
 	});
 } 
 
+async function createTestUsers() {
+	var sqlHousehold = "SELECT COUNT(*) FROM household";
+	con.query(sqlHousehold, function (err, result) {
+		if (err) {
+			console.log(err);
+		}
+		var numberOfHouseholds = parseInt(results[0]['COUNT(*)']);
+		var i = 1;
+		while(i<=numberOfHouseholds) {
+			var sql = mysql.format("INSERT INTO user (householdid) VALUES (?)", [i]);
+			con.query(sql, function(err, results) {
+				if (err) {
+					console.log(err);
+				}
+				i=i+1;
+			});
+		}
+	});
+}
+
 async function createTestHouseholds(location) {
 	console.log("Location in createTestHouseholds",location);
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
@@ -712,6 +732,7 @@ async function createTestHouseholds(location) {
 		});
 		console.log("Inserted households to test");
 	});
+	await createTestUsers();
 }
 
 async function genWindAndTemp(location,date) {

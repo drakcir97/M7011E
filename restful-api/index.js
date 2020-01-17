@@ -304,13 +304,12 @@ io.sockets.on('connect', function(socket)
 
     socket.on('/api/buffer', function(data) {
         var id = data.id;
-        var sqlBuffer = mysql.format("SELECT value FROM powerstored WHERE householdid=?", [id]);
+        var sqlBuffer = mysql.format("SELECT value FROM powerstored INNER JOIN user ON powerstored.householdid=user.householdid WHERE user.id=?", [id]);
         conn.query(sqlBuffer, (err, results) => {
             if (err) {
                 console.log(err);
-            } else {
-                return socket.emit('/api/buffer', JSON.stringify({"status": 200, "error": null, "response": results}));
             }
+            return socket.emit('/api/buffer', JSON.stringify({"status": 200, "error": null, "response": results}));
         });
     });
 
