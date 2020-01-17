@@ -85,7 +85,7 @@
         displayjson += '<br>';
         var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
         displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
-        displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response[0].result;
+        displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
         //var netprod = parseFloat(user[0]['powergenerated.value']) - parseFloat(user[0]['powerusage.value']);
         //displayjson += " generated: "+user[i]['powergenerated.value'] + " used: " + user[i]['powerusage.value'] + " net production: " + netprod;
         // for(var i = 0; i < user.length; i++) {
