@@ -730,11 +730,7 @@ async function createTestUsers() {
 			console.log(err);
 		}
 		var numberOfHouseholds = parseInt(results[0]['COUNT(*)']);
-		var i = 1;
-		while(i<=numberOfHouseholds) {
-			if (i>numberOfHouseholds) {
-				break;
-			}
+		for(var i = 1; i<=numberOfHouseholds; i++) {
 			console.log("Householdid & userid: "+i)
 			var sql = mysql.format("INSERT INTO user (householdid) VALUES (?)", [i]);
 			con.query(sql, function(err, results) {
@@ -748,7 +744,6 @@ async function createTestUsers() {
 					}
 				});
 			});
-			i=i+1;
 		}
 	});
 }
