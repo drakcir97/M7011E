@@ -1,7 +1,8 @@
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
-* [Setup](#setup)
+* [Installation](#setup)
+* [Launch](#launch)
 
 ## General info
 A web system for controlling the production and consumption of electricity on a smaller scaled market including a simulator.
@@ -12,7 +13,7 @@ Project is created with:
 * HTML version: 5
 * MySQL version: 5.7.28
 	
-## Setup
+## Installation
 Requirements: Node.js 13.0.1 with following npm installs:
 * cookie-parser@1.4.4
 * express@4.17.1
@@ -26,3 +27,16 @@ Requirements: Node.js 13.0.1 with following npm installs:
 * random-normal@1.0.0
 * request@2.88.0
 * socket.io@2.3.0
+
+## Launch
+To run this project:
+
+```
+$ cd M7011E
+$ cd simulator
+$ forever start simulator.js
+$ cd ../restful-api
+$ forever start index.js
+$ cd ../server
+$ forever start index.js
+```
