@@ -13,6 +13,7 @@
     </picture>
 <iframe src="https://3.95.190.134:3000/api/weather" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
 <iframe src="https://3.95.190.134:3000/api/user" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
+<iframe src="https://3.95.190.134:3000/api/user" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
 <!--<iframe src="https://3.95.190.134:3000/api/electricityprice2" name="iframe_electricityprice2" id="iframe_electricityprice2" style="display: none;"></iframe>
 <iframe src="https://3.95.190.134:3000/api/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe> -->
 
@@ -43,14 +44,14 @@
         var text2 = div2.textContent || div2.innerText || "";
         var user = JSON.parse(text2);
 
-        // var theFrame3 = document.getElementById('iframe_electricityprice2');
-        // var theWin3 = theFrame3.contentWindow;
-        // var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
-        // var theJson3 = theDoc3.body.innerHTML;
-        // var div3 = document.createElement("div");
-        // div3.innerHTML = theJson3;
-        // var text3 = div3.textContent || div3.innerText || "";
-        // var electricityprice2 = JSON.parse(text3);
+        var theFrame3 = document.getElementById('iframe_electricityprice2');
+        var theWin3 = theFrame3.contentWindow;
+        var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
+        var theJson3 = theDoc3.body.innerHTML;
+        var div3 = document.createElement("div");
+        div3.innerHTML = theJson3;
+        var text3 = div3.textContent || div3.innerText || "";
+        var electricityprice2 = JSON.parse(text3);
 
         // var theFrame4 = document.getElementById('iframe_buffer');
         // var theWin4 = theFrame4.contentWindow;

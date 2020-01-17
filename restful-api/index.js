@@ -169,7 +169,19 @@ io.sockets.on('connect', function(socket)
     //show single user
     socket.on('/api/user', function(data) {
         var id = data.id;
-        let sql = mysql.format("SELECT household.id,household.locationid,household.housetype,powerusage.value,powergenerated.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid INNER JOIN powergenerated ON household.id=powergenerated.householdid WHERE household.id=? ORDER BY id DESC LIMIT 1", [id]);
+        let sql = mysql.format("SELECT household.id,household.locationid,household.housetype,powerusage.value FROM household INNER JOIN powerusage ON household.id=powerusage.householdid WHERE household.id=? ORDER BY id DESC LIMIT 1", [id]);
+        //order by datetimeid fungerar inte i queryn ovanför, bytte till bara id, bör förmodligen vara datetimeid i SELECT
+        let query = conn.query(sql, (err, results) => {
+            if(err) throw err;
+            return socket.emit('/api/user', JSON.stringify({"status": 200, "error": null, "response": results}));
+        });
+    });
+
+    //show powergenerated
+    socket.on('/api/powergenerated', function(data) {
+        var id = data.id;
+        let sql = mysql.format("SELECT powergenerated.value FROM powergenerated WHERE householdid=? ORDER BY householdid DESC LIMIT 1",[id]);
+            , [id]);
         //order by datetimeid fungerar inte i queryn ovanför, bytte till bara id, bör förmodligen vara datetimeid i SELECT
         let query = conn.query(sql, (err, results) => {
             if(err) throw err;
