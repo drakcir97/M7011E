@@ -421,6 +421,7 @@ io.sockets.on('connect', function(socket)
     });
 
     socket.on('/api/planton', function(data) {
+        console.log("ENTER PLANTON");
         var id = data.id;
         var sqlSettingsCount = mysql.format("SELECT COUNT(powerplant.ratiokeep) FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?", [id]);
         conn.query(sqlSettingsCount, (err, results) => {
@@ -433,6 +434,9 @@ io.sockets.on('connect', function(socket)
                 } else {
                     var sqlLocationId = mysql.format("SELECT location.id FROM location INNER JOIN household ON location.id=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?",[id]);
                     conn.query(sqlLocationId, (err, results) => {
+                        if (err) {
+                            console.log(err);
+                        };
                         var locationid = results[0]['id'];
                         console.log("LOCATIONID  "+locationid);
                         var sqlSettings = mysql.format("UPDATE powerplant SET status='starting' WHERE locationid=?", [locationid]);
