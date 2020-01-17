@@ -783,7 +783,7 @@ app.get('/api/:inp', (req, res) => {
                         console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id);
                         console.log("after first emit");
                         console.log(message);
-                        return socket.emit(inp, {id: decoded.id}); //Send id to api.
+                        socket.emit(inp, {id: decoded.id}); //Send id to api.
                 });
                 
                 socket.on(inp, function (message) {
