@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>Homepage</title>
+<div class="toprightcorner"><a href="/signout">Sign out</a></div>
+<div class="topleftcorner"><a href="/home">Home</a></div>
+<body>
+<form id="userpage" method="GET" action="/userpage">
+    <button name="user" value="user">Go to userpage</button>
+</form>
+<form id="online" method="GET" action="/onlinestatus">
+    <button name="status" value="status">Check onlinestatus</button>
+</form>
+<form id="log" method="GET" action="/log">
+    <button name="status" value="status">Check log</button>
+</form>
+<form id="deleteusers" method="GET" action="/deleteusers">
+    <button name="status" value="status">Delete user</button>
+</form>
+<form id="blockusers" method="GET" action="/blockusers">
+    <button name="status" value="status">Block user</button>
+</form>
+<!-- <form id="house" method="POST" action="/addPicture">
+    <p>image url:  <input type="text" name="img_url" id="img_url"></p>
+    <button name="picture" value="picture">Go to userpage</button>
+</form> -->
+<form id="house" enctype="multipart/form-data" method="POST" action="/addPicture">
+    Select a file (8MB max): <input type="file" name="picture" id="picture" multiple="multiple"><br><br>
+    <input type="submit" value="Upload">
+  </form>
+</form>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>Profile</title>
+<div class="toprightcorner"><a href="/signout">Sign out</a></div>
+<body>
+<form id="userpage" method="GET" action="/userpage">
+    <button name="user" value="user">Go to userpage</button>
+</form>
+<div class="topleftcorner"><a href="/home">Home</a></div>
+<div class="topleftcorner"><a href="/settings">Settings</a></div>
+</form>
+<p onload="getText('weather')" id="weather" name="weather">asd</p>
+<p onload="getText('user')" id="user" name="user">asd</p>
+<script>
+        function getText(inp) {
+            console.log(inp);
+            //let url = 'https://3.95.190.134:3000/api/'+inp;
+            let url = 'https://3.95.190.134:3000/usersinfo';
+    
+            fetch(url)
+                .then(res => res.json())
+                .then((out) => {
+                    console.log(out);
+                    document.getElementById(inp).innerHTML = out;
+            }).catch(err => { throw err });
+        }
+    </script>
+</body>
+</html>
