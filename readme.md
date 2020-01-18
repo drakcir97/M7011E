@@ -40,3 +40,9 @@ $ forever start index.js
 $ cd ../server
 $ forever start index.js
 ```
+
+## Administrator
+To create an administrator:
+
+* Go to https://(your configured ip):3000/createadmin
+* Log into the default administrator using normal sign in (username: sysadmin@miri, password: sysadmin)
