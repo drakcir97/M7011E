@@ -49,15 +49,15 @@
 
         function getCaptcha() {
                 var imgid = img_info();
-                document.getElementById("p1").src = getSource(); + "captcha/"+imgid+".png";
                 document.getElementById("p2").value = imgid;
+                return getSource() + "captcha/"+imgid+".png";
         }
 
 </script>
 
 <picture> 
         
-        <img id="p1" onload="getCaptcha()" name="p1" source media="(min-width: 465px)" src="" />
+        <img id="p1" onload="this.onload=null; this.src=getCaptcha();" name="p1" source media="(min-width: 465px)" src="" srcset="" />
                 
 
  <!--       <script>
