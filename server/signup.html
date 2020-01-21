@@ -50,7 +50,8 @@
         function getCaptcha() {
                 var imgid = img_info();
             //    document.getElementById("p2").value = imgid;
-                alert(getSource());
+                var imgsource = getSource();
+                alert(imgsource);
                 alert("captcha/"+imgid+".png");
                 return getSource() + "captcha/"+imgid+".png";
         }
