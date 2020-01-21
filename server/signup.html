@@ -35,13 +35,15 @@
 <p>Captcha: <input type="text" name="usercaptcha" id="usercaptcha"></p>
 <input type="hidden" id="p2" name="p2" value="2">
 
-<script type="text/javascript" src="htmlconfig.js">
+<script>
         function getSource() {
                 var config = require("../config/htmlconfig");
                 return config.host + ':' + config.port + '/';
         }
         function getSource2() {
-                alert(config.host);
+                var imported = document.createElement('script');
+                imported.src = '../config/htmlconfig'
+                alert(imported.src)
                 return "Testgetsource2";
         }
 </script>
