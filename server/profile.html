@@ -12,11 +12,19 @@
 </form>
 <p onload="getText('weather')" id="weather" name="weather">asd</p>
 <p onload="getText('user')" id="user" name="user">asd</p>
+
+<script>
+    function getSource() {
+        var config = require("../config/htmlconfig");
+        return config.host + ':' + config.port + '/';
+    }
+</script>
+
 <script>
         function getText(inp) {
             console.log(inp);
             //let url = 'https://3.95.190.134:3000/api/'+inp;
-            let url = '{#ipaddress#}:{#port#}/usersinfo';
+            let url = getSource() + 'usersinfo';
     
             fetch(url)
                 .then(res => res.json())

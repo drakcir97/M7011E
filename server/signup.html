@@ -1,4 +1,3 @@
-{config_load file='../config/html.conf'}
 <html>
 <head>
 <title>Signup</title>
@@ -35,6 +34,14 @@
 <p>Password: <input type="password" name="userpassword" id="userpassword"></p>
 <p>Captcha: <input type="text" name="usercaptcha" id="usercaptcha"></p>
 <input type="hidden" id="p2" name="p2" value="2">
+
+<script>
+        function getSource() {
+                var config = require("../config/htmlconfig");
+                return config.host + ':' + config.port + '/';
+        }
+</script>
+
 <picture>
         <script>
                 function img_info() {
@@ -47,7 +54,7 @@
                 
         <script>
                 var imgid = img_info();
-                document.getElementById("p1").src = "{#ipaddress#}:{#port#}/captcha/"+imgid+".png";
+                document.getElementById("p1").src = getSource() + "captcha/"+imgid+".png";
                 document.getElementById("p2").value = imgid;
         </script> 
 

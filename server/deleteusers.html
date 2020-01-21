@@ -6,7 +6,15 @@
     <div class="toprightcorner"><a href="/signout">Sign out</a></div>
     <div class="topleftcorner"><a href="/home">Home</a></div>
 <p id="test"> </p>
-<iframe src="{#ipaddress#}:{#port#}/usersinfo" name="iframe" id="iframe" style="display: none;"></iframe> 
+<iframe src="/usersinfo" onload="this.onload=null; this.src=getSource() + 'usersinfo'" name="iframe" id="iframe" style="display: none;"></iframe> 
+
+<script>
+    function getSource() {
+        var config = require("../config/htmlconfig");
+        return config.host + ':' + config.port + '/';
+    }
+</script>
+
 <script>
     function myFunction() {
 

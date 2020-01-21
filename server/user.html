@@ -1,4 +1,3 @@
-{config_load file='../config/html.conf'}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,13 +9,20 @@
   <div class="topleftcorner"><a href="/home">Home</a></div>
   <div class="topleftcorner"><a href="/settings">Settings</a></div>
   <picture>
-      <img src="{#ipaddress#}:{#port#}/userimage" width="350" height="200" srcset="{#ipaddress#}:{#port#}/userimage">
+      <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'userimage'" width="350" height="200" srcset="/userimage">
     </picture>
-<iframe src="{#ipaddress#}:{#port#}/api/weather" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
-<iframe src="{#ipaddress#}:{#port#}/api/user" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
-<iframe src="{#ipaddress#}:{#port#}/api/powergenerated" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
-<iframe src="{#ipaddress#}:{#port#}/api/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
-<iframe src="{#ipaddress#}:{#port#}/api/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
+<iframe src="/api/weather" onload="this.onload=null; this.src=getSource() + 'api/weather'" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
+<iframe src="/api/user" onload="this.onload=null; this.src=getSource() + 'api/user'" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
+<iframe src="/api/powergenerated" onload="this.onload=null; this.src=getSource() + 'api/powergenerated'" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
+<iframe src="/api/electricityprice2" onload="this.onload=null; this.src=getSource() + 'api/electricityprice2'" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
+<iframe src="/api/buffer" onload="this.onload=null; this.src=getSource() + 'api/buffer'" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
+
+<script>
+    function getSource() {
+        var config = require("../config/htmlconfig");
+        return config.host + ':' + config.port + '/';
+    }
+</script>
 
 <script>
     function myFunction() {
