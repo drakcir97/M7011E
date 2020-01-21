@@ -40,24 +40,22 @@
                 var config = require("../config/htmlconfig");
                 return config.host + ':' + config.port + '/';
         }
+
+        function img_info() {
+                var x = Math.floor((Math.random() * 5) + 1);
+                var str = x.toString();
+                return str;
+        }
+
+        function getCaptcha() {
+                var imgid = img_info();
+                document.getElementById("p1").src = getSource(); + "captcha/"+imgid+".png";
+                document.getElementById("p2").value = imgid;
+        }
+
 </script>
 
-<picture>
-        <script>
-                function img_info() {
-                        var x = Math.floor((Math.random() * 5) + 1);
-                        var str = x.toString();
-                        return str;
-                }
-        </script>    
-        
-        <script>
-                function getCaptcha() {
-                        var imgid = img_info();
-                        document.getElementById("p1").src = getSource() + "captcha/"+imgid+".png";
-                        document.getElementById("p2").value = imgid;
-                }
-        </script> 
+<picture> 
         
         <img id="p1" onload="getCaptcha()" name="p1" source media="(min-width: 465px)" src="" />
                 
