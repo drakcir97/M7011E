@@ -33,7 +33,6 @@
 <p>Email: <input type="text" name="emailaddress" id="emailaddress"></p>
 <p>Password: <input type="password" name="userpassword" id="userpassword"></p>
 <p>Captcha: <input type="text" name="usercaptcha" id="usercaptcha"></p>
-<p id="test"> </p>
 <input type="hidden" id="p2" name="p2" value="2">
 
 <script>
@@ -52,7 +51,7 @@
                 console.log("test getcaptcha");
                 var imgid = img_info();
                 document.getElementById("p2").value = imgid;
-                document.getElementById("test").innerHTML = (getSource() + "captcha/"+imgid+".png").Text;
+                alert(getSource() + "captcha/"+imgid+".png");
                 return getSource() + "captcha/"+imgid+".png";
         }
 
