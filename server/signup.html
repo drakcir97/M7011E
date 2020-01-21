@@ -60,13 +60,15 @@
             //    document.getElementById("p2").value = imgid;
                 var imgsource = getSource2();
                 alert(imgsource + "captcha/"+imgid+".png")
-                return imgsource + "captcha/"+imgid+".png";
+                var test = imgsource.toString()+"captcha/"+imgid+".png";
+                alert(test)
+                return test;
         }
 
 </script>
 
 <picture> 
-        <img src="https://3.95.190.134:3000/captcha/4.png" id="p1" onload="this.onload=null; this.src=getCaptcha();" name="p1" source media="(min-width: 465px)" /> 
+        <img src="" id="p1" onload="this.onload=null; this.src=getCaptcha();" name="p1" source media="(min-width: 465px)" /> 
                 
 
  <!--       <script>
