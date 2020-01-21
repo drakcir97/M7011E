@@ -48,6 +48,7 @@
         }
 
         function getCaptcha() {
+                console.log("test getcaptcha");
                 var imgid = img_info();
                 document.getElementById("p2").value = imgid;
                 return getSource() + "captcha/"+imgid+".png";
