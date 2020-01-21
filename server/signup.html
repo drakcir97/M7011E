@@ -48,11 +48,10 @@
         }
 
         function getCaptcha() {
-            //    var imgid = img_info();
-            //    document.getElementById("p2").value = imgid;
-                alert("test");
-                return "test";
-            //    return getSource() + "captcha/"+imgid+".png";
+                var imgid = img_info();
+                document.getElementById("p2").value = imgid;
+                alert(getSource() + "captcha/"+imgid+".png")
+                return getSource() + "captcha/"+imgid+".png";
         }
 
 </script>
