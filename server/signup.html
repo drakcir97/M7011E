@@ -32,7 +32,7 @@
 <p>Full Name: <input type="text" name="name" id="name"></p>
 <p>Email: <input type="text" name="emailaddress" id="emailaddress"></p>
 <p>Password: <input type="password" name="userpassword" id="userpassword"></p>
-<p>Captcha: <input type="text" name="usercaptcha" id="usercaptcha"></p>
+<p>Captcha: <input onload="getCaptcha()" type="text" name="usercaptcha" id="usercaptcha"></p>
 <input type="hidden" id="p2" name="p2" value="2">
 
 <script>
@@ -51,14 +51,13 @@
                 console.log("test getcaptcha");
                 var imgid = img_info();
                 document.getElementById("p2").value = imgid;
-                alert(getSource() + "captcha/"+imgid+".png");
                 return getSource() + "captcha/"+imgid+".png";
         }
 
 </script>
 
 <picture> 
-        <img src="test" onload="this.onload=null; this.src=getCaptcha()" width="350" height="200" srcset="test"  />
+        <img src="" srcset="" id="p1" onload="this.onload=null; this.src=getCaptcha();" name="p1" source media="(min-width: 465px)" />
                 
 
  <!--       <script>
