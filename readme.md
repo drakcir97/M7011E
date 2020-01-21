@@ -15,6 +15,18 @@ Project is created with:
 	
 ## Installation and use
 Requirements: Node.js 13.0.1
+
+Setup database:
+```
+$ mysql -u root -p
+$ SOURCE {pathway to project}/database/createdb.sql;
+$ SOURCE {pathway to project}/database/createtable.sql;
+$ SOURCE {pathway to project}/database/createdblogin.sql;
+$ SOURCE {pathway to project}/database/createtablelogin.sql;
+$ exit;
+```
+
+Run project:
 ```
 $ git clone https://github.com/drakcir97/M7011E.git
 $ npm install
@@ -26,6 +38,14 @@ $ forever start index.js
 $ cd ../server
 $ forever start index.js
 ```
+
+## Config
+To make changes to the system, see the folder named 'config'.
+
+* apiconfig.js is the config for the API
+* html.conf is config for html
+* serverconfig.js changes the server
+* simulatorconfig.js is for the simulator
 
 ## Administrator
 To create an administrator:

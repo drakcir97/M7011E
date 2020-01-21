@@ -1,0 +1,22 @@
+const express = require('express')
+const app = express()
+
+var randomNormal = require('random-normal')
+
+function getNormValues(meanIn, stIn){
+	var meanVal = randomNormal({mean: meanIn, dev: stIn});
+	var elecProd = ((1.3968**windSpeedCurrentTime)*56.94).toFixed(3);
+	var elecConsApartment
+ = randomNormal({mean: 1.25, dev: 0.35});
+	return  meanVal;
+
+}
+
+function electricityProduction(windSpeedCurrentTime){
+	return ((1.3968**windSpeedCurrentTime)*56.94).toFixed(3)
+}
+
+function updateValues(meanIn, stIn){
+	var updateMeanVal = randomNormal({mean: meanIn, dev: stIn});
+	
+}

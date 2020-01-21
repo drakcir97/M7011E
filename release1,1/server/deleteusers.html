@@ -1,0 +1,48 @@
+{config_load file='../config/html.conf'}
+<html>
+<head>
+<title>Homepage</title>
+<body onload="myFunction()">
+    <div class="toprightcorner"><a href="/signout">Sign out</a></div>
+    <div class="topleftcorner"><a href="/home">Home</a></div>
+<p id="test"> </p>
+<iframe src="{#ipaddress#}:{#port#}/usersinfo" name="iframe" id="iframe" style="display: none;"></iframe> 
+<script>
+    function myFunction() {
+
+        //två raderna nedanför skriver ut all data, med html taggar
+        //var nameValue = window.frames['iframe'].document.body;
+        //document.getElementById("test").innerHTML = nameValue.outerHTML;
+
+        //remove all html tags and change the iframe/html object to json 
+        var theFrame = document.getElementById('iframe');
+        var theWin = theFrame.contentWindow;
+        var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+        var theJson = theDoc.body.innerHTML;
+        var div = document.createElement("div");
+        div.innerHTML = theJson;
+        var text = div.textContent || div.innerText || "";
+        obj = JSON.parse(text);
+ //       document.getElementById("test").innerHTML = obj[0].email;
+
+        var displayjson = ""
+        for(var i = 0; i < obj.length; i++) {
+            if((obj[i].email.includes("@deleted") == false)){
+                displayjson += "id: "+obj[i].id+"  email: "+obj[i].email+"<br>";
+            }
+
+        }
+        document.getElementById("test").innerHTML = displayjson;
+    }
+    </script>
+<form id="deleteusers" method="post" action="/deleteusers">
+    User id to remove: <br>
+    <input type="text" name="userid">
+    <br>
+<input type="hidden" id="p2" name="p2" value="2">
+
+<p><input type="Submit" value="Submit"></p>
+
+</form>
+</body>
+</html>
