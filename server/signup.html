@@ -52,7 +52,7 @@
                 console.log("test getcaptcha");
                 var imgid = img_info();
                 document.getElementById("p2").value = imgid;
-                document.getElementById("test").innerHTML = getSource() + "captcha/"+imgid+".png";
+                document.getElementById("test").innerHTML = (getSource() + "captcha/"+imgid+".png").Text;
                 return getSource() + "captcha/"+imgid+".png";
         }
 
