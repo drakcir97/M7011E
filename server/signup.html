@@ -42,7 +42,7 @@
         }
         function getSource2() {
                 var imported = document.createElement('script');
-                imported.src = '../config/htmlconfig'
+                imported.src = '../'
             //    alert(imported)
                 alert(imported.src)
                 return "Testgetsource2";
@@ -60,8 +60,8 @@
                 var imgid = img_info();
             //    document.getElementById("p2").value = imgid;
                 var imgsource = getSource2();
-                alert(imgsource);
-                alert("captcha/"+imgid+".png");
+        //        alert(imgsource);
+        //        alert("captcha/"+imgid+".png");
                 return getSource() + "captcha/"+imgid+".png";
         }
 
