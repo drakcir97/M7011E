@@ -2,28 +2,29 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const mysql = require('mysql');
- 
-var apartmentPower = 300; //Average power used by an apartment.
-var housePower = 2500; //Average power used by house.
-var	tempMinAffect = 25; //At this value no power goes to heat.
-var	tempMaxAffect = -30; //At this value maximum power goes to heat.
-var	tempAffect = 2; //Maximum affect temperature has.
-var	tempCoefficient = 0.6; //Procentage that is affected by temperature.
-var	powerCostHigh = 0.01; //Cost if powerplant
-var	powerCostLow = 0.005; //Cost if wind
+var config = require("../config/apiconfig");
+var simconfig = require("../config/simulatorconfig");
 var http = require('http');
 //var io = require('socket.io');
 
 // parse application/json
 app.use(bodyParser.json());
 
+var apartmentPower = simconfig.simulatorvar.apartmentPower; //Average power used by an apartment.
+var housePower = simconfig.simulatorvar.housePower; //Average power used by house.
+var	tempMinAffect = simconfig.simulatorvar.tempMinAffect; //At this value no power goes to heat.
+var	tempMaxAffect = simconfig.simulatorvar.tempMaxAffect; //At this value maximum power goes to heat.
+var	tempAffect = simconfig.simulatorvar.tempAffect; //Maximum affect temperature has.
+var	tempCoefficient = simconfig.simulatorvar.tempCoefficient; //Procentage that is affected by temperature.
+var	powerCostHigh = simconfig.simulatorvar.powerCostHigh; //Cost if powerplant
+var	powerCostLow = simconfig.simulatorvar.powerCostLow; //Cost if wind
  
 //create database connection
 const conn = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'miri'
+    host: config.database.host,
+    user: config.database.user,
+    password: config.database.password,
+    database: config.database.database
 });
  
 //connect to database
@@ -140,7 +141,7 @@ conn.connect((err) =>{
 // server.listen(8080);
 // io.listen(server);
 
-var io = require('socket.io').listen(8080);
+var io = require('socket.io').listen(config.port);
 
 // Add a connect listener
 io.sockets.on('connect', function(socket)
@@ -478,6 +479,37 @@ io.sockets.on('connect', function(socket)
                                 console.log(err);
                             }
                             return socket.emit('/api/plantoff', JSON.stringify({"status": 200, "error": null, "response": results}));
+                        });
+                    });
+                }
+            }
+        });
+    });
+
+    socket.on('/api/plantpower', function(data) {
+        var id = data.id;
+        var power = data.power;
+        var sqlSettingsCount = mysql.format("SELECT COUNT(powerplant.ratiokeep) FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?", [id]);
+        conn.query(sqlSettingsCount, (err, results) => {
+            if (err) {
+                console.log(err);
+            } else {
+                var count = parseInt(JSON.stringify(results[0]['COUNT(powerplant.ratiokeep)']));
+                if (count == 0) {
+                    return socket.emit('/api/plantpower', JSON.stringify({"status": 200, "error": true, "response": "No power plant found"}));
+                } else {
+                    var sqlLocationId = mysql.format("SELECT location.id FROM location INNER JOIN household ON location.id=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?",[id]);
+                    conn.query(sqlLocationId, (err, results) => {
+                        if (err) {
+                            console.log(err);
+                        };
+                        var locationid = results[0]['id'];
+                        var sqlSettings = mysql.format("UPDATE powerplant SET maxpower=? WHERE locationid=?", [power,locationid]);
+                        conn.query(sqlSettings, (err, results) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                            return socket.emit('/api/plantpower', JSON.stringify({"status": 200, "error": null, "response": results}));
                         });
                     });
                 }

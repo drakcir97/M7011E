@@ -1,3 +1,4 @@
+{config_load file='../config/html.conf'}
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,10 +9,10 @@
   <div class="toprightcorner"><a href="/signout">Sign out</a></div>
   <div class="topleftcorner"><a href="/home">Home</a></div>
   <picture>
-      <img src="https://3.95.190.134:3000/userimage" width="350" height="200" srcset="https://3.95.190.134:3000/userimage">
+      <img src="{#ipaddress#}:{#port#}/userimage" width="350" height="200" srcset="{#ipaddress#}:{#port#}/userimage">
     </picture>
-<iframe src="https://3.95.190.134:3000/api/plantstatus" name="iframe_plant" id="iframe_plant" style="display: none;"></iframe>
-<iframe src="https://3.95.190.134:3000/api/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
+<iframe src="{#ipaddress#}:{#port#}/api/plantstatus" name="iframe_plant" id="iframe_plant" style="display: none;"></iframe>
+<iframe src="{#ipaddress#}:{#port#}/api/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
 
 <script>
     function myFunction() {
@@ -67,6 +68,12 @@
 
 <form id="plantoff" method="POST" action="/plantoff">
     <button name="status" value="status">OFF</button>
+</form>
+
+<form id="plantpower" method="POST" action="/plantpower">
+    <p>Power to produce from plant: </p>
+    <input type="number" name="power" min="1" max="1000000">
+    <input type="Submit" value="Submit">
 </form>
 
 </body>

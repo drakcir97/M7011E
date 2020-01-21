@@ -1,3 +1,4 @@
+{config_load file='../config/html.conf'}
 <html>
 <head>
 <title>Profile</title>
@@ -15,7 +16,7 @@
         function getText(inp) {
             console.log(inp);
             //let url = 'https://3.95.190.134:3000/api/'+inp;
-            let url = 'https://3.95.190.134:3000/usersinfo';
+            let url = '{#ipaddress#}:{#port#}/usersinfo';
     
             fetch(url)
                 .then(res => res.json())

@@ -1,3 +1,4 @@
+{config_load file='../config/html.conf'}
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,13 +10,13 @@
   <div class="topleftcorner"><a href="/home">Home</a></div>
   <div class="topleftcorner"><a href="/settings">Settings</a></div>
   <picture>
-      <img src="https://3.95.190.134:3000/userimage" width="350" height="200" srcset="https://3.95.190.134:3000/userimage">
+      <img src="{#ipaddress#}:{#port#}/userimage" width="350" height="200" srcset="{#ipaddress#}:{#port#}/userimage">
     </picture>
-<iframe src="https://3.95.190.134:3000/api/weather" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
-<iframe src="https://3.95.190.134:3000/api/user" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
-<iframe src="https://3.95.190.134:3000/api/powergenerated" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
-<iframe src="https://3.95.190.134:3000/api/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
-<iframe src="https://3.95.190.134:3000/api/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
+<iframe src="{#ipaddress#}:{#port#}/api/weather" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
+<iframe src="{#ipaddress#}:{#port#}/api/user" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
+<iframe src="{#ipaddress#}:{#port#}/api/powergenerated" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
+<iframe src="{#ipaddress#}:{#port#}/api/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
+<iframe src="{#ipaddress#}:{#port#}/api/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
 
 <script>
     function myFunction() {

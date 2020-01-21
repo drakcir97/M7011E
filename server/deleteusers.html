@@ -1,3 +1,4 @@
+{config_load file='../config/html.conf'}
 <html>
 <head>
 <title>Homepage</title>
@@ -5,7 +6,7 @@
     <div class="toprightcorner"><a href="/signout">Sign out</a></div>
     <div class="topleftcorner"><a href="/home">Home</a></div>
 <p id="test"> </p>
-<iframe src="https://3.95.190.134:3000/usersinfo" name="iframe" id="iframe" style="display: none;"></iframe> 
+<iframe src="{#ipaddress#}:{#port#}/usersinfo" name="iframe" id="iframe" style="display: none;"></iframe> 
 <script>
     function myFunction() {
 

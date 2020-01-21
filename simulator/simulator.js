@@ -4,22 +4,23 @@ const app = express()
 
 var randomNormal = require('random-normal')
 var mysql = require('mysql');
+var config = require("../config/simulatorconfig");
 
 //	var elePro = ((1.3968**windSpeedCurrentTime)*56.94).toFixed(3);
-var apartmentPower = 300; //Average power used by an apartment.
-var housePower = 2500; //Average power used by house.
-var	tempMinAffect = 25; //At this value no power goes to heat.
-var	tempMaxAffect = -30; //At this value maximum power goes to heat.
-var	tempAffect = 2; //Maximum affect temperature has.
-var	tempCoefficient = 0.6; //Procentage that is affected by temperature.
-var	powerCostHigh = 0.01; //Cost if powerplant
-var	powerCostLow = 0.005; //Cost if wind
+var apartmentPower = config.simulatorvar.apartmentPower; //Average power used by an apartment.
+var housePower = config.simulatorvar.housePower; //Average power used by house.
+var	tempMinAffect = config.simulatorvar.tempMinAffect; //At this value no power goes to heat.
+var	tempMaxAffect = config.simulatorvar.tempMaxAffect; //At this value maximum power goes to heat.
+var	tempAffect = config.simulatorvar.tempAffect; //Maximum affect temperature has.
+var	tempCoefficient = config.simulatorvar.tempCoefficient; //Procentage that is affected by temperature.
+var	powerCostHigh = config.simulatorvar.powerCostHigh; //Cost if powerplant
+var	powerCostLow = config.simulatorvar.powerCostLow; //Cost if wind
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "miri"
+	host: config.database.host,
+	user: config.database.user,
+	password: config.database.password,
+	database: config.database.database
 });
 
 function getNormValues(meanIn, stIn){

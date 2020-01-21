@@ -12,16 +12,18 @@ var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 var formidable = require('formidable');
 var net = require("net");
+var config = require("../config/serverconfig");
+var apiconfig = require("../config/apiconfig");
 var options = {
         key: fs.readFileSync('key.pem'),
         cert: fs.readFileSync('cert.pem')
 };
 
 var con = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "password",
-        database: "serverdb"
+        host: config.database.host,
+        user: config.database.user,
+        password: config.database.password,
+        database: config.database.database
 });
 
 var mime = {
@@ -475,7 +477,7 @@ app.post('/blockusers', function(req, res) {
                                 } else {
                                         // Connect to server
                                         var io = require('socket.io-client');
-                                        var socket = io.connect('http://localhost:8080/', {reconnect: true});
+                                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
                                         socket.on('response', function (message) { 
                                                 //Send data to api containing new settings user set.
                                                 socket.emit('/api/checkblock',{id: inp}); //Send settings to api.
@@ -689,7 +691,7 @@ app.post('/settings', function(req, res) {
                 });
                 // Connect to server
                 var io = require('socket.io-client');
-                var socket = io.connect('http://localhost:8080/', {reconnect: true});
+                var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
 
                 socket.on('response', function (message) { 
                         //Send data to api containing new settings user set.
@@ -718,7 +720,7 @@ app.post('/plantsettings', function(req, res) {
                         var ratiokeep = req.body.ratiokeep;
                         // Connect to server
                         var io = require('socket.io-client');
-                        var socket = io.connect('http://localhost:8080/', {reconnect: true});
+                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
 
                         socket.on('response', function (message) { 
                                 //Send data to api containing new settings user set.
@@ -749,7 +751,7 @@ app.post('/planton', function(req, res) {
                 if (decoded.admin == '1') {
                         // Connect to server
                         var io = require('socket.io-client');
-                        var socket = io.connect('http://localhost:8080/', {reconnect: true});
+                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
 
                         socket.on('response', function (message) { 
                                 //Send data to api containing new settings user set.
@@ -780,7 +782,7 @@ app.post('/plantoff', function(req, res) {
                 if (decoded.admin == '1') {
                         // Connect to server
                         var io = require('socket.io-client');
-                        var socket = io.connect('http://localhost:8080/', {reconnect: true});
+                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
 
                         socket.on('response', function (message) { 
                                 //Send data to api containing new settings user set.
@@ -789,6 +791,38 @@ app.post('/plantoff', function(req, res) {
                         });
                         
                         socket.on('/api/plantoff', function (message) {
+                                //socket.emit('api/users');
+                                console.log(message);
+                                return res.redirect('/');
+                        });
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+});
+
+app.post('/plantpower', function(req, res) {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                if (decoded.admin == '1') {
+                        var power = req.body.power;
+                        // Connect to server
+                        var io = require('socket.io-client');
+                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
+
+                        socket.on('response', function (message) { 
+                                //Send data to api containing new settings user set.
+                                socket.emit('/api/plantpower',{id: decoded.id, power: power}); //Send settings to api.
+                                console.log(message);
+                        });
+                        
+                        socket.on('/api/plantpower', function (message) {
                                 //socket.emit('api/users');
                                 console.log(message);
                                 return res.redirect('/');
@@ -818,7 +852,7 @@ app.get('/api/:inp', (req, res) => {
                 //res.status(200).send(decoded);
                 // Connect to server
                 var io = require('socket.io-client');
-                var socket = io.connect('http://localhost:8080/');
+                var socket = io.connect('http://localhost:'+apiconfig.port+'/');
 
                 // socket.on('testServer', function (message) {
                 //         socket.emit('/api/test', {data: 'asd'});
@@ -886,7 +920,7 @@ app.get('/home', (req, res) => {
 //      res.end("hello");
 //}).listen(3000);
 
-var temp = https.createServer(options, app).listen(3000);
+var temp = https.createServer(options, app).listen(config.port);
 
 // Connect to server
 var io = require('socket.io')(temp);
