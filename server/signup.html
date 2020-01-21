@@ -43,9 +43,8 @@
         function getSource2() {
                 var imported = document.createElement('script');
                 imported.src = '../'
-            //    alert(imported)
-                alert(imported.src)
-                return "Testgetsource2";
+                //alert(imported.src)
+                return imported.src;
         }
 </script>
 <script>
@@ -62,7 +61,7 @@
                 var imgsource = getSource2();
         //        alert(imgsource);
         //        alert("captcha/"+imgid+".png");
-                return getSource() + "captcha/"+imgid+".png";
+                return imgsource + "captcha/"+imgid+".png";
         }
 
 </script>
