@@ -285,14 +285,14 @@ async function createLocation(location, callback){
 				};
 				console.log("Location not found, was inserted");
 				try {
-					callback(genTotalPower);
+					callback(null, null);
 				} catch (e) {
 					console.log("Can't run");
 				}
             });
 		} else {
 			try {
-				callback(genTotalPower);
+				callback(null, null);
 			} catch (e) {
 				console.log("Can't run");
 			}
@@ -320,7 +320,7 @@ async function createPowerplant(location, callback) {
 							console.log(err);
 						}
 						try {
-							callback(genTotalPower);
+							callback(null, null);
 						} catch (e) {
 							console.log("Can't run");
 						}
@@ -328,7 +328,7 @@ async function createPowerplant(location, callback) {
 				})
 			} else {
 				try {
-					callback(genTotalPower);
+					callback(null, null);
 				} catch (e) {
 					console.log("Can't run");
 				}
@@ -737,7 +737,7 @@ async function updatePowerPlant(callback) {
 			});
 		}
 		try {
-			callback(genTotalPower);
+			callback(null,null);
 		} catch (e) {
 			console.log("Can't run");
 		}
