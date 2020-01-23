@@ -339,12 +339,11 @@ io.sockets.on('connect', function(socket)
     socket.on('/api/blockusers', function(data) {
         //res.status(200).send(decoded);
         console.log("id "+data.id);
-        var d = new Date();
         var inp = data.id;
         var secondsblock = data.secondsblock;
 
         var sqlsettime = mysql.format("INSERT INTO blockedhousehold (householdid, dt) VALUES (SELECT householdid FROM user WHERE id=?,?)", [inp, secondsblock]);
-        con.query(sqlPassword, function(err, results) {
+        con.query(sqlsettime, function(err, results) {
             if (err) throw err;
             return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
         });   

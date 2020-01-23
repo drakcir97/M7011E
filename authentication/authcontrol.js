@@ -6,7 +6,7 @@ module.exports = {
     'secret': 'supersecret',
     register: function(userid,admin) {
         var token = jwt.sign({ id: userid, admin: admin }, this.secret, {
-            expiresIn: 86400 // expires in 24 hours
+            expiresIn: "2h" // expires in 2 hours
         });
         return token;
     },
