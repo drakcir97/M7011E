@@ -267,7 +267,7 @@ async function generatePowerUsageForTime(householdid,dateid,callback) {
 }
 
 //Creates location if it does not exist.
-async function createLocation(location){
+async function createLocation(location, callback){
 	console.log("location in createlocation",location);
 	var sql = mysql.format("SELECT COUNT(id) FROM location WHERE name=?", [location]);  
     con.query(sql, async function (err, result) {
@@ -283,13 +283,24 @@ async function createLocation(location){
                 if (err) {
 					console.log(err);
 				};
-                console.log("Location not found, was inserted");
+				console.log("Location not found, was inserted");
+				try {
+					callback(genTotalPower);
+				} catch (e) {
+					console.log("Can't run");
+				}
             });
+		} else {
+			try {
+				callback(genTotalPower);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		}
     });
 }
 
-async function createPowerplant(location) {
+async function createPowerplant(location, callback) {
 	var sql = mysql.format("SELECT COUNT(powerplant.id) FROM powerplant INNER JOIN location ON powerplant.locationid=location.id WHERE location.name=?",[location]);
 	con.query(sql, async function(err, results) {
 		if (err) {
@@ -308,8 +319,19 @@ async function createPowerplant(location) {
 						if (err) {
 							console.log(err);
 						}
+						try {
+							callback(genTotalPower);
+						} catch (e) {
+							console.log("Can't run");
+						}
 					});
 				})
+			} else {
+				try {
+					callback(genTotalPower);
+				} catch (e) {
+					console.log("Can't run");
+				}
 			}
 		}
 	});
@@ -679,7 +701,7 @@ async function checkIfBlocked(householdid) {
 }
 
 //Updates all powerplants that exist in simulator.
-async function updatePowerPlant() {
+async function updatePowerPlant(callback) {
 	var sql = "SELECT id FROM powerplant";
 	con.query(sql, async function (err, result) {
 		if (err) {
@@ -713,6 +735,11 @@ async function updatePowerPlant() {
 					});
 				}
 			});
+		}
+		try {
+			callback(genTotalPower);
+		} catch (e) {
+			console.log("Can't run");
 		}
 	});
 }
@@ -789,7 +816,7 @@ async function checkTestHouseholds(location) {
 	con.query(sqlCountHousehold, async function (err, result) {
 		var totalhouseholds = result[0]['COUNT(id)'];
 		if (totalhouseholds == "0") {
-			createTestHouseholds(location);
+			await createTestHouseholds(location);
 		}
 	});
 } 
@@ -939,12 +966,27 @@ async function update() {
 	var location = "Boden";
 	var nowDate = new Date(); 
 	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
-	await createLocation(location);
-	await createPowerplant(location);
-	await updatePowerPlant();
-	await checkTestHouseholds(location);
-	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
-	await genWindAndTemp(location,date);
+	await createLocation(location, async function (err, data) {
+		if (err) {
+			console.log("error");
+		} else {
+			await createPowerplant(location, async function(err, data) {
+				if (err) {
+					console.log("error");
+				} else {
+					await updatePowerPlant(async function(err, data) {
+						if (err) {
+							console.log("error");
+						} else {
+							await checkTestHouseholds(location);
+							await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
+							await genWindAndTemp(location,date);
+						}
+					});
+				}
+			});
+		}
+	});
 	//await genTotalPower();
 	// await genPower();
 	// await genWindAndTemp(location,date,async function(err,result) {
