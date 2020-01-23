@@ -257,7 +257,7 @@ async function generatePowerUsageForTime(householdid,dateid,callback) {
 			}
 			var pwr = (1-tempCoefficient) * meanPwr + tempPwr;
 			var sqlInsert = mysql.format("INSERT INTO powerusage (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,pwr,dateid]);
-			con.query(sqlInsert, function(err, result) {
+			con.query(sqlInsert, async function(err, result) {
 				if (err) {
 					console.log(err);
 				};
