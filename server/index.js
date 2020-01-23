@@ -221,6 +221,8 @@ app.get('/usersOnline', (req, res) => {
                                 return res.send(result); //Temporary to see if it works.
                         });
                    //     return res.sendFile('onlineStatus.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
         
@@ -242,6 +244,8 @@ app.get('/onlinestatus', (req, res) => {
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
                         return res.sendFile('onlinestatus.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });
@@ -350,7 +354,7 @@ app.post('/addPicture', function(req, res) {
                                 if (err){
                                         console.log(err);
                                 } else {
-                                        return res.redirect('/');
+                                        return res.redirect('/home');
                                 }
                         });
                 });
@@ -426,6 +430,8 @@ app.get('/deleteusers', (req, res) => {
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
                         return res.sendFile('deleteusers.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });
@@ -442,6 +448,8 @@ app.get('/blockusers', (req, res) => {
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
                         return res.sendFile('blockusers.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });
@@ -474,6 +482,7 @@ app.post('/blockusers', function(req, res) {
                         con.query(sqlDelete, (err, results) => {
                                 if (err) {
                                         console.log(err);
+                                        return res.redirect('/blockusers');
                                 } else {
                                         // Connect to server
                                         var io = require('socket.io-client');
@@ -501,6 +510,7 @@ app.post('/blockusers', function(req, res) {
                                                 socket.on('/api/blockedusers', function (message) {
                                                         //socket.emit('api/users');
                                                         console.log(message);
+                                                        return res.redirect('/blockusers');
                                                 });
                                          //       socket.close();
                                         }
@@ -512,6 +522,8 @@ app.post('/blockusers', function(req, res) {
                                 }
                         });
                         return res.sendFile('blockusers.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });
@@ -534,6 +546,8 @@ app.get('/usersinfo', (req, res) => {
                                 console.log(result)
                                 return res.send(result); //Temporary to see if it works.
                         });
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
         
@@ -575,6 +589,8 @@ app.post('/deleteusers', function(req, res) {
                                         return res.sendFile('deleteusers.html', {root : './'});
                                 }
                         });
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });
