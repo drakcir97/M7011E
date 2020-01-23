@@ -465,7 +465,7 @@ app.post('/blockusers', function(req, res) {
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
-                        var timedblocked = 0;
+                        var timeblocked = 0;
                         var d = new Date();
                         var inp = req.body.userid;
                         var secondsblock = req.body.block;
