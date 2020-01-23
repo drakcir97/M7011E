@@ -109,7 +109,7 @@ app.post('/login', function(req, res) {
                         var saltedpw = saltHashPassword(req.body.userpassword,salt);
                         if (pw == saltedpw.passwordHash) {
                                 var token = authenticator.register(userid,admin);
-                                res.cookie('token', token, { maxAge: 86400 })
+                                res.cookie('token', token, { maxAge: '12h' })
                                 //res.status(200).send({ auth: true, token: token })
                                 var sqlToken = mysql.format("INSERT INTO token (userid, token) VALUES (?,?)", [userid,token]);
                                 con.query(sqlToken, function(err, result){
