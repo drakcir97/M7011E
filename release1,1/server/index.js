@@ -109,7 +109,7 @@ app.post('/login', function(req, res) {
                         var saltedpw = saltHashPassword(req.body.userpassword,salt);
                         if (pw == saltedpw.passwordHash) {
                                 var token = authenticator.register(userid,admin);
-                                res.cookie('token', token, { maxAge: 86400 })
+                                res.cookie('token', token, { maxAge: 43200000 }); //12 h
                                 //res.status(200).send({ auth: true, token: token })
                                 var sqlToken = mysql.format("INSERT INTO token (userid, token) VALUES (?,?)", [userid,token]);
                                 con.query(sqlToken, function(err, result){
@@ -221,6 +221,8 @@ app.get('/usersOnline', (req, res) => {
                                 return res.send(result); //Temporary to see if it works.
                         });
                    //     return res.sendFile('onlineStatus.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
         
@@ -242,6 +244,8 @@ app.get('/onlinestatus', (req, res) => {
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
                         return res.sendFile('onlinestatus.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });
@@ -350,7 +354,7 @@ app.post('/addPicture', function(req, res) {
                                 if (err){
                                         console.log(err);
                                 } else {
-                                        return res.redirect('/');
+                                        return res.redirect('/home');
                                 }
                         });
                 });
@@ -372,7 +376,7 @@ app.post('/signup', function(req, res) {
                 var sqlSignup = mysql.format("INSERT INTO user (name,email,admin) VALUES (?,?,?)", [req.body.name,req.body.emailaddress,false]);
                 con.query(sqlSignup, function(err,result) {
                         if (err){
-                                return res.redirect(404,'/signup');
+                                return res.send("A user with that email already exists: (sql error)");
                         } else {
                                 var sqlUserId = mysql.format("SELECT id FROM user WHERE name=? AND email=?", [req.body.name,req.body.emailaddress]);
                                 con.query(sqlUserId, function(err,result) {
@@ -387,7 +391,7 @@ app.post('/signup', function(req, res) {
                         }
                 });
         } else {
-                res.redirect(404,'/signup');
+                res.send("Captcha was incorrect");
         }
         
 });
@@ -426,6 +430,8 @@ app.get('/deleteusers', (req, res) => {
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
                         return res.sendFile('deleteusers.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });
@@ -442,6 +448,8 @@ app.get('/blockusers', (req, res) => {
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
                         return res.sendFile('blockusers.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });
@@ -457,7 +465,7 @@ app.post('/blockusers', function(req, res) {
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
-                        var timedblocked = 0;
+                        var timeblocked = 0;
                         var d = new Date();
                         var inp = req.body.userid;
                         var secondsblock = req.body.block;
@@ -470,48 +478,44 @@ app.post('/blockusers', function(req, res) {
                         }
                         secondsblock = d.getTime()/1000+secondsblock;
 
-                        var sqlDelete = mysql.format("SELECT user.id FROM user WHERE id=?", [inp]);
-                        con.query(sqlDelete, (err, results) => {
-                                if (err) {
-                                        console.log(err);
-                                } else {
-                                        // Connect to server
-                                        var io = require('socket.io-client');
-                                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
-                                        socket.on('response', function (message) { 
-                                                //Send data to api containing new settings user set.
-                                                socket.emit('/api/checkblock',{id: inp}); //Send settings to api.
-                                                console.log(message);
-                                        });
-                                        
-                                        socket.on('/api/checkblock', function (message) {
-                                                //socket.emit('api/users');
-                                                console.log(message);
-                                                timeblocked = message.response.dt;
-                                        });                                       
-                                        if(timeblocked <= currenttime){
-
-
-                                                socket.on('response', function (message) { 
-                                                        //Send data to api containing new settings user set.
-                                                        socket.emit('/api/blockusers',{id: inp, secondsblock: secondsblock}); //Send settings to api.
-                                                        console.log(message);
-                                                });
-                                                
-                                                socket.on('/api/blockedusers', function (message) {
-                                                        //socket.emit('api/users');
-                                                        console.log(message);
-                                                });
-                                         //       socket.close();
-                                        }
-                                        else{
-                                                return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
-                                        }
-
-                                                   //     return res.send(results);
-                                }
+                        // Connect to server
+                        var io = require('socket.io-client');
+                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
+                        socket.on('response', function (message) { 
+                                //Send data to api containing new settings user set.
+                                socket.emit('/api/checkblock',{id: inp}); //Send settings to api.
+                                console.log(message);
                         });
+                        
+                        socket.on('/api/checkblock', function (message) {
+                                //socket.emit('api/users');
+                                console.log(message);
+                                timeblocked = BigInt(message.response.dt);
+                        });   
+                        if (timeblocked == -1) {
+                                return res.redirect('/blockusers')
+                        } else if (timeblocked <= currenttime) {
+
+                                socket.on('response', function (message) { 
+                                        //Send data to api containing new settings user set.
+                                        socket.emit('/api/blockusers',{id: inp, secondsblock: secondsblock}); //Send settings to api.
+                                        console.log(message);
+                                });
+                                
+                                socket.on('/api/blockedusers', function (message) {
+                                        //socket.emit('api/users');
+                                        console.log(message);
+                                        return res.redirect('/blockusers');
+                                });
+                                //       socket.close();
+                        }
+                        else{
+                                return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
+                        }
                         return res.sendFile('blockusers.html', {root : './'});
+                                        //     return res.send(results);
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });
@@ -534,6 +538,8 @@ app.get('/usersinfo', (req, res) => {
                                 console.log(result)
                                 return res.send(result); //Temporary to see if it works.
                         });
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
         
@@ -575,6 +581,8 @@ app.post('/deleteusers', function(req, res) {
                                         return res.sendFile('deleteusers.html', {root : './'});
                                 }
                         });
+                } else {
+                        return res.send("User is not an administrator");
                 }
         });
 });

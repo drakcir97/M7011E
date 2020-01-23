@@ -1,4 +1,3 @@
-{config_load file='../config/html.conf'}
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,10 +8,17 @@
   <div class="toprightcorner"><a href="/signout">Sign out</a></div>
   <div class="topleftcorner"><a href="/home">Home</a></div>
   <picture>
-      <img src="{#ipaddress#}:{#port#}/userimage" width="350" height="200" srcset="{#ipaddress#}:{#port#}/userimage">
+      <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'usersimage'"width="350" height="200" srcset="/userimage">
     </picture>
-<iframe src="{#ipaddress#}:{#port#}/api/plantstatus" name="iframe_plant" id="iframe_plant" style="display: none;"></iframe>
-<iframe src="{#ipaddress#}:{#port#}/api/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
+<iframe src="/api/plantstatus" onload="this.onload=null; this.src=getSource() + 'api/usersinfo'" name="iframe_plant" id="iframe_plant" style="display: none;"></iframe>
+<iframe src="/api/electricityprice2" onload="this.onload=null; this.src=getSource() + 'api/electricityprice2'" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
+
+<script>
+    function getSource() {
+        var config = require("../config/htmlconfig");
+        return config.host + ':' + config.port + '/';
+    }
+</script>
 
 <script>
     function myFunction() {

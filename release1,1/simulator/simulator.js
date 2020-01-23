@@ -36,13 +36,13 @@ async function generateTemperature(location, date, dateid,callback) {
 		//url below has the id for Arvidsjaur
 		url: 'https://opendata-download-metobs.smhi.se/api/version/latest/parameter/1/station/159880/period/latest-hour/data.json',
 		json: true
-		}, function(error, response, body) {
+		}, async function(error, response, body) {
 		var test = body;
 		var objVal = test.value;
 //		var location = test.station.name;
 		var temperature = (parseFloat(JSON.stringify(objVal[0].value).slice(1, -1)));
 		var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
-		con.query(sqlLocation, function (err, result) {
+		con.query(sqlLocation, async function (err, result) {
 			if (err) {
 				console.log(err);
 			};           
@@ -50,7 +50,7 @@ async function generateTemperature(location, date, dateid,callback) {
 			//var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate(); 
 			var locationId = result[0]['id'];
 			var sql = mysql.format("INSERT INTO temperature (locationid, temperature, datetimeid) VALUES (?,?,?)", [locationId, temperature, dateid]);
-			con.query(sql, function(err, result) {
+			con.query(sql, async function(err, result) {
 				if (err) {
 					console.log(err);
 				};
@@ -77,7 +77,7 @@ async function generateDate(callback) {
 	var sqlInsert = mysql.format("INSERT INTO datet (dt) VALUES (?)", [formatted]);
 	// SELECT fields FROM table ORDER BY id DESC LIMIT 1;
 	//INSERT INTO blog(title,desc) VALUES ('blog1','description'); SELECT * FROM blog
-	con.query(sqlInsert, function (err, result) {
+	con.query(sqlInsert, async function (err, result) {
 		if (err) {
 			console.log(err);
 		};
@@ -85,7 +85,7 @@ async function generateDate(callback) {
 		console.log(lookupDate);
 		var sqlLookup = mysql.format("SELECT id FROM datet WHERE dt=?", [lookupDate]);
 		//var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
-		con.query(sqlLookup, function (err, result) {
+		con.query(sqlLookup, async function (err, result) {
 			if (err) {
 				try {
 					callback(err, null);
@@ -116,7 +116,7 @@ async function testWindForDay(location,date, callback) {
 	//below i think we try to check locationid with location
 	//date should be enough?
 	var sql = mysql.format("SELECT COUNT(i) FROM averagewindspeed WHERE dt=?", [date]);
-	con.query(sql, function (err, result) {
+	con.query(sql, async function (err, result) {
 		if (err) {
 			try {
 				callback(err, null);
@@ -146,7 +146,7 @@ async function testWindForDay(location,date, callback) {
 //Generates average wind for date for location if it does not exist.
 async function generateWindForDay(location,date){
 	//createLocation(location);
-	testWindForDay(location,date, function(err, data) {
+	testWindForDay(location,date, async function(err, data) {
 		if(err){
 			console.log("error");
 		}
@@ -154,14 +154,14 @@ async function generateWindForDay(location,date){
 			console.log("data is ",data);
 			if(data == false){
 				var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
-				con.query(sqlLocation, function (err, result) {
+				con.query(sqlLocation, async function (err, result) {
         			if (err) {
 						console.log(err);
 					};
 					var meanWind = getNormValues(7, 2);
 					var locationId = result[0]['id'];
         			var sql = mysql.format("INSERT INTO averagewindspeed (locationid, windspeed, dt) VALUES (?,?,?)", [locationId, meanWind, date]);
-    				con.query(sql, function (err, result) {
+    				con.query(sql, async function (err, result) {
             			if (err) {
 							console.log(err);
 						};
@@ -179,13 +179,13 @@ async function generateWindForDay(location,date){
 //Generate wind for location using average for that day.
 async function generateWindForTime(location,date,dateid,callback) {
 	var sqlLocation = mysql.format("SELECT id FROM location WHERE name=?", [location]);
-	con.query(sqlLocation, function (err, result) {
+	con.query(sqlLocation, async function (err, result) {
 		if (err) {
 			console.log(err);
 		};
 		var locationId = result[0]['id'];
 		var sqlGetAvg = mysql.format("SELECT windspeed FROM averagewindspeed WHERE dt=? AND locationid=?", [date,locationId]);
-		con.query(sqlGetAvg, function(err, result) {
+		con.query(sqlGetAvg, async function(err, result) {
 			if (err) {
 				console.log(err);
 			};
@@ -193,7 +193,7 @@ async function generateWindForTime(location,date,dateid,callback) {
 			var avgForDay = result[0]['windspeed'];
 			var meanWind = getNormValues(avgForDay,2); //Replace later for real deviation.
 			var sql = mysql.format("INSERT INTO windspeed (locationid, windspeed, datetimeid) VALUES (?,?,?)", [locationId,meanWind,dateid]);
-			con.query(sql, function (err, result) {
+			con.query(sql, async function (err, result) {
 				if (err) {
 					console.log(err);
 				};
@@ -210,7 +210,7 @@ async function generateWindForTime(location,date,dateid,callback) {
 //Generates power generated for household using windspeed.
 async function generatePowerForTime(householdid,dateid) {
 	var sqlType = mysql.format("SELECT windspeed FROM windspeed WHERE datetimeid=?", [dateid]);
-	con.query(sqlType, function (err, result) {
+	con.query(sqlType, async function (err, result) {
 		if (err) {
 			console.log(err);
 		};
@@ -218,7 +218,7 @@ async function generatePowerForTime(householdid,dateid) {
 		var windSpeedCurrentTime = result[0]['windspeed'];
 		var meanPwr = ((1.3968**windSpeedCurrentTime)*56.94).toFixed(3);
 		var sqlInsert = mysql.format("INSERT INTO powergenerated (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,meanPwr,dateid]);
-		con.query(sqlInsert, function(err, result) {
+		con.query(sqlInsert, async function(err, result) {
 			if (err) {
 				console.log(err);
 			};
@@ -229,13 +229,13 @@ async function generatePowerForTime(householdid,dateid) {
 //Generates power used using temperature and values from config.
 async function generatePowerUsageForTime(householdid,dateid,callback) {
 	var sqlType = mysql.format("SELECT housetype FROM household WHERE id=?", [householdid]);
-	con.query(sqlType, function (err, result) {
+	con.query(sqlType, async function (err, result) {
 		if (err) {
 			console.log(err);
 		};
 		var housetype = result[0]['housetype'];
 		var sqlTemp = mysql.format("SELECT temperature FROM temperature WHERE datetimeid=?", [dateid]);
-		con.query(sqlTemp, function(err, result) {
+		con.query(sqlTemp, async function(err, result) {
 			if (err) {
 				console.log(err);
 			};
@@ -257,7 +257,7 @@ async function generatePowerUsageForTime(householdid,dateid,callback) {
 			}
 			var pwr = (1-tempCoefficient) * meanPwr + tempPwr;
 			var sqlInsert = mysql.format("INSERT INTO powerusage (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,pwr,dateid]);
-			con.query(sqlInsert, function(err, result) {
+			con.query(sqlInsert, async function(err, result) {
 				if (err) {
 					console.log(err);
 				};
@@ -267,10 +267,10 @@ async function generatePowerUsageForTime(householdid,dateid,callback) {
 }
 
 //Creates location if it does not exist.
-async function createLocation(location){
+async function createLocation(location, callback){
 	console.log("location in createlocation",location);
 	var sql = mysql.format("SELECT COUNT(id) FROM location WHERE name=?", [location]);  
-    con.query(sql, function (err, result) {
+    con.query(sql, async function (err, result) {
         if (err) {
 			console.log(err);
 		};         
@@ -279,37 +279,61 @@ async function createLocation(location){
 		if (count == 0) {
         	var sqlInsert = mysql.format("INSERT INTO location (name) VALUES (?)", [location]);
 			console.log("Passed count == 0");
-            con.query(sqlInsert, function(err, result) {
+            con.query(sqlInsert, async function(err, result) {
                 if (err) {
 					console.log(err);
 				};
-                console.log("Location not found, was inserted");
+				console.log("Location not found, was inserted");
+				try {
+					callback();
+				} catch (e) {
+					console.log("Can't run");
+				}
             });
+		} else {
+			try {
+				callback();
+			} catch (e) {
+				console.log("Can't run");
+			}
 		}
     });
 }
 
-async function createPowerplant(location) {
+async function createPowerplant(location, callback) {
 	var sql = mysql.format("SELECT COUNT(powerplant.id) FROM powerplant INNER JOIN location ON powerplant.locationid=location.id WHERE location.name=?",[location]);
-	con.query(sql, function(err, results) {
+	con.query(sql, async function(err, results) {
 		if (err) {
 			console.log(err);
 		} else {
-			var count = parseInt(results[0]['COUNT(id)']);
+			var count = parseInt(results[0]['COUNT(powerplant.id)']);
 			if (count == 0) {
 				var sqlLocationId = mysql.format("SELECT id FROM location WHERE name=?", [location]);
-				con.query(sqlLocationId, function(err, results) {
+				con.query(sqlLocationId, async function(err, results) {
 					if (err) {
 						console.log(err)
 					}
 					var locationid = results[0]['id'];
 					var sqlInsert = mysql.format("INSERT INTO powerplant (locationid, maxpower, currentpower, buffer, ratiokeep, status) VALUES (?,?,?,?,?,?)", [locationid,20000,0,0,0.1,'stopped']);
-					con.query(sqlInsert, function(err, results) {
+					con.query(sqlInsert, async function(err, results) {
 						if (err) {
 							console.log(err);
 						}
+						console.log("Plant not found, was inserted: createPowerplant")
+						try {
+							callback();
+						} catch (e) {
+							console.log("Can't run");
+						}
 					});
 				})
+			} else {
+				console.log("Plant was found, not inserted: createPowerplant");
+				try {
+					callback();
+				} catch (e) {
+					console.log("Can't run");
+				}
 			}
 		}
 	});
@@ -317,7 +341,7 @@ async function createPowerplant(location) {
 
 function getPowerTotalIn(dateid,callback) {
 	var sql = mysql.format("SELECT powerin FROM powertotal WHERE datetimeid=?", [dateid]);
-	con.query(sql, function (err, result) {
+	con.query(sql, async function (err, result) {
 		if (err) {
 			try {
 				callback(err, null);
@@ -337,7 +361,7 @@ function getPowerTotalIn(dateid,callback) {
 
 function getPowerTotalOut(dateid,callback) {
 	var sql = mysql.format("SELECT powerout FROM powertotal WHERE datetimeid=?", [dateid]);
-	con.query(sql, function (err, result) {
+	con.query(sql, async function (err, result) {
 		if (err) {
 			try {
 				callback(err,null);
@@ -357,14 +381,14 @@ function getPowerTotalOut(dateid,callback) {
 
 async function createbuffer(householdid) {
 	var sqlCheckBuffer = mysql.format("SELECT COUNT(value) FROM powerstored WHERE householdid=?", [householdid]);
-	con.query(sqlCheckBuffer, function(err, results) {
+	con.query(sqlCheckBuffer, async function(err, results) {
 		if (err) {
 			console.log(err);
 		}
 		var count = parseInt(results[0]['COUNT(value)']);
 		if (count == 0) {
 			sqlInsertBuffer = mysql.format("INSERT INTO powerstored (householdid, value) VALUES (?,?)", [householdid,0]);
-			con.query(sqlInsertBuffer, function(err, results) {
+			con.query(sqlInsertBuffer, async function(err, results) {
 				if (err) {
 					console.log(err);
 				}
@@ -380,7 +404,7 @@ async function createbuffer(householdid) {
 async function putinbuffer(householdid,powertobuffer) {
 	var buffer = 0;
 	var sqlCheckBuffer = mysql.format("SELECT COUNT(value) FROM powerstored WHERE householdid=?", [householdid]);
-	con.query(sqlCheckBuffer, function(err, results) {
+	con.query(sqlCheckBuffer, async function(err, results) {
 		if (err) {
 			console.log(err);
 		}
@@ -389,13 +413,13 @@ async function putinbuffer(householdid,powertobuffer) {
 			return 0;
 		} else {
 			var sqlBuffer = mysql.format("SELECT value FROM powerstored WHERE householdid=?", [householdid]);
-			con.query(sqlBuffer, function(err, result) {
+			con.query(sqlBuffer, async function(err, result) {
 				if (err) {
 					console.log(err);
 				};
 				buffer = parseFloat(result[0]['value']); //Get old value
 				var sqlBuffer = mysql.format("UPDATE powerstored SET value=? WHERE householdid=?",[buffer+powertobuffer,householdid]); //Update to new value.
-				con.query(sqlBuffer, function(err, result) {
+				con.query(sqlBuffer, async function(err, result) {
 					if (err) {
 						console.log(err);
 					};
@@ -643,14 +667,14 @@ async function buyFromPlant(householdid, amountOfPower) {
 
 async function checkIfBlocked(householdid) {
 	var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhousehold WHERE householdid=?", [householdid]);
-	con.query(sqlBanned, function(err, results) {
+	con.query(sqlBanned, async function(err, results) {
 		if (err) {
 			console.log(err);
 		} else {
 			var num = parseInt(results[0]['COUNT(dt)']);
 			if (num != 0) {
 				var sqlBanned = mysql.format("SELECT dt FROM blockedhousehold WHERE householdid=?", [householdid]);
-				con.query(sqlBanned, function(err, results) {
+				con.query(sqlBanned, async function(err, results) {
 					if (err) {
 						console.log(err);
 					} else {
@@ -659,7 +683,7 @@ async function checkIfBlocked(householdid) {
 						var currenttime = d.getTime()/1000;
 						if (banned <= currentime) {
 							var sqlRemove = mysql.format("DELETE FROM blockedhousehold WHERE householdid=?", [householdid]);
-							con.query(sqlRemove, function(err, results) {
+							con.query(sqlRemove, async function(err, results) {
 								if (err) {
 									console.log(err);
 								} else {
@@ -679,9 +703,9 @@ async function checkIfBlocked(householdid) {
 }
 
 //Updates all powerplants that exist in simulator.
-async function updatePowerPlant() {
+async function updatePowerPlant(callback) {
 	var sql = "SELECT id FROM powerplant";
-	con.query(sql, function (err, result) {
+	con.query(sql, async function (err, result) {
 		if (err) {
 			console.log(err);
 		};
@@ -714,6 +738,11 @@ async function updatePowerPlant() {
 				}
 			});
 		}
+		try {
+			callback();
+		} catch (e) {
+			console.log("Can't run");
+		}
 	});
 }
 
@@ -722,7 +751,7 @@ async function generatePowerTotal(dateid,callback) {
 	var totalgenerated = 0;
 	var totalused = 0;
 	var sql = mysql.format("SELECT value FROM powergenerated WHERE datetimeid=?", [dateid]);
-	con.query(sql, function (err, result) {
+	con.query(sql, async function (err, result) {
 		if (err) {
 			console.log(err);
 		};
@@ -730,7 +759,7 @@ async function generatePowerTotal(dateid,callback) {
 			totalgenerated = totalgenerated + parseFloat(JSON.stringify(val.value));
 		}
 		var sql = mysql.format("SELECT value FROM powerusage WHERE datetimeid=?", [dateid]);
-		con.query(sql, function (err, result) {
+		con.query(sql, async function (err, result) {
 			if (err) {
 				console.log(err);
 			}; 
@@ -738,7 +767,7 @@ async function generatePowerTotal(dateid,callback) {
 				totalused = totalused + parseFloat(JSON.stringify(val.value));
 			}
 			var sql = mysql.format("INSERT INTO powertotal (powerin,powerout,datetimeid) VALUES (?,?,?)", [totalgenerated, totalused, dateid]);
-			con.query(sql, function (err, result) {
+			con.query(sql, async function (err, result) {
 				if (err) {
 					console.log(err);
 				};
@@ -755,7 +784,7 @@ async function generatePowerTotal(dateid,callback) {
 
 async function getDate(callback) {
 	var sqlLookup = "SELECT id FROM datet ORDER BY id DESC LIMIT 1";
-	con.query(sqlLookup, function (err, result) {
+	con.query(sqlLookup, async function (err, result) {
 		if (err) {
 			try {
 				callback(err, null);
@@ -771,7 +800,7 @@ async function getDate(callback) {
 
 async function getHouseholds(callback) {
 	var sqlHousehold = "SELECT id FROM household";
-	con.query(sqlHousehold, function (err, result) {
+	con.query(sqlHousehold, async function (err, result) {
 		if (err) {
 			try{
 				callback(err,null);
@@ -786,10 +815,10 @@ async function getHouseholds(callback) {
 
 async function checkTestHouseholds(location) {
 	var sqlCountHousehold = "SELECT COUNT(id) FROM household";
-	con.query(sqlCountHousehold, function (err, result) {
+	con.query(sqlCountHousehold, async function (err, result) {
 		var totalhouseholds = result[0]['COUNT(id)'];
 		if (totalhouseholds == "0") {
-			createTestHouseholds(location);
+			await createTestHouseholds(location);
 		}
 	});
 } 
@@ -797,7 +826,7 @@ async function checkTestHouseholds(location) {
 async function createTestUsers() {
 	console.log("Creating users");
 	var sqlHousehold = "SELECT COUNT(*) FROM household";
-	con.query(sqlHousehold, function (err, results) {
+	con.query(sqlHousehold, async function (err, results) {
 		if (err) {
 			console.log(err);
 		}
@@ -805,7 +834,7 @@ async function createTestUsers() {
 		for(var i = 1; i<8; i++) {
 			console.log("Householdid & userid: "+i)
 			var sql = mysql.format("INSERT INTO user (householdid) VALUES (?)", [i]);
-			con.query(sql, function(err, results) {
+			con.query(sql, async function(err, results) {
 				if (err) {
 					console.log(err);
 				}
@@ -831,7 +860,7 @@ async function createTestHouseholds(location) {
 		console.log("locationid ",locationid);
 		while(i<5) {
 			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, apartment]);
-			con.query(sql, function (err, result) {
+			con.query(sql, async function (err, result) {
 				if (err) {
 					console.log(err);
 				};
@@ -842,7 +871,7 @@ async function createTestHouseholds(location) {
 		while (j<2) {
 	//		console.log("j",j);
 			var sql = mysql.format("INSERT INTO household (locationid,housetype) VALUES (?,?)", [locationid, house]);
-			con.query(sql, function (err, result) {
+			con.query(sql, async function (err, result) {
 				if (err) {
 					console.log(err);
 				};
@@ -850,7 +879,7 @@ async function createTestHouseholds(location) {
 			j=j+1;
 		}
 		var sqlHousehold = "SELECT COUNT(*) FROM household";
-		con.query(sqlHousehold, function (err, result) {
+		con.query(sqlHousehold, async function (err, result) {
 		//	console.log(result[0]['COUNT(*)']);
 		});
 		console.log("Inserted households to test");
@@ -915,10 +944,10 @@ async function genTotalPower() {
 									console.log("error");
 								} else {
 									var sqlCountHousehold = "SELECT COUNT(id) FROM household";
-									con.query(sqlCountHousehold, function (err, result) {
+									con.query(sqlCountHousehold, async function (err, result) {
 										var sqlHousehold = "SELECT id FROM household";
 										var totalhouseholds = result[0]['COUNT(id)'];
-										con.query(sqlHousehold, function (err, result) {
+										con.query(sqlHousehold, async function (err, result) {
 											for(house of result) {
 												generatePowerCost(JSON.stringify(house.id), data,dataIn,dataOut,totalhouseholds);
 											}
@@ -939,12 +968,27 @@ async function update() {
 	var location = "Boden";
 	var nowDate = new Date(); 
 	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
-	await createLocation(location);
-	await createPowerplant(location);
-	await updatePowerPlant();
-	await checkTestHouseholds(location);
-	await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
-	await genWindAndTemp(location,date);
+	await createLocation(location, async function (err, data) {
+		if (err) {
+			console.log(err);
+		} else {
+			await createPowerplant(location, async function(err, data) {
+				if (err) {
+					console.log(err);
+				} else {
+					await updatePowerPlant(async function(err, data) {
+						if (err) {
+							console.log(err);
+						} else {
+							await checkTestHouseholds(location);
+							await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
+							await genWindAndTemp(location,date);
+						}
+					});
+				}
+			});
+		}
+	});
 	//await genTotalPower();
 	// await genPower();
 	// await genWindAndTemp(location,date,async function(err,result) {

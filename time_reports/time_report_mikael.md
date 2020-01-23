@@ -27,3 +27,5 @@
 | 2019-01-15  | 8       | fixed rest-api, userpage, still some problems. |
 | 2019-01-16  | 6       | writing report, trying to display values from the restapi to clientside in a proper way |
 | 2019-01-17  | 8       | writing more report, and had some trouble with the simulator. Also with server/client |
+| 2020-1-21   | 3       | Working with the config and display captchas |
+| 2020-1-23   | 4       | Report and callbacks in the simulator |

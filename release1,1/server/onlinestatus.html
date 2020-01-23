@@ -1,4 +1,3 @@
-{config_load file='../config/html.conf'}
 <html>
 <head>
 <title>Homepage</title>
@@ -7,8 +6,16 @@
     <div class="topleftcorner"><a href="/home">Home</a></div>
 </form>
 <p id="test"> </p>
-<iframe src="{#ipaddress#}:{#port#}/usersOnline" name="iframe" id="iframe" style="display: none;"></iframe> 
-<iframe src="{#ipaddress#}:{#port#}/usersinfo" name="iframeallusers" id="iframeallusers" style="display: none;"></iframe>
+<iframe src="/usersOnline" onload="this.onload=null; this.src=getSource() + 'usersOnline'" name="iframe" id="iframe" style="display: none;"></iframe> 
+<iframe src="/usersinfo" onload="this.onload=null; this.src=getSource() + 'usersinfo'" name="iframeallusers" id="iframeallusers" style="display: none;"></iframe>
+
+<script>
+    function getSource() {
+        var config = require("../config/htmlconfig");
+        return config.host + ':' + config.port + '/';
+    }
+</script>
+
 <script>
     function myFunction() {
 

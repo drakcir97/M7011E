@@ -33,3 +33,5 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2020-1-15   | 8       | Fixed issues with API, trying to fix user page, currently able to send data and format it. |
 | 2020-1-16   | 6       | Began work on the report, also trying to send data from the API and formatting. |
 | 2020-1-17   | 8       | More on report, fixed issues and features in the simulator and API and server. |
+| 2020-1-21   | 3       | Config for API, simulator and server. |
+| 2020-1-23   | 4       | Report and work on simulator. |

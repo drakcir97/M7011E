@@ -1,4 +1,3 @@
-{config_load file='../config/html.conf'}
 <html>
 <head>
 <title>Homepage</title>
@@ -6,10 +5,18 @@
     <div class="toprightcorner"><a href="/signout">Sign out</a></div>
     <div class="topleftcorner"><a href="/home">Home</a></div>
 <p id="test"> </p>
-<iframe src="{#ipaddress#}:{#port#}/usersinfo" name="iframe" id="iframe" style="display: none;"></iframe> 
+<iframe src="/usersinfo" onload="this.onload=null; this.src=getSource() + 'usersinfo'" name="iframe" id="iframe" style="display: none;"></iframe> 
 <form id="demo" method="GET" action="/usersinfo" name="demo" target="iframe">
     <button name="status" value="status">Get data</button>
 </form>
+
+    <script>
+        function getSource() {
+            var config = require("../config/htmlconfig");
+            return config.host + ':' + config.port + '/';
+        }
+
+    </script>
 <script>
     function myFunction() {
 
@@ -40,10 +47,10 @@
     </script>
 <form id="deleteusers" method="post" action="/blockusers">
     User id to to block: <br>
-    <input type="text" name="userid">
+    <input type="number" name="userid" min="0">
     <br>
     Time to block the user to sell (20-100 seconds):<br>
-    <input type="text" name="block" id="block">
+    <input type="number" name="block" id="block" min="20" max="100">
     <br>
     
 <input type="hidden" id="p2" name="p2" value="2">
