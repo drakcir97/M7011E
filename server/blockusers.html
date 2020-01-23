@@ -47,7 +47,7 @@
     </script>
 <form id="deleteusers" method="post" action="/blockusers">
     User id to to block: <br>
-    <input type="text" name="userid">
+    <input type="number" name="userid" min="0">
     <br>
     Time to block the user to sell (20-100 seconds):<br>
     <input type="number" name="block" id="block" min="20" max="100">
