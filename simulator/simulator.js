@@ -285,14 +285,14 @@ async function createLocation(location, callback){
 				};
 				console.log("Location not found, was inserted");
 				try {
-					callback(null, null);
+					callback();
 				} catch (e) {
 					console.log("Can't run");
 				}
             });
 		} else {
 			try {
-				callback(null, null);
+				callback();
 			} catch (e) {
 				console.log("Can't run");
 			}
@@ -319,16 +319,18 @@ async function createPowerplant(location, callback) {
 						if (err) {
 							console.log(err);
 						}
+						console.log("Plant not found, was inserted: createPowerplant")
 						try {
-							callback(null, null);
+							callback();
 						} catch (e) {
 							console.log("Can't run");
 						}
 					});
 				})
 			} else {
+				console.log("Plant was found, not inserted: createPowerplant");
 				try {
-					callback(null, null);
+					callback();
 				} catch (e) {
 					console.log("Can't run");
 				}
@@ -737,7 +739,7 @@ async function updatePowerPlant(callback) {
 			});
 		}
 		try {
-			callback(null,null);
+			callback();
 		} catch (e) {
 			console.log("Can't run");
 		}
