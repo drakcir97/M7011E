@@ -968,15 +968,15 @@ async function update() {
 	var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate();
 	await createLocation(location, async function (err, data) {
 		if (err) {
-			console.log("error");
+			console.log(err);
 		} else {
 			await createPowerplant(location, async function(err, data) {
 				if (err) {
-					console.log("error");
+					console.log(err);
 				} else {
 					await updatePowerPlant(async function(err, data) {
 						if (err) {
-							console.log("error");
+							console.log(err);
 						} else {
 							await checkTestHouseholds(location);
 							await generateWindForDay(location, date); // generateWindForTime will select data from averagewindspeed 
