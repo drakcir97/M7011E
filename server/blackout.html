@@ -26,9 +26,10 @@
         var text = div.textContent || div.innerText || "";
         alert(text);
         var obj = JSON.parse(text);
+        alert(obj.response.length);
 
         var displayjson = ""
-        for(var i = 0; i < obj.length; i++) {
+        for(var i = 0; i < obj.response.length; i++) {
             alert("test");
             displayjson += "User id: "+obj.response[i].id+" Household id: "+obj.response[i].householdid+" Time: "+obj.response[i].dt+"<br>";
         }
