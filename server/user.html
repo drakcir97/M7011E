@@ -73,12 +73,12 @@
         var text5 = div5.textContent || div5.innerText || "";
         var buffer = JSON.parse(text5);
 
-        var displayjson = " windspeed: "+weather.response[0].windspeed;
-        displayjson += '<br>';
-        var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
-        displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod; 
-        displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
-        document.getElementById("test").innerHTML = price.response.result+ " "+buffer.response[0].value;
+        // var displayjson = " windspeed: "+weather.response[0].windspeed;
+        // displayjson += '<br>';
+        // var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
+        // displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod; 
+        // displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
+        document.getElementById("test").innerHTML = price.response.result+" "+buffer.response[0].value;
     }
     </script>
 

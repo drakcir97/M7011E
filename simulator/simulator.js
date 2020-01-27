@@ -547,8 +547,12 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 										} else {
 											var powerCheap = totalin/totalhouseholds;
 											var powerExpensive = (powersum+powerCheap);
-											await buyFromPlant(householdid, powerExpensive);
-											powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
+											await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
+												if (powerExpensive!=dataPlant) {
+													await blackout(householdid,dateid, async function(err, dataBout) {});
+												}
+												powercost = dataPlant*powerCostHigh - powerCheap*powerCostLow;
+											});
 										}
 									}
 								}
@@ -598,9 +602,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 										var powerExpensive = (powersum+powerCheap);
 										await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
 											if (powerExpensive!=dataPlant) {
-												await blackout(householdid,dateid, async function(err, dataBout) {
-
-												});
+												await blackout(householdid,dateid, async function(err, dataBout) {});
 											}
 											powercost = dataPlant*powerCostHigh - powerCheap*powerCostLow;
 										});
