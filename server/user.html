@@ -45,7 +45,7 @@
         var text2 = div2.textContent || div2.innerText || "";
         var user = JSON.parse(text2);
 
-/**        var theFrame3 = document.getElementById('iframe_powgen');
+        var theFrame3 = document.getElementById('iframe_powgen');
         var theWin3 = theFrame3.contentWindow;
         var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
         var theJson3 = theDoc3.body.innerHTML;
@@ -54,7 +54,7 @@
         var text3 = div3.textContent || div3.innerText || "";
         var powgen = JSON.parse(text3);
 
-        var theFrame4 = document.getElementById('iframe_price');
+/**        var theFrame4 = document.getElementById('iframe_price');
         var theWin4 = theFrame4.contentWindow;
         var theDoc4 = theFrame4.contentDocument || theFrame4.contentWindow.document;
         var theJson4 = theDoc4.body.innerHTML;
@@ -78,7 +78,7 @@
         var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
         displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod; 
         displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result; */
-        document.getElementById("test").innerHTML = user;
+        document.getElementById("test").innerHTML = powgen.response[0].value;
     }
     </script>
 

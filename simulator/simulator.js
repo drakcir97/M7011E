@@ -487,6 +487,10 @@ async function getfrombuffer(householdid,powerneeded,callback) {
 	});
 }
 
+async function blackout(householdid,dateid) {
+	var sqlInsert = mysql.format("INSERT INTO blackout (householdid, datetimeid) VALUES (?,?)")
+}
+
 async function generatePowerCost(householdid, dateid, totalin, totalout,totalhouseholds) {
 	console.log("houseid in powercost ",householdid," ",dateid);
 	await createbuffer(householdid);
