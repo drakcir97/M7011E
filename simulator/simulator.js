@@ -487,8 +487,18 @@ async function getfrombuffer(householdid,powerneeded,callback) {
 	});
 }
 
-async function blackout(householdid,dateid) {
-	var sqlInsert = mysql.format("INSERT INTO blackout (householdid, datetimeid) VALUES (?,?)")
+async function blackout(householdid,dateid,callback) {
+	var sqlInsert = mysql.format("INSERT INTO blackout (householdid, datetimeid) VALUES (?,?)", [householdid,dateid]);
+	con.query(sqlInsert, async function(err, result) {
+		if (err) {
+			console.log(err);
+		}
+		try {
+			callback(null, null);
+		} catch (e) {
+			console.log("Can't run");
+		}
+	});
 }
 
 async function generatePowerCost(householdid, dateid, totalin, totalout,totalhouseholds) {
@@ -588,7 +598,9 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 										var powerExpensive = (powersum+powerCheap);
 										await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
 											if (powerExpensive!=dataPlant) {
+												await blackout(householdid,dateid, async function(err, dataBout) {
 
+												});
 											}
 											powercost = dataPlant*powerCostHigh - powerCheap*powerCostLow;
 										});
