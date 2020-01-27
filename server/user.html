@@ -36,7 +36,7 @@
         var weather = JSON.parse(text);
         
 
-/**        var theFrame2 = document.getElementById('iframe_user');
+        var theFrame2 = document.getElementById('iframe_user');
         var theWin2 = theFrame2.contentWindow;
         var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
         var theJson2 = theDoc2.body.innerHTML;
@@ -45,7 +45,7 @@
         var text2 = div2.textContent || div2.innerText || "";
         var user = JSON.parse(text2);
 
-        var theFrame3 = document.getElementById('iframe_powgen');
+/**        var theFrame3 = document.getElementById('iframe_powgen');
         var theWin3 = theFrame3.contentWindow;
         var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
         var theJson3 = theDoc3.body.innerHTML;
@@ -78,7 +78,7 @@
         var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
         displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod; 
         displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result; */
-        document.getElementById("test").innerHTML = weather;
+        document.getElementById("test").innerHTML = user;
     }
     </script>
 
