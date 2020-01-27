@@ -516,7 +516,7 @@ io.sockets.on('connect', function(socket)
         });
     });
 
-    socket.on('api/blackout', function(data) {
+    socket.on('/api/blackout', function(data) {
         var id = data.id;
         var sqlCount = "SELECT COUNT(*) FROM blackout";
         conn.query(sqlCount, (err, results) => {
