@@ -516,6 +516,28 @@ io.sockets.on('connect', function(socket)
         });
     });
 
+    socket.on('api/blackout', function(data) {
+        var id = data.id;
+        var sqlCount = "SELECT COUNT(*) FROM blackout";
+        conn.query(sqlCount, (err, results) => {
+            if (err) {
+                console.log(err);
+            }
+            var count = parseInt(results[0]['COUNT(*)']);
+            if (count == 0) {
+                return socket.emit('/api/blackout', JSON.stringify({"status": 200, "error": null, "response": 'No users in blackout'}));
+            } else {
+                var sqlBlackout = "SELECT user.id, blackout.householdid, datet.dt FROM blackout INNER JOIN user ON blackout.householdid=user.householdid INNER JOIN datet ON datet.id=blackout.datetimeid";
+                conn.query(sqlBlackout, (err, results) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    return socket.emit('/api/blackout', JSON.stringify({"status": 200, "error": null, "response": results}));
+                });
+            }
+        });
+    });
+
     // Disconnect listener
     socket.on('disconnect', function() {
         console.log('Client disconnected.');

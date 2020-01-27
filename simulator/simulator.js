@@ -625,89 +625,89 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 
 //Returns amount that could be bought from powerplant, up to amountOfPower.
 async function buyFromPlant(householdid, amountOfPower,callback) {
-	var blocked = await checkIfBlocked(householdid);
-	if (!blocked) {
-		var sqlLocationId = mysql.format("SELECT powerplant.id FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?",[householdid]);
-		con.query(sqlLocationId, (err, results) => {
-			if (err) {
-				console.log(err);
-			} else {
-				var plantid = results[0]['id'];
-				console.log("POWERPLANT ID  "+plantid);
-				var sqlPower = mysql.format("SELECT status,buffer,currentpower,maxpower,ratiokeep FROM powerplant WHERE id=?", [plantid]);
-				con.query(sqlPower, (err, results) => {
-					var plantstatus = results[0]['status'];
-					var plantbuffer = parseFloat(results[0]['buffer']);
-					var plantcurrentpower = parseFloat(results[0]['currentpower']);
-					var plantmaxpower = parseFloat(results[0]['maxpower']);
-					var plantratiokeep = parseFloat(results[0]['ratiokeep']);
-					if (plantstatus == 'running') {
-						if (plantcurrentpower < amountOfPower) {
-							var sqlSet0 = mysql.format("UPDATE powerplant SET plantcurrentpower=0 WHERE id=?", [plantid]);
-							con.query(sqlSet0, (err, results) => {
-								if (err) {
-									console.log(err);
-								}
-								try {
-									callback(null, plantcurrentpower);
-								} catch (e) {
-									console.log("Can't run");
-								}
-							});
+	await checkIfBlocked(householdid, async function(err, blocked) {
+		if (!blocked) {
+			var sqlLocationId = mysql.format("SELECT powerplant.id FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?",[householdid]);
+			con.query(sqlLocationId, (err, results) => {
+				if (err) {
+					console.log(err);
+				} else {
+					var plantid = results[0]['id'];
+					console.log("POWERPLANT ID  "+plantid);
+					var sqlPower = mysql.format("SELECT status,buffer,currentpower,maxpower,ratiokeep FROM powerplant WHERE id=?", [plantid]);
+					con.query(sqlPower, (err, results) => {
+						var plantstatus = results[0]['status'];
+						var plantbuffer = parseFloat(results[0]['buffer']);
+						var plantcurrentpower = parseFloat(results[0]['currentpower']);
+						var plantmaxpower = parseFloat(results[0]['maxpower']);
+						var plantratiokeep = parseFloat(results[0]['ratiokeep']);
+						if (plantstatus == 'running') {
+							if (plantcurrentpower < amountOfPower) {
+								var sqlSet0 = mysql.format("UPDATE powerplant SET plantcurrentpower=0 WHERE id=?", [plantid]);
+								con.query(sqlSet0, (err, results) => {
+									if (err) {
+										console.log(err);
+									}
+									try {
+										callback(null, plantcurrentpower);
+									} catch (e) {
+										console.log("Can't run");
+									}
+								});
+							} else {
+								var sqlReduce = mysql.format("UPDATE powerplant SET plantcurrentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
+								con.query(sqlReduce, (err, results) => {
+									if (err) {
+										console.log(err);
+									}
+									try {
+										callback(null, amountOfPower);
+									} catch (e) {
+										console.log("Can't run");
+									}
+								});
+							}
 						} else {
-							var sqlReduce = mysql.format("UPDATE powerplant SET plantcurrentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
-							con.query(sqlReduce, (err, results) => {
-								if (err) {
-									console.log(err);
-								}
-								try {
-									callback(null, amountOfPower);
-								} catch (e) {
-									console.log("Can't run");
-								}
-							});
+							if (plantbuffer < amountOfPower) {
+								var sqlSet0 = mysql.format("UPDATE powerplant SET buffer=0 WHERE id=?", [plantid]);
+								con.query(sqlSet0, (err, results) => {
+									if (err) {
+										console.log(err);
+									}
+									try {
+										callback(null, plantbuffer);
+									} catch (e) {
+										console.log("Can't run");
+									}
+								});
+							} else {
+								var sqlReduce = mysql.format("UPDATE powerplant SET buffer=? WHERE id=?", [plantbuffer-amountOfPower,plantid]);
+								con.query(sqlReduce, (err, results) => {
+									if (err) {
+										console.log(err);
+									}
+									try {
+										callback(null, amountOfPower);
+									} catch (e) {
+										console.log("Can't run");
+									}
+								});
+							}
 						}
-					} else {
-						if (plantbuffer < amountOfPower) {
-							var sqlSet0 = mysql.format("UPDATE powerplant SET buffer=0 WHERE id=?", [plantid]);
-							con.query(sqlSet0, (err, results) => {
-								if (err) {
-									console.log(err);
-								}
-								try {
-									callback(null, plantbuffer);
-								} catch (e) {
-									console.log("Can't run");
-								}
-							});
-						} else {
-							var sqlReduce = mysql.format("UPDATE powerplant SET buffer=? WHERE id=?", [plantbuffer-amountOfPower,plantid]);
-							con.query(sqlReduce, (err, results) => {
-								if (err) {
-									console.log(err);
-								}
-								try {
-									callback(null, amountOfPower);
-								} catch (e) {
-									console.log("Can't run");
-								}
-							});
-						}
-					}
-				});
+					});
+				}
+			});
+		} else {
+			try {
+				callback(null, 0);
+			} catch (e) {
+				console.log("Can't run");
 			}
-		});
-	} else {
-		try {
-			callback(null, 0);
-		} catch (e) {
-			console.log("Can't run");
 		}
-	}
-	
+	});
 }
 
-async function checkIfBlocked(householdid) {
+async function checkIfBlocked(householdid,callback) {
 	var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhousehold WHERE householdid=?", [householdid]);
 	con.query(sqlBanned, async function(err, results) {
 		if (err) {
@@ -728,17 +728,28 @@ async function checkIfBlocked(householdid) {
 							con.query(sqlRemove, async function(err, results) {
 								if (err) {
 									console.log(err);
-								} else {
-									return false;
+								}
+								try {
+									callback(null, false);
+								} catch (e) {
+									console.log("Can't run");
 								}
 							});
 						} else {
-							return true;
+							try {
+								callback(null, true);
+							} catch (e) {
+								console.log("Can't run");
+							}
 						}
 					}
 				});
 			} else {
-				return false;
+				try {
+					callback(null, false);
+				} catch (e) {
+					console.log("Can't run");
+				}
 			}
 		}
 	});

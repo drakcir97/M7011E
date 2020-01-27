@@ -293,6 +293,8 @@ app.get('/userpage', (req, res) => {
         
 });
 
+
+
 app.get( '/userimage', function( req, res ) {
         var token = req.cookies.token;
         if (!token) {
@@ -430,6 +432,24 @@ app.get('/deleteusers', (req, res) => {
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
                         return res.sendFile('deleteusers.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+});
+
+app.get('/viewusers', (req, res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        return res.sendFile('viewusers.html', {root : './'});
                 } else {
                         return res.send("User is not an administrator");
                 }
@@ -585,6 +605,25 @@ app.post('/deleteusers', function(req, res) {
                         return res.send("User is not an administrator");
                 }
         });
+});
+
+app.get('/blackout', (req, res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        return res.sendFile('blackout.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+        
 });
 
 app.get('/purgelogin', (req, res) => { //Added so we can remove login tokens from db.
@@ -884,6 +923,39 @@ app.get('/api/:inp', (req, res) => {
                         return res.send(message);
                 });
                 
+        });
+});
+
+app.post('/fetchuser', (req, res) => {
+        var token = req.cookies.token;
+        var userid = req.body.userid;
+        if (!token) {
+                console.log("Token failed, is missing!");
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) {
+                        console.log("Failed to verify!");
+                        return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                }
+
+                if (decoded.admin == '1') {
+                        // Connect to server
+                        var io = require('socket.io-client');
+                        var socket = io.connect('http://localhost:'+apiconfig.port+'/');
+
+                        socket.on('response', function (message) { 
+                                console.log(message);
+                                socket.emit('/api/user', {id: userid}); //Send id to api.
+                        });
+                        
+                        socket.on('/api/user', function (message) {
+                                console.log(message);
+                                return res.send(message);
+                        });
+                } else {
+                        return res.send('User is not an administrator');
+                }
         });
 });
 

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body onload="myFunction()">
+  <div class="toprightcorner"><a href="/signout">Sign out</a></div>
+  <div class="topleftcorner"><a href="/home">Home</a></div>
+<iframe src="/api/blackout" onload="this.onload=null; this.src=getSource() + 'api/blackout'" name="iframe_blackout" id="iframe_blackout" style="display: none;"></iframe>
+
+<script>
+    function getSource() {
+        var config = require("../config/htmlconfig");
+        return config.host + ':' + config.port + '/';
+    }
+</script>
+
+<script>
+    function myFunction() {
+        var theFrame = document.getElementById('iframe_blackout');       
+        var theWin = theFrame.contentWindow;
+        var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+        var theJson = theDoc.body.innerHTML;
+        var div = document.createElement("div");
+        div.innerHTML = theJson;
+        var text = div.textContent || div.innerText || "";
+        var obj = JSON.parse(text);
+
+        var displayjson = ""
+        for(var i = 0; i < obj.length; i++) {
+            displayjson += "User id: "+obj[i].response.id+" Household id: "+obj[i].response.householdid+" Time: "+obj[i].response.dt+"<br>";
+        }
+        document.getElementById("test").innerHTML = displayjson;
+    }
+    </script>
+
+<p id="test"> </p>
+
+</body>
+</html>
