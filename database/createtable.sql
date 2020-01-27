@@ -131,3 +131,12 @@ CREATE TABLE IF NOT EXISTS blockedhousehold (
 	PRIMARY KEY (id),
 	FOREIGN KEY (householdid) REFERENCES household(id)
 );
+
+CREATE TABLE IF NOT EXISTS blackout (
+	id int NOT NULL AUTO_INCREMENT,
+	householdid int NOT NULL,
+	datetimeid int NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (householdid) REFERENCES household(id),
+	FOREIGN KEY (datetimeid) REFERENCES datet(id)
+);

@@ -582,7 +582,9 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 									} else {
 										var powerCheap = totalin/totalhouseholds;
 										var powerExpensive = (powersum+powerCheap);
-										await buyFromPlant(householdid, -powerExpensive);
+										await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
+
+										});
 										powercost = powerExpensive*powerCostHigh - powerCheap*powerCostLow;
 									}
 								}
@@ -602,7 +604,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 }
 
 //Returns amount that could be bought from powerplant, up to amountOfPower.
-async function buyFromPlant(householdid, amountOfPower) {
+async function buyFromPlant(householdid, amountOfPower,callback) {
 	var blocked = await checkIfBlocked(householdid);
 	if (!blocked) {
 		var sqlLocationId = mysql.format("SELECT powerplant.id FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?",[householdid]);
@@ -626,7 +628,11 @@ async function buyFromPlant(householdid, amountOfPower) {
 								if (err) {
 									console.log(err);
 								}
-								return plantcurrentpower;
+								try {
+									callback(null, plantcurrentpower);
+								} catch (e) {
+									console.log("Can't run");
+								}
 							});
 						} else {
 							var sqlReduce = mysql.format("UPDATE powerplant SET plantcurrentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
@@ -634,7 +640,11 @@ async function buyFromPlant(householdid, amountOfPower) {
 								if (err) {
 									console.log(err);
 								}
-								return amountOfPower;
+								try {
+									callback(null, amountOfPower);
+								} catch (e) {
+									console.log("Can't run");
+								}
 							});
 						}
 					} else {
@@ -644,7 +654,11 @@ async function buyFromPlant(householdid, amountOfPower) {
 								if (err) {
 									console.log(err);
 								}
-								return plantbuffer;
+								try {
+									callback(null, plantbuffer);
+								} catch (e) {
+									console.log("Can't run");
+								}
 							});
 						} else {
 							var sqlReduce = mysql.format("UPDATE powerplant SET buffer=? WHERE id=?", [plantbuffer-amountOfPower,plantid]);
@@ -652,7 +666,11 @@ async function buyFromPlant(householdid, amountOfPower) {
 								if (err) {
 									console.log(err);
 								}
-								return amountOfPower;
+								try {
+									callback(null, amountOfPower);
+								} catch (e) {
+									console.log("Can't run");
+								}
 							});
 						}
 					}

@@ -36,7 +36,7 @@
         var weather = JSON.parse(text);
         
 
-        var theFrame2 = document.getElementById('iframe_user');
+/**        var theFrame2 = document.getElementById('iframe_user');
         var theWin2 = theFrame2.contentWindow;
         var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
         var theJson2 = theDoc2.body.innerHTML;
@@ -76,9 +76,9 @@
         var displayjson = " windspeed: "+weather.response[0].windspeed;
         displayjson += '<br>';
         var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
-        displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
-        displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
-        document.getElementById("test").innerHTML = displayjson;
+        displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod; 
+        displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result; */
+        document.getElementById("test").innerHTML = weather;
     }
     </script>
 
