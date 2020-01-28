@@ -526,6 +526,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 			if (err) {
 				console.log(err);
 			}
+			console.log("powerCostHigh "+powerCostHigh);
 			var sqlSettingsCheck = mysql.format("SELECT COUNT(simulationsettings.ratiokeep) FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
 			con.query(sqlSettingsCheck, async function(err, result) {
 				var count = parseInt(result[0]['COUNT(simulationsettings.ratiokeep']);
