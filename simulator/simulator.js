@@ -554,9 +554,9 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 										} else {
 											// var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
 											// console.log("BUFFER POWER  "+powerfrombuffer);
-											// console.log("POWERSUM BEFORE  "+powersum);
+											console.log("POWERSUM BEFORE  "+powersum);
 											powersum += dataBuffer; //Add power we got from buffer, will still be negative.
-											//console.log("POWERSUM AFTER  "+powersum);
+											console.log("POWERSUM AFTER  "+powersum);
 											if (totalin>totalout) {
 												powercost = powerCostLow*powersum;
 											} else {
@@ -569,7 +569,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 														if (powerExpensive!=dataPlant) {
 															await blackout(householdid,dateid, async function(err, dataBout) {});
 														}
-														//console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
+														console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
 														powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
 													});
 												}
@@ -608,9 +608,9 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 									} else {
 										// var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
 										// console.log("BUFFER POWER  "+powerfrombuffer);
-										// console.log("POWERSUM BEFORE  "+powersum);
+										console.log("POWERSUM BEFORE  "+powersum);
 										powersum += dataBuffer; //Add power we got from buffer, will still be negative.
-										//console.log("POWERSUM AFTER  "+powersum);
+										console.log("POWERSUM AFTER  "+powersum);
 										if (totalin>totalout) {
 											powercost = powerCostLow*powersum;
 										} else {
@@ -623,7 +623,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 													if (powerExpensive!=dataPlant) {
 														await blackout(householdid,dateid, async function(err, dataBout) {});
 													}
-													//console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
+													console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
 													powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
 												});
 											}
