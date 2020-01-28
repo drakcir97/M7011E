@@ -178,6 +178,7 @@ io.sockets.on('connect', function(socket)
         });
     });
 
+
     //show powergenerated
     socket.on('/api/powergenerated', function(data) {
         var id = data.id;
@@ -200,18 +201,9 @@ io.sockets.on('connect', function(socket)
         });
     });
     
-    //show current electricity price
+    //show current electricity price type 1
     socket.on('/api/electricityprice', function(data) {
-        var sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
-        conn.query(sql, (err, results) => {
-            if(err) throw err;
-            return socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": {result: results}}));
-        });
-    });
-
-    //show current electricity price type 2
-    socket.on('/api/electricityprice2', function(data) {
-        console.log("electricityprice2")
+        console.log("electricityprice")
         var sql = "SELECT COUNT(id) FROM household";
         conn.query(sql, (err, results) => {
             if(err) throw err;
@@ -228,7 +220,39 @@ io.sockets.on('connect', function(socket)
                 } else {
                     powercost = powerCostLow;
                 }
-                return socket.emit('/api/electricityprice2', JSON.stringify({"status": 200, "error": null, "response": {result: powercost}}));
+                return socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": {result: powercost}}));
+            });
+            
+        });
+    });
+
+    //show current electricity price type 2
+    socket.on('/api/electricityprice2', function(data) {
+        console.log("electricityprice2")
+        var id = data.id;
+        var sql = "SELECT COUNT(id) FROM household";
+        conn.query(sql, (err, results) => {
+            if(err) throw err;
+            var totalhouseholds = parseInt(JSON.stringify(results[0]['COUNT(id)']));
+            var powercost = 0;
+            var sqlPower = "SELECT powerin,powerout FROM powertotal ORDER BY i DESC LIMIT 1";
+            conn.query(sqlPower, (err, results) => {
+                if(err) throw err;
+                var powerin = parseFloat(JSON.stringify(results[0]['powerin']));
+                var powerout = parseFloat(JSON.stringify(results[0]['powerout']));
+                var sqlPriceAndPowerFromPlant = mysql.format("SELECT powerplantsettings.powerCostHigh, powerplantsettings.powerCostLow, powerplant.maxpower FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?", [id]);
+                conn.query(sqlPriceAndPowerFromPlant, (err, results) => {
+                    if(err) throw err;
+                    var high = parseFloat(JSON.stringify(results[0]['powerCostHigh']));
+                    var low = parseFloat(JSON.stringify(results[0]['powerCostLow']));
+                    var max = parseFloat(JSON.stringify(results[0]['maxpower']));
+                    if (powerin > powerout) {
+                        powercost = (low * (powerin-powerout) + high*max)/((powerin-powerout)*max);   
+                    } else {
+                        powercost = high;
+                    }
+                    return socket.emit('/api/electricityprice2', JSON.stringify({"status": 200, "error": null, "response": {result: powercost}}));
+                });
             });
             
         });

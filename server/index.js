@@ -1005,6 +1005,8 @@ app.post('/fetchuser', (req, res) => {
                         
                         socket.on('/api/user', function (message) {
                                 console.log(message);
+                                var user = JSON.parse(message);
+                                message = "power used: "+user.response[0].value;
                                 return res.send(message);
                         });
                 } else {
