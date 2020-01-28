@@ -794,7 +794,7 @@ async function updatePowerPlant(callback) {
 					var newBuffer = plantmaxpower * plantratiokeep + plantbuffer + plantcurrentpower; //We send all power that is not sold to buffer.
 					var newCurrent = plantmaxpower * (1-plantratiokeep);
 
-					var sqlPlant = mysql.format("UPDATE powerplant SET buffer=?, plantcurrentpower=? WHERE id=?", [newBuffer,newCurrent,val.id]);
+					var sqlPlant = mysql.format("UPDATE powerplant SET buffer=?, currentpower=? WHERE id=?", [newBuffer,newCurrent,val.id]);
 					con.query(sqlPlant, (err, results) => {
 						if (err) {
 							console.log(err);
