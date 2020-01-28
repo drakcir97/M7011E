@@ -1009,11 +1009,12 @@ app.post('/fetchuser', (req, res) => {
                                 message = "power used: "+user.response[0].value;
                                 return res.send(message);
                         });
+                        
                 } else {
                         return res.send('User is not an administrator');
                 }
         });
-});
+}); 
 
 app.get('/profile', (req, res) => {
         var token = req.cookies.token;

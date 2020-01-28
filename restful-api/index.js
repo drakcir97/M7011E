@@ -591,7 +591,7 @@ io.sockets.on('connect', function(socket)
             if (count == 0) {
                 return socket.emit('/api/blackout', JSON.stringify({"status": 200, "error": null, "response": 'No users in blackout'}));
             } else {
-                var sqlBlackout = "SELECT user.id, blackout.householdid, datet.dt FROM blackout INNER JOIN user ON blackout.householdid=user.householdid INNER JOIN datet ON datet.id=blackout.datetimeid";
+                var sqlBlackout = "SELECT user.id, blackout.householdid, datet.dt FROM blackout INNER JOIN user ON blackout.householdid=user.householdid INNER JOIN datet ON datet.id=blackout.datetimeid ORDER BY datet.dt DESC LIMIT 5";
                 conn.query(sqlBlackout, (err, results) => {
                     if (err) {
                         console.log(err);
