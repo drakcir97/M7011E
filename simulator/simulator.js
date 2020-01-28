@@ -832,7 +832,7 @@ async function fetchSettings(householdid,callback) {
 				if (err) {
 					console.log(err);
 				};
-				var plantid = parseInt(result[0]['powerplant.id']);
+				var plantid = result[0]['powerplant.id'];
 				var sqlInsert = mysql.format("INSERT INTO powerplantsettings (powerplantid, powerCostLow, powerCostHigh) VALUES (?,?,?)", [plantid,config.simulatorvar.powerCostLow,config.simulatorvar.powerCostHigh]);
 				con.query(sqlInsert, async function(err, result) {
 					if (err) {
