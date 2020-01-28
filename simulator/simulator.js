@@ -827,6 +827,7 @@ async function fetchSettings(householdid,callback) {
 		};
 		var count = parseInt(result[0]['COUNT(powerplantsettings.id)']);
 		if (count == 0) { //Settings do not exist, create with config value and set current cost to new value.
+			console.log("ENTERED IF IN fetchSettings: count "+count);
 			var sqlPlantId = mysql.format("SELECT powerplant.id FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?", [householdid]);
 			con.query(sqlPlantId, async function(err, result) {
 				if (err) {
@@ -848,6 +849,7 @@ async function fetchSettings(householdid,callback) {
 				});
 			});
 		} else { //Settings do not exist, fetch them and set 'local' instance of powercost to those found in settings.
+			console.log("ENTERED ELSE IN fetchSettings: count "+count);
 			var sqlSettings = mysql.format("SELECT powerplantsettings.powerCostLow, powerplantsettings.powerCostHigh FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?", [householdid]);
 			con.query(sqlSettings, async function(err, result) {
 				if (err) {
