@@ -559,9 +559,21 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 											console.log("POWERSUM AFTER  "+powersum);
 											if (totalin>totalout) {
 												powercost = powerCostLow*powersum;
+												var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+												con.query(sqlCost, async function(err, result) {
+													if (err) {
+														console.log(err);
+													};
+												});
 											} else {
 												if ((powersum + totalin/totalhouseholds) > 0) {
 													powercost = powerCostLow*powersum;
+													var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+													con.query(sqlCost, async function(err, result) {
+														if (err) {
+															console.log(err);
+														};
+													});
 												} else {
 													var powerCheap = totalin/totalhouseholds;
 													var powerExpensive = (powersum+powerCheap);
@@ -572,18 +584,19 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 														console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
 														powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
 														console.log("POWERCOST"+powercost);
+														var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+														con.query(sqlCost, async function(err, result) {
+															if (err) {
+																console.log(err);
+															};
+														});
 													});
 												}
 											}
 										}
 									});
 								} 
-								var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
-								con.query(sqlCost, async function(err, result) {
-									if (err) {
-										console.log(err);
-									};
-								});
+
 							});
 						});
 					});	
@@ -614,9 +627,21 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 										console.log("POWERSUM AFTER  "+powersum);
 										if (totalin>totalout) {
 											powercost = powerCostLow*powersum;
+											var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+											con.query(sqlCost, async function(err, result) {
+												if (err) {
+													console.log(err);
+												};
+											});
 										} else {
 											if ((powersum + totalin/totalhouseholds) > 0) {
 												powercost = powerCostLow*powersum;
+												var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+												con.query(sqlCost, async function(err, result) {
+													if (err) {
+														console.log(err);
+													};
+												});
 											} else {
 												var powerCheap = totalin/totalhouseholds;
 												var powerExpensive = (powersum+powerCheap);
@@ -627,18 +652,18 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 													console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
 													powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
 													console.log("POWERCOST"+powercost);
+													var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+													con.query(sqlCost, async function(err, result) {
+														if (err) {
+															console.log(err);
+														};
+													});
 												});
 											}
 										}
 									}
 								});
 							} 
-							var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
-							con.query(sqlCost, async function(err, result) {
-								if (err) {
-									console.log(err);
-								};
-							});
 						});
 					});
 				}
