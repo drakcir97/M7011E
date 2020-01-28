@@ -754,6 +754,59 @@ app.post('/settings', function(req, res) {
         });
 });
 
+app.get('/powersettings', (req,res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+
+                        var high = req.body.powerCostHigh;
+                        var low = req.body.powerCostLow;
+
+                        var io = require('socket.io-client');
+                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
+
+                        socket.on('response', function (message) { 
+                                //Send data to api containing new settings user set.
+                                socket.emit('/api/powersettings',{id: decoded.id, powerCostHigh: high, powerCostLow: low}); //Send settings to api.
+                                console.log(message);
+                        });
+                        
+                        socket.on('/api/powersettings', function (message) {
+                                //socket.emit('api/users');
+                                console.log(message);
+                                return res.redirect('/');
+                        });
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+});
+
+app.post('/powersettings', function(req,res) {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        return res.sendFile('blackout.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+});
+
 app.post('/plantsettings', function(req, res) {
         var token = req.cookies.token;
         if (!token) {
