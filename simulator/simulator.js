@@ -571,6 +571,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 														}
 														console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
 														powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
+														console.log("POWERCOST"+powercost);
 													});
 												}
 											}
@@ -625,6 +626,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 													}
 													console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
 													powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
+													console.log("POWERCOST"+powercost);
 												});
 											}
 										}
