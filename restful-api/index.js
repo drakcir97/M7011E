@@ -396,8 +396,9 @@ io.sockets.on('connect', function(socket)
                     if (err) {
                         console.log(err);
                     }
-                    var plantid = results[0]['powerplant.id'];
-                    console.log("powerplantid"+plantid);
+                    //var plantid = results[0]['powerplant.id'];
+                    var plantid = results[0]['id'];
+                    console.log("powerplantid "+plantid);
                     if (count == 0) {  
                         var sqlSettings = mysql.format("INSERT INTO powerplantsettings (powerplantid, powerCostHigh, powerCostLow) VALUES (?,?,?)", [plantid,high,low]);
                         conn.query(sqlSettings, (err, results) => {
