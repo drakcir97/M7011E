@@ -662,7 +662,7 @@ async function buyFromPlant(householdid, amountOfPower,callback) {
 						var plantratiokeep = parseFloat(results[0]['ratiokeep']);
 						if (plantstatus == 'running') {
 							if (plantcurrentpower < amountOfPower) {
-								var sqlSet0 = mysql.format("UPDATE powerplant SET plantcurrentpower=0 WHERE id=?", [plantid]);
+								var sqlSet0 = mysql.format("UPDATE powerplant SET currentpower=0 WHERE id=?", [plantid]);
 								con.query(sqlSet0, (err, results) => {
 									if (err) {
 										console.log(err);
@@ -674,7 +674,7 @@ async function buyFromPlant(householdid, amountOfPower,callback) {
 									}
 								});
 							} else {
-								var sqlReduce = mysql.format("UPDATE powerplant SET plantcurrentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
+								var sqlReduce = mysql.format("UPDATE powerplant SET currentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
 								con.query(sqlReduce, (err, results) => {
 									if (err) {
 										console.log(err);
