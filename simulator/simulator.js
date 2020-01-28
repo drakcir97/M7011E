@@ -568,7 +568,8 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 														if (powerExpensive!=dataPlant) {
 															await blackout(householdid,dateid, async function(err, dataBout) {});
 														}
-														powercost = dataPlant*powerCostHigh - powerCheap*powerCostLow;
+														//console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
+														powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
 													});
 												}
 											}
@@ -621,7 +622,8 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 													if (powerExpensive!=dataPlant) {
 														await blackout(householdid,dateid, async function(err, dataBout) {});
 													}
-													powercost = dataPlant*powerCostHigh - powerCheap*powerCostLow;
+													//console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
+													powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
 												});
 											}
 										}
@@ -717,6 +719,7 @@ async function buyFromPlant(householdid, amountOfPower,callback) {
 				}
 			});
 		} else {
+			console.log("BLOCKED FROM BUYING "+householdid);
 			try {
 				callback(null, 0);
 			} catch (e) {
