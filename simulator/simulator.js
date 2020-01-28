@@ -855,8 +855,8 @@ async function fetchSettings(householdid,callback) {
 				if (err) {
 					console.log(err);
 				};
-				powerCostHigh = parseFloat(result[0]['powerplantsettings.powerCostHigh']); //Cost if powerplant
-				powerCostLow = parseFloat(result[0]['powerplantsettings.powerCostLow']); //Cost if wind
+				powerCostHigh = parseFloat(result[0]['powerCostHigh']); //Cost if powerplant
+				powerCostLow = parseFloat(result[0]['powerCostLow']); //Cost if wind
 				try {
 					callback();
 				} catch (e) {
