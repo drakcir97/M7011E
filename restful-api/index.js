@@ -385,7 +385,7 @@ io.sockets.on('connect', function(socket)
         var id = data.id;
         var high = data.powerCostHigh;
         var low = data.powerCostLow;
-        var sqlSettingsCount = mysql.format("SELECT COUNT(powerplantsettings.id) FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplantsettings.locationid=household.locationid INNER JOIN user ON user.householdid=household.id WHERE user.id=?", [id]);
+        var sqlSettingsCount = mysql.format("SELECT COUNT(powerplantsettings.id) FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON user.householdid=household.id WHERE user.id=?", [id]);
         conn.query(sqlSettingsCount, (err, results) => {
             if (err) {
                 console.log(err);
