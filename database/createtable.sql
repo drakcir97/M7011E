@@ -124,6 +124,15 @@ CREATE TABLE IF NOT EXISTS powerplant (
 	FOREIGN KEY (locationid) REFERENCES location(id)
 );
 
+CREATE TABLE IF NOT EXISTS powerplantsettings (
+	id int NOT NULL AUTO_INCREMENT,
+	powerplantid int NOT NULL UNIQUE,
+	powerCostLow float NOT NULL DEFAULT '0.01',
+	powerCostHigh float NOT NULL DEFAULT '0.005',
+	PRIMARY KEY (id),
+	FOREIGN KEY (powerplantid) REFERENCES powerplant(id)
+);
+
 CREATE TABLE IF NOT EXISTS blockedhousehold (
 	id int NOT NULL AUTO_INCREMENT,
 	householdid int NOT NULL UNIQUE,

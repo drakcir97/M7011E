@@ -35,3 +35,5 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2020-1-17   | 8       | More on report, fixed issues and features in the simulator and API and server. |
 | 2020-1-21   | 3       | Config for API, simulator and server. |
 | 2020-1-23   | 4       | Report and work on simulator. |
+| 2020-1-27   | 3       | Work on self-certificate (Try to make it work to present), blackout implement and more robustness for simulator. |
+| 2020-1-28   | 2       | Added ability to change powercost in simulator. This is a per plant basis. More robustness also. |

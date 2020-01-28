@@ -43,9 +43,10 @@
     </script>
 
 <p id="test"> </p>
-<form id="fetchuser" method="post" action="/fetchuser">
+<form id="fetchuser" method="post" action="/fetchuser" oninput="out.value=fetchuser.value">
     User id to view page: <br>
     <input type="number" name="userid">
+    <output name="out"></output>
     <br>
 <input type="hidden" id="p2" name="p2" value="2">
 
