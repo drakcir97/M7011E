@@ -934,6 +934,8 @@ app.post('/plantpower', function(req, res) {
         });
 });
 
+//Create similar one for admin that takes an userid as input through the post/get that connects to API. Use this to display a special web page
+//with iframe that calls admin passthough to api.
 app.get('/api/:inp', (req, res) => {
         console.log("start '/api/:inp");
         console.log(req.params.inp);
@@ -1004,12 +1006,9 @@ app.post('/fetchuser', (req, res) => {
                         });
                         
                         socket.on('/api/user', function (message) {
-                                socket.on('/api/weather', function (message2) {
-                                        message += message2+"<br>test<br>";
-                                });
                                 console.log(message);
                                 var user = JSON.parse(message);
-                                message += "<br>power used: "+user.response[0].value;
+                                message = user.response[0].value;
                                 return res.send(message);
                         });
                         
