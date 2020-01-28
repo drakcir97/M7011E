@@ -820,7 +820,7 @@ async function updatePowerPlant(callback) {
 
 //Fetches this households powercosts and CHANGES local variables to match.
 async function fetchSettings(householdid,callback) {
-	var sqlCount = mysql.format("SELECT COUNT(powerplantsettings.id) FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.plantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?", [householdid]);
+	var sqlCount = mysql.format("SELECT COUNT(powerplantsettings.id) FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?", [householdid]);
 	con.query(sqlCount, async function(err, result) {
 		if (err) {
 			console.log(err);
@@ -833,7 +833,7 @@ async function fetchSettings(householdid,callback) {
 					console.log(err);
 				};
 				var plantid = parseInt(result[0]['powerplant.id']);
-				var sqlInsert = mysql.format("INSERT INTO powerplantsettings (plantid, powerCostLow, powerCostHigh) VALUES (?,?,?)", [plantid,config.simulatorvar.powerCostLow,config.simulatorvar.powerCostHigh]);
+				var sqlInsert = mysql.format("INSERT INTO powerplantsettings (powerplantid, powerCostLow, powerCostHigh) VALUES (?,?,?)", [plantid,config.simulatorvar.powerCostLow,config.simulatorvar.powerCostHigh]);
 				con.query(sqlInsert, async function(err, result) {
 					if (err) {
 						console.log(err);
@@ -848,7 +848,7 @@ async function fetchSettings(householdid,callback) {
 				});
 			});
 		} else { //Settings do not exist, fetch them and set 'local' instance of powercost to those found in settings.
-			var sqlSettings = mysql.format("SELECT powerplantsettings.powerCostLow, powerplantsettings.powerCostHigh FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.plantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?", [householdid]);
+			var sqlSettings = mysql.format("SELECT powerplantsettings.powerCostLow, powerplantsettings.powerCostHigh FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?", [householdid]);
 			con.query(sqlSettings, async function(err, result) {
 				if (err) {
 					console.log(err);

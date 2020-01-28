@@ -385,20 +385,20 @@ io.sockets.on('connect', function(socket)
         var id = data.id;
         var high = data.powerCostHigh;
         var low = data.powerCostLow;
-        var sqlSettingsCount = mysql.format("SELECT COUNT(powerplantsettings.id) FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.plantid=powerplant.id INNER JOIN household ON powerplantsettings.locationid=household.locationid INNER JOIN user ON user.householdid=household.id WHERE user.id=?", [id]);
+        var sqlSettingsCount = mysql.format("SELECT COUNT(powerplantsettings.id) FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplantsettings.locationid=household.locationid INNER JOIN user ON user.householdid=household.id WHERE user.id=?", [id]);
         conn.query(sqlSettingsCount, (err, results) => {
             if (err) {
                 console.log(err);
             } else {
                 var count = parseInt(JSON.stringify(results[0]['COUNT(powerplantsettings.id)']));
-                var sqlPlantId = mysql.format("SELECT powerplant.id FROM powerplant ON powerplantsettings.plantid=powerplant.id INNER JOIN household ON powerplantsettings.locationid=household.locationid INNER JOIN user ON user.householdid=household.id WHERE user.id=?", [id]);
+                var sqlPlantId = mysql.format("SELECT powerplant.id FROM powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplantsettings.locationid=household.locationid INNER JOIN user ON user.householdid=household.id WHERE user.id=?", [id]);
                 conn.query(sqlPlantId, (err, results) => {
                     if (err) {
                         console.log(err);
                     }
                     var plantid = results[0]['powerplant.id'];
                     if (count == 0) {  
-                        var sqlSettings = mysql.format("INSERT INTO powerplantsettings (plantid, powerCostHigh, powerCostLow) VALUES (?,?,?)", [plantid,high,low]);
+                        var sqlSettings = mysql.format("INSERT INTO powerplantsettings (powerplantid, powerCostHigh, powerCostLow) VALUES (?,?,?)", [plantid,high,low]);
                         conn.query(sqlSettings, (err, results) => {
                             if (err) {
                                 console.log(err);
@@ -406,7 +406,7 @@ io.sockets.on('connect', function(socket)
                             return socket.emit('/api/powersettings', JSON.stringify({"status": 200, "error": null, "response": results}));
                         });
                     } else {
-                        var sqlSettings = mysql.format("UPDATE powerplantsettings SET powerCostHigh=?,powerCostLow=? WHERE plantid=?", [high,low,plantid]);
+                        var sqlSettings = mysql.format("UPDATE powerplantsettings SET powerCostHigh=?,powerCostLow=? WHERE powerplantid=?", [high,low,plantid]);
                         conn.query(sqlSettings, (err, results) => {
                             if (err) {
                                 console.log(err);
