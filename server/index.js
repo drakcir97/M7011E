@@ -765,6 +765,24 @@ app.get('/powersettings', (req,res) => {
                 //res.status(200).send(decoded);
                 console.log("Decoded admin"+decoded.admin);
                 if (decoded.admin == '1') {
+                        return res.sendFile('powersettings.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+});
+
+app.post('/powersettings', function(req,res) {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
 
                         var high = req.body.powerCostHigh;
                         var low = req.body.powerCostLow;
@@ -783,24 +801,7 @@ app.get('/powersettings', (req,res) => {
                                 console.log(message);
                                 return res.redirect('/');
                         });
-                } else {
-                        return res.send("User is not an administrator");
-                }
-        });
-});
 
-app.post('/powersettings', function(req,res) {
-        var token = req.cookies.token;
-        if (!token) {
-                return res.status(401).end()
-        }
-        jwt.verify(token, authenticator.secret, function(err, decoded) {
-                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-                
-                //res.status(200).send(decoded);
-                console.log("Decoded admin"+decoded.admin);
-                if (decoded.admin == '1') {
-                        return res.sendFile('blackout.html', {root : './'});
                 } else {
                         return res.send("User is not an administrator");
                 }
