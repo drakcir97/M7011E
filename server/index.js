@@ -1004,9 +1004,12 @@ app.post('/fetchuser', (req, res) => {
                         });
                         
                         socket.on('/api/user', function (message) {
+                                socket.on('/api/weather', function (message2) {
+                                        message += message2+"<br>test<br>";
+                                });
                                 console.log(message);
                                 var user = JSON.parse(message);
-                                message = "power used: "+user.response[0].value;
+                                message += "<br>power used: "+user.response[0].value;
                                 return res.send(message);
                         });
                         
