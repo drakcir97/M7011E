@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body onload="myFunction()">
+  <div class="toprightcorner"><a href="/signout">Sign out</a></div>
+  <div class="topleftcorner"><a href="/home">Home</a></div>
+  <div class="topleftcorner"><a href="/settings">Settings</a></div>
+  <picture>
+      <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'userimage'" width="350" height="200" srcset="/userimage">
+    </picture>
+<iframe src="/api/weather" onload="this.onload=null; this.src=getSource() + 'api/weather'" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
+<iframe src="/api/user" onload="this.onload=null; this.src=getSource() + 'api/user'" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
+<iframe src="/api/powergenerated" onload="this.onload=null; this.src=getSource() + 'api/powergenerated'" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
+<iframe src="/api/electricityprice2" onload="this.onload=null; this.src=getSource() + 'api/electricityprice2'" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
+<iframe src="/api/buffer" onload="this.onload=null; this.src=getSource() + 'api/buffer'" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
+
+<script>
+    function getSource() {
+        var config = require("../config/htmlconfig");
+        return config.host + ':' + config.port + '/';
+    }
+</script>
+
+<script>
+    function myFunction() {
+        var theFrame = document.getElementById('iframe_weather');       
+        var theWin = theFrame.contentWindow;
+        var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+        var theJson = theDoc.body.innerHTML;
+        var div = document.createElement("div");
+        div.innerHTML = theJson;
+        var text = div.textContent || div.innerText || "";
+        var weather = JSON.parse(text);
+        
+
+        var theFrame2 = document.getElementById('iframe_user');
+        var theWin2 = theFrame2.contentWindow;
+        var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
+        var theJson2 = theDoc2.body.innerHTML;
+        var div2 = document.createElement("div");
+        div2.innerHTML = theJson2;
+        var text2 = div2.textContent || div2.innerText || "";
+        var user = JSON.parse(text2);
+
+        var theFrame3 = document.getElementById('iframe_powgen');
+        var theWin3 = theFrame3.contentWindow;
+        var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
+        var theJson3 = theDoc3.body.innerHTML;
+        var div3 = document.createElement("div");
+        div3.innerHTML = theJson3;
+        var text3 = div3.textContent || div3.innerText || "";
+        var powgen = JSON.parse(text3);
+
+        var theFrame4 = document.getElementById('iframe_price');
+        var theWin4 = theFrame4.contentWindow;
+        var theDoc4 = theFrame4.contentDocument || theFrame4.contentWindow.document;
+        var theJson4 = theDoc4.body.innerHTML;
+        var div4 = document.createElement("div");
+        div4.innerHTML = theJson4;
+        var text4 = div4.textContent || div4.innerText || "";
+        var price = JSON.parse(text4);
+        
+
+        var theFrame5 = document.getElementById('iframe_buffer');
+        var theWin5 = theFrame5.contentWindow;
+        var theDoc5 = theFrame5.contentDocument || theFrame5.contentWindow.document;
+        var theJson5 = theDoc5.body.innerHTML;
+        var div5 = document.createElement("div");
+        div5.innerHTML = theJson5;
+        var text5 = div5.textContent || div5.innerText || "";
+        var buffer = JSON.parse(text5);
+
+        var displayjson = " windspeed: "+weather.response[0].windspeed;
+        displayjson += '<br>';
+        var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
+        displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
+        displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
+        document.getElementById("test").innerHTML = displayjson;
+    }
+    </script>
+
+<p id="test"> </p>
+
+</body>
+</html>

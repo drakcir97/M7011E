@@ -578,7 +578,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 													var powerCheap = totalin/totalhouseholds;
 													var powerExpensive = (powersum+powerCheap);
 													await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
-														if (powerExpensive!=dataPlant) {
+														if (powerExpensive!=-dataPlant) {
 															await blackout(householdid,dateid, async function(err, dataBout) {});
 														}
 														console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
@@ -646,7 +646,7 @@ async function generatePowerCost(householdid, dateid, totalin, totalout,totalhou
 												var powerCheap = totalin/totalhouseholds;
 												var powerExpensive = (powersum+powerCheap);
 												await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
-													if (powerExpensive!=dataPlant) {
+													if (powerExpensive!=-dataPlant) {
 														await blackout(householdid,dateid, async function(err, dataBout) {});
 													}
 													console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
