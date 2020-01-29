@@ -339,14 +339,14 @@ io.sockets.on('connect', function(socket)
 
     socket.on('/api/checkblock', function(data) {
         var id = data.id;
-        var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhouseholds INNER JOIN user ON blockedhouseholds.householdid=user.householdid WHERE user.id=?", [id]);
+        var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
         conn.query(sqlBanned, function(err, results) {
             if (err) {
                 console.log(err);
             } else {
                 var num = parseInt(results[0]['COUNT(dt)']);
                 if (num != 0) {
-                    var sqlBanned = mysql.format("SELECT dt FROM blockedhouseholds INNER JOIN user ON blockedhouseholds.householdid=user.householdid WHERE user.id=?", [id]);
+                    var sqlBanned = mysql.format("SELECT dt FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
                     conn.query(sqlBanned, function(err, results) {
                         if (err) {
                             console.log(err);
