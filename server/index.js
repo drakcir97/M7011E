@@ -512,6 +512,7 @@ app.post('/blockusers', function(req, res) {
                                 console.log(message);
                                 var parsed = JSON.parse(message);
                                 timeblocked = BigInt(parsed['response'][0]['dt']);
+                                console.log("Current time "+currenttime+" timeblocked "+timeblocked);
 
                                 if (timeblocked <= currenttime) {
 
