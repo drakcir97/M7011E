@@ -37,3 +37,4 @@ Fixed so it does everything in correct order. Just need to fix the values genera
 | 2020-1-23   | 4       | Report and work on simulator. |
 | 2020-1-27   | 3       | Work on self-certificate (For demo), blackout implement and more robustness for simulator. |
 | 2020-1-28   | 2       | Added ability to change powercost in simulator. This is a per plant basis. More robustness also. |
+| 2020-1-29   | 2       | Now blocking should work, API also removes block (sim does too), since sim only check when buying power. |
