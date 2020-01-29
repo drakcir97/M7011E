@@ -340,14 +340,14 @@ io.sockets.on('connect', function(socket)
     socket.on('/api/checkblock', function(data) {
         var id = data.id;
         var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhouseholds INNER JOIN user ON blockedhouseholds.householdid=user.householdid WHERE user.id=?", [id]);
-        con.query(sqlBanned, function(err, results) {
+        conn.query(sqlBanned, function(err, results) {
             if (err) {
                 console.log(err);
             } else {
                 var num = parseInt(results[0]['COUNT(dt)']);
                 if (num != 0) {
                     var sqlBanned = mysql.format("SELECT dt FROM blockedhouseholds INNER JOIN user ON blockedhouseholds.householdid=user.householdid WHERE user.id=?", [id]);
-                    con.query(sqlBanned, function(err, results) {
+                    conn.query(sqlBanned, function(err, results) {
                         if (err) {
                             console.log(err);
                         }
@@ -367,11 +367,11 @@ io.sockets.on('connect', function(socket)
         var secondsblock = data.secondsblock;
 
         var sqlHouseholdId = mysql.format("SELECT householdid FROM user WHERE id=?", [inp]);
-        con.query(sqlHouseholdId, function(err, results) {
+        conn.query(sqlHouseholdId, function(err, results) {
             if (err) throw err;
             var householdid = results[0]['householdid'];
             var sqlsettime = mysql.format("INSERT INTO blockedhousehold (householdid, dt) VALUES (?,?)", [householdid,secondsblock]);
-            con.query(sqlsettime, function(err, results) {
+            conn.query(sqlsettime, function(err, results) {
                 if (err) throw err;
                 return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
             });  
