@@ -523,7 +523,7 @@ app.post('/blockusers', function(req, res) {
                                                 console.log(message);
                                         });
                                         
-                                        socket.on('/api/blockedusers', function (message) {
+                                        socket.on('/api/blockusers', function (message) {
                                                 //socket.emit('api/users');
                                                 console.log(message);
                                                 return res.redirect('/blockusers');
