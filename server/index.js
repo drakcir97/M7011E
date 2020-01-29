@@ -513,9 +513,7 @@ app.post('/blockusers', function(req, res) {
                                 var parsed = JSON.parse(message);
                                 timeblocked = BigInt(parsed['response']['dt']);
 
-                                if (timeblocked == -1) {
-                                        return res.redirect('/blockusers')
-                                } else if (timeblocked <= currenttime) {
+                                if (timeblocked <= currenttime) {
 
                                         // Connect to server
                                         var io = require('socket.io-client');
