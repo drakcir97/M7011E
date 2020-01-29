@@ -511,7 +511,7 @@ app.post('/blockusers', function(req, res) {
                                 //socket.emit('api/users');
                                 console.log(message);
                                 var parsed = JSON.parse(message);
-                                timeblocked = BigInt(parsed['response']['dt']);
+                                timeblocked = BigInt(parsed['response'][0]['dt']);
 
                                 if (timeblocked <= currenttime) {
 

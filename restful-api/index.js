@@ -354,7 +354,7 @@ io.sockets.on('connect', function(socket)
                         return socket.emit('/api/checkblock', JSON.stringify({"status": 200, "error": null, "response": results}));
                     });
                 } else {
-                    return socket.emit('/api/checkblock', JSON.stringify({"status": 200, "error": null, "response": {dt: -1}}));
+                    return socket.emit('/api/checkblock', JSON.stringify({"status": 200, "error": null, "response": [{dt: -1}]}));
                 }
             }
         });
