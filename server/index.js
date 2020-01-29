@@ -511,28 +511,29 @@ app.post('/blockusers', function(req, res) {
                                 //socket.emit('api/users');
                                 console.log(message);
                                 timeblocked = BigInt(message.response.dt);
-                        });   
-                        if (timeblocked == -1) {
-                                return res.redirect('/blockusers')
-                        } else if (timeblocked <= currenttime) {
-
-                                socket.on('response', function (message) { 
-                                        //Send data to api containing new settings user set.
-                                        socket.emit('/api/blockusers',{id: inp, secondsblock: secondsblock}); //Send settings to api.
-                                        console.log(message);
-                                });
                                 
-                                socket.on('/api/blockedusers', function (message) {
-                                        //socket.emit('api/users');
-                                        console.log(message);
-                                        return res.redirect('/blockusers');
-                                });
-                                //       socket.close();
-                        }
-                        else{
-                                return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
-                        }
-                        return res.sendFile('blockusers.html', {root : './'});
+                                if (timeblocked == -1) {
+                                        return res.redirect('/blockusers')
+                                } else if (timeblocked <= currenttime) {
+        
+                                        socket.on('response', function (message) { 
+                                                //Send data to api containing new settings user set.
+                                                socket.emit('/api/blockusers',{id: inp, secondsblock: secondsblock}); //Send settings to api.
+                                                console.log(message);
+                                        });
+                                        
+                                        socket.on('/api/blockedusers', function (message) {
+                                                //socket.emit('api/users');
+                                                console.log(message);
+                                                return res.redirect('/blockusers');
+                                        });
+                                        //       socket.close();
+                                }
+                                else{
+                                        return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
+                                }
+                                return res.sendFile('blockusers.html', {root : './'});
+                        });   
                                         //     return res.send(results);
                 } else {
                         return res.send("User is not an administrator");

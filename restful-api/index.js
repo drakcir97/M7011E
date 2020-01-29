@@ -366,11 +366,16 @@ io.sockets.on('connect', function(socket)
         var inp = data.id;
         var secondsblock = data.secondsblock;
 
-        var sqlsettime = mysql.format("INSERT INTO blockedhousehold (householdid, dt) VALUES (SELECT householdid FROM user WHERE id=?,?)", [inp, secondsblock]);
-        con.query(sqlsettime, function(err, results) {
+        var sqlHouseholdId = mysql.format("SELECT householdid FROM user WHERE id=?", [inp]);
+        con.query(sqlHouseholdId, function(err, results) {
             if (err) throw err;
-            return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
-        });   
+            var householdid = results[0]['householdid'];
+            var sqlsettime = mysql.format("INSERT INTO blockedhousehold (householdid, dt) VALUES (?,?)", [householdid,secondsblock]);
+            con.query(sqlsettime, function(err, results) {
+                if (err) throw err;
+                return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
+            });  
+        }); 
 
     });
 
