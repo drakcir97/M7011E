@@ -535,7 +535,7 @@ app.post('/blockusers', function(req, res) {
                                 else{
                                         return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
                                 }
-                                return res.sendFile('blockusers.html', {root : './'});
+                                //return res.sendFile('blockusers.html', {root : './'});
                         });   
                                         //     return res.send(results);
                 } else {
