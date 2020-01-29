@@ -516,6 +516,10 @@ app.post('/blockusers', function(req, res) {
                                 if (timeblocked == -1) {
                                         return res.redirect('/blockusers')
                                 } else if (timeblocked <= currenttime) {
+
+                                        // Connect to server
+                                        var io = require('socket.io-client');
+                                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
         
                                         socket.on('response', function (message) { 
                                                 //Send data to api containing new settings user set.
