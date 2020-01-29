@@ -770,10 +770,10 @@ async function checkIfBlocked(householdid,callback) {
 					if (err) {
 						console.log(err);
 					} else {
-						var banned = parseInt(results[0]['dt']);
+						var banned = BigInt(results[0]['dt']);
 						var d = new Date();
 						var currenttime = d.getTime()/1000;
-						if (banned <= currentime) {
+						if (banned <= currenttime) {
 							var sqlRemove = mysql.format("DELETE FROM blockedhousehold WHERE householdid=?", [householdid]);
 							con.query(sqlRemove, async function(err, results) {
 								if (err) {
