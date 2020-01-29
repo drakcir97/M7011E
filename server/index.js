@@ -510,8 +510,8 @@ app.post('/blockusers', function(req, res) {
                         socket.on('/api/checkblock', function (message) {
                                 //socket.emit('api/users');
                                 console.log(message);
-                                timeblocked = BigInt(message.response.dt);
-                                
+                                timeblocked = BigInt(message.response[0].dt);
+
                                 if (timeblocked == -1) {
                                         return res.redirect('/blockusers')
                                 } else if (timeblocked <= currenttime) {
