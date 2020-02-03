@@ -375,6 +375,7 @@ io.sockets.on('connect', function(socket)
                 if (err) {
                     console.log(err);
                 } else {
+                    console.log(results);
                     var num = parseInt(results[0]['COUNT(dt)']);
                     if (num == 0) {
                         var sqlsettime = mysql.format("INSERT INTO blockedhousehold (householdid, dt) VALUES (?,?)", [householdid,secondsblock]);
