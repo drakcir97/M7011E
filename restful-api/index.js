@@ -370,8 +370,8 @@ io.sockets.on('connect', function(socket)
         conn.query(sqlHouseholdId, function(err, results) {
             if (err) throw err;
             var householdid = results[0]['householdid'];
-            var sqlBanned = mysql.format("SELECT COUNT(blockedhousehold.dt) FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
-            conn.query(sqlBanned, function(err, results) {
+            var sqlCount = mysql.format("SELECT COUNT(blockedhousehold.dt) FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
+            conn.query(sqlCount, function(err, results) {
                 if (err) {
                     console.log(err);
                 } else {
