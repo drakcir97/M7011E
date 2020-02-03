@@ -370,12 +370,12 @@ io.sockets.on('connect', function(socket)
         conn.query(sqlHouseholdId, function(err, results) {
             if (err) throw err;
             var householdid = results[0]['householdid'];
-            var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
+            var sqlBanned = mysql.format("SELECT COUNT(blockedhousehold.dt) FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
             conn.query(sqlBanned, function(err, results) {
                 if (err) {
                     console.log(err);
                 } else {
-                    var num = parseInt(results[0]['COUNT(dt)']);
+                    var num = parseInt(results[0]['COUNT(blockedhousehold.dt)']);
                     if (num != 0) {
                         var sqlsettime = mysql.format("INSERT INTO blockedhousehold (householdid, dt) VALUES (?,?)", [householdid,secondsblock]);
                         conn.query(sqlsettime, function(err, results) {
@@ -383,12 +383,12 @@ io.sockets.on('connect', function(socket)
                             return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
                         }); 
                     } else {
-                        var sqlBanned = mysql.format("SELECT dt FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
+                        var sqlBanned = mysql.format("SELECT blockedhousehold.dt FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
                         conn.query(sqlBanned, function(err, results) {
                             if (err) {
                                 console.log(err);
                             } else {
-                                var lastblocked = results[0]['dt'];
+                                var lastblocked = results[0]['blockedhousehold.dt'];
                                 if (lastblocked < secondsblock) {
                                     var sqlsettime = mysql.format("UPDATE blockedhousehold SET dt=? WHERE householdid=?", [secondsblock,householdid]);
                                     conn.query(sqlsettime, function(err, results) {
