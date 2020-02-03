@@ -383,7 +383,7 @@ io.sockets.on('connect', function(socket)
                             return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
                         }); 
                     } else {
-                        var sqlBanned = mysql.format("SELECT blockedhousehold.dt FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
+                        var sqlBanned = mysql.format("SELECT dt FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
                         conn.query(sqlBanned, function(err, results) {
                             if (err) {
                                 console.log(err);
