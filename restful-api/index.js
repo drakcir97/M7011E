@@ -388,7 +388,7 @@ io.sockets.on('connect', function(socket)
                             if (err) {
                                 console.log(err);
                             } else {
-                                var lastblocked = results[0]['blockedhousehold.dt'];
+                                var lastblocked = BigInt(results[0]['dt']);
                                 if (lastblocked < secondsblock) {
                                     var sqlsettime = mysql.format("UPDATE blockedhousehold SET dt=? WHERE householdid=?", [secondsblock,householdid]);
                                     conn.query(sqlsettime, function(err, results) {
