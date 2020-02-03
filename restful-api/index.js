@@ -363,7 +363,7 @@ io.sockets.on('connect', function(socket)
     socket.on('/api/blockusers', function(data) {
         //res.status(200).send(decoded);
         console.log("id "+data.id);
-        var inp = data.id;
+        var id = data.id;
         var secondsblock = data.secondsblock;
 
         var sqlHouseholdId = mysql.format("SELECT householdid FROM user WHERE id=?", [inp]);
