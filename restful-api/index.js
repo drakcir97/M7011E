@@ -366,7 +366,7 @@ io.sockets.on('connect', function(socket)
         var id = data.id;
         var secondsblock = data.secondsblock;
 
-        var sqlHouseholdId = mysql.format("SELECT householdid FROM user WHERE id=?", [inp]);
+        var sqlHouseholdId = mysql.format("SELECT householdid FROM user WHERE id=?", [id]);
         conn.query(sqlHouseholdId, function(err, results) {
             if (err) throw err;
             var householdid = results[0]['householdid'];
