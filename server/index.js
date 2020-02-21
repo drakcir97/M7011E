@@ -1064,7 +1064,8 @@ app.get('/home', (req, res) => {
 //      res.end("hello");
 //}).listen(3000);
 
-var temp = https.createServer(options, app).listen(config.port);
+//var temp = https.createServer(options, app).listen(config.port);
+var temp = http.createServer(app).listen(config.port);
 
 // Connect to server
 var io = require('socket.io')(temp);
