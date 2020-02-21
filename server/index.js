@@ -1066,7 +1066,11 @@ app.get('/home', (req, res) => {
 //}).listen(3000);
 
 //var temp = https.createServer(options, app).listen(config.port);
-var temp = http.createServer(app).listen(config.port);
+if (config.https) {
+        var temp = https.createServer(options, app).listen(config.port);
+} else {
+        var temp = http.createServer(app).listen(config.port);
+}
 
 // Connect to server
 var io = require('socket.io')(temp);
