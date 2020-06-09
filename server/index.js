@@ -1040,10 +1040,10 @@ app.get('/aapi/:inp/:id', (req, res) => {
         });
 });
 
-app.get('/fetchuser/:id', (req, res) => {
+app.get('/fetchuser/', (req, res) => {
         var token = req.cookies.token;
         var userid = req.body.userid;
-        var id = req.params.id;
+        var id = req.body.userid;
         if (!token) {
                 console.log("Token failed, is missing!");
                 return res.status(401).end()
@@ -1076,7 +1076,7 @@ app.get('/fetchuser/:id', (req, res) => {
                                         'userid' : id
                                 }
                         };
-                        return res.render('index.html',{userid: id});
+                        return res.render('fetchuser.html',{userid: id});
                         //return res.sendFile('fetchuser.html', options);
                         
                 } else {
