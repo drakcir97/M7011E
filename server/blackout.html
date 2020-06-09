@@ -1,10 +1,81 @@
 <html>
-<html>
+<style>
+.header {
+    padding: 2px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+    font-size: 20px;
+}
+label {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 18px;
+    color: #333;
+    height: 20px;
+    width: 150px;
+    margin-top: 10px;
+    margin-left: 10px;
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+input {
+    height: 20px;
+    width: 300px;
+    border: 1px solid #000;
+    margin-top: 10px;
+    float: right;
+}
+input[type=button] {
+    float:none;
+}
+form {
+        background-color: #FFF;
+        height: 10px;
+        width: 600px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 0px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 0px;
+}
+.right {
+    float: right;
+}
+.centerforheader {
+    position: absolute;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+</style>
 <head>
+    <div class="header">
+        <h1>JSONLIGAN</h1>
+        <p>M7011E</p>
+    </div>
+</head>   
+<head>
+    <div>
+        <h1 class="centerforheader">Blackout</h1>
+        <div class="right">
+        <form id="signout" method="get" action="/signout">
+        <label for=""></label>
+        <input type="submit" value="Signout">
+        </form>
+        <form id="home" method="get" action="/home">
+        <label for=""></label>
+        <input type="submit" value="Home">
+        </form>
+        </div>
+    </div>
 </head>
 <body onload="myFunction()">
-  <div class="toprightcorner"><a href="/signout">Sign out</a></div>
-  <div class="topleftcorner"><a href="/home">Home</a></div>
+ <!-- <div class="toprightcorner"><a href="/signout">Sign out</a></div>
+  <div class="topleftcorner"><a href="/home">Home</a></div> -->
+
 <iframe src="/api/blackout" onload="this.onload=null; this.src=getSource() + 'api/blackout'" name="iframe_blackout" id="iframe_blackout" style="display: none;"></iframe>
 
 <script>
@@ -16,7 +87,6 @@
 
 <script>
     function myFunction() {
-        alert("enter myFunction");
         var theFrame = document.getElementById('iframe_blackout');       
         var theWin = theFrame.contentWindow;
         var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
@@ -24,13 +94,9 @@
         var div = document.createElement("div");
         div.innerHTML = theJson;
         var text = div.textContent || div.innerText || "";
-        alert(text);
         var obj = JSON.parse(text);
-        alert(obj.response.length);
-
         var displayjson = ""
         for(var i = 0; i < obj.response.length; i++) {
-            alert("test");
             displayjson += "User id: "+obj.response[i].id+" Household id: "+obj.response[i].householdid+" Time: "+obj.response[i].dt+"<br>";
         }
         document.getElementById("test").innerHTML = displayjson;

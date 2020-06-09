@@ -1,7 +1,59 @@
 <html>
+<style>
+form {
+        background-color: #FFF;
+        height: 50px;
+        width: 600px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 0px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 0px;
+        text-align:center;
+}
+label {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 18px;
+    color: #333;
+    height: 20px;
+    width: 150px;
+    margin-top: 10px;
+    margin-left: 10px;
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+input {
+    height: 20px;
+    width: 300px;
+    border: 1px solid #000;
+    margin-top: 10px;
+    float: left;
+}
+input[type=button] {
+    float:none;
+}
+.header {
+  padding: 2px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 20px;
+}
+.testDiv {
+        margin: auto;
+}
+</style>
+
+
 <head>
-<title>Login</title>
-<div class="toprightcorner"><a href="/signup">Sign up</a></div>
+<div class="header">
+        <h1>JSONLIGAN</h1>
+        <p>M7011E</p>
+</div>
+<!--<div class="rightcorner"><a href="/signup">Sign up</a></div>-->
 <script language="">
         function validate(form){
                 if(form.username.value.length==0){
@@ -19,14 +71,30 @@
                 return true;
         }
 </script>
+
 </body>
 <body>
-<h1>Login</h1>
+<div id="form">
+
 <form id="login" method="post" action="/login">
-<p>Email: <input type="text" name="emailaddress" id="emailaddress"></p>
-<p>Password: <input type="password" name="userpassword" id="userpassword"></p>
-<p><input type="Submit" value="Login"></p>
+<!--<p>Email: <input type="text" name="emailaddress" id="emailaddress" placeholder="Email"></p>
+<p>Password: <input type="password" name="userpassword" id="userpassword" placeholder="Password"></p> -->
+<div class="testDiv">
+<label for="Email">Email:</label>
+<input name="Email" id="Email" placeholder="Email"/>
+<label for="Password">Password:</label>
+<input type="password" name="Password" id="Password" placeholder="Password" />
+<label for=""></label>
+<input type="Submit" value="Login">
 </form>
+<form id="signup" method="post" action="/signup">
+<label for=""></label>
+<input type="Submit" value="Signup">
+</div>
+</form>
+
+</div>
+
 </body>
 </html>
 

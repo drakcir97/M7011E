@@ -1,22 +1,112 @@
 <html>
+<style>
+.header {
+    padding: 2px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+    font-size: 20px;
+}
+label {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 18px;
+    color: #333;
+    height: 20px;
+    width: 250px;
+    margin-top: 10px;
+    margin-left: 10px;
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+input {
+    height: 20px;
+    width: 300px;
+    border: 1px solid #000;
+    margin-top: 10px;
+    float: right;
+}
+input[type=button] {
+    float:none;
+}
+form {
+    background-color: #FFF;
+    height: 10px;
+    width: 600px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 0px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 0px;
+}
+.right {
+    float: right;
+}
+.centerforheader {
+    position: absolute;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+.center {
+    margin: auto;
+}
+.under {
+    position: absolute;
+    float: left;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+</style>
 <head>
-<title>Homepage</title>
-<div class="toprightcorner"><a href="/signout">Sign out</a></div>
-<body>
-<div class="topleftcorner"><a href="/settings">Settings</a></div>
-<div class="topleftcorner"><a href="/changepassword">Change password</a></div>
-<form id="userpage" method="GET" action="/userpage">
-    <button name="user" value="user">Go to userpage</button>
-</form>
+    <div class="header">
+    <h1>JSONLIGAN</h1>
+    <p>M7011E</p>
+    </div>
+</head>    
+<head>
+    <div>
+    <h1 class="centerforheader">Homepage</h1>
+    <div class="right">
+    <form id="signout" method="get" action="/signout">
+    <label for=""></label>
+    <input type="submit" value="Signout">
+    </form>
+    <form id="home" method="get" action="/home">
+    <label for=""></label>
+    <input type="submit" value="Home">
+    </form>
+    </form>
+    <form id="settings" method="get" action="/settings">
+    <label for=""></label>
+    <input type="submit" value="Settings">
+    </form>
+    <form id="user" method="get" action="/userpage">
+    <label for=""></label>
+    <input type="submit" value="Go to userpage">
+    </form>
+    </div>
+    </div>
+</head>        
 
 <!-- <form id="house" method="POST" action="/addPicture">
     <p>image url:  <input type="text" name="img_url" id="img_url"></p>
     <button name="picture" value="picture">Go to userpage</button>
 </form> -->
 <form id="house" enctype="multipart/form-data" method="POST" action="/addPicture">
-    Select a file (8MB max): <input type="file" name="picture" id="picture" multiple="multiple"><br><br>
+    <label for="picture">Select a file (8MB max): </label>
+    <input id="picture" type="file" name="picture" multiple="multiple"/>
+
     <input type="submit" value="Upload">
-  </form>
+    
+<input type="hidden" id="p2" name="p2" value="2">
+<div class="under">
+<p> Upload an image of your house to display here:</p>
+</div>
 </form>
+
 </body>
 </html>

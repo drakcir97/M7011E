@@ -1,6 +1,70 @@
 <html>
+<style>
+.header {
+        padding: 2px;
+        text-align: center;
+        background: #1abc9c;
+        color: white;
+        font-size: 20px;
+}
+label {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 18px;
+        color: #333;
+        height: 20px;
+        width: 250px;
+        margin-top: 10px;
+        margin-left: 10px;
+        text-align: right;
+        clear: both;
+        float:left;
+        margin-right:15px;
+}
+input {
+        height: 20px;
+        width: 300px;
+        border: 1px solid #000;
+        margin-top: 10px;
+        float: right;
+}
+input[type=button] {
+        float:none;
+}
+form {
+        background-color: #FFF;
+        height: 10px;
+        width: 600px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 0px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 0px;
+}
+.right {
+        float: right;
+}
+.centerforheader {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+}
+.center {
+        margin: auto;
+}
+</style>
 <head>
-<title>Signup</title>
+        <div class="header">
+        <h1>JSONLIGAN</h1>
+        <p>M7011E</p>
+        </div>
+</head>    
+<head>
+        <div>
+        <h1 class="centerforheader">Signup</h1>
+        </div>
+        </div>
+</head>         
 <script language="">
         function validate(form){
                 if(form.username.value.length==0){
@@ -27,12 +91,17 @@
 </script>
 </body>
 <body onload="getCaptcha()">
-<h1>Login</h1>
 <form id="login" method="post" action="/signup">
-<p>Full Name: <input type="text" name="name" id="name"></p>
-<p>Email: <input type="text" name="emailaddress" id="emailaddress"></p>
-<p>Password: <input type="password" name="userpassword" id="userpassword"></p>
-<p>Captcha: <input type="text" name="usercaptcha" id="usercaptcha"></p>
+
+<label for="name">Full name: </label>
+<input id="Userid" type="text" name="name" id="name" placeholder="Name" />    
+<label for="emailaddress">Email: </label>
+<input id="Userid" type="text" name="emailaddress" id="emailaddress" placeholder="Email" />  
+<label for="userpassword">Password: </label>
+<input id="Userid" type="password" name="userpassword" id="userpassword" placeholder="Password" />  
+<label for="usercaptcha">Captcha: </label>
+<input id="Userid" type="text" name="usercaptcha" id="usercaptcha" placeholder="Captcha" />  
+
 <input type="hidden" id="p2" name="p2" value="2">
 
 <script>

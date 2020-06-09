@@ -1,13 +1,99 @@
 <!DOCTYPE html>
 <html>
-<head>
+<style>
+        .header {
+            padding: 2px;
+            text-align: center;
+            background: #1abc9c;
+            color: white;
+            font-size: 20px;
+        }
+        label {
+            font-family: Georgia, "Times New Roman", Times, serif;
+            font-size: 18px;
+            color: #333;
+            height: 20px;
+            width: 250px;
+            margin-top: 10px;
+            margin-left: 10px;
+            text-align: right;
+            clear: both;
+            float:left;
+            margin-right:15px;
+        }
+        input {
+            height: 20px;
+            width: 300px;
+            border: 1px solid #000;
+            margin-top: 10px;
+            float: right;
+        }
+        input[type=button] {
+            float:none;
+        }
+        form {
+            background-color: #FFF;
+            height: 10px;
+            width: 600px;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: 0px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 0px;
+        }
+        .right {
+            float: right;
+        }
+        .centerforheader {
+            position: absolute;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+        }
+        .center {
+            margin: auto;
+        }
+        .under {
+            position: absolute;
+            float: left;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        </style>
+        <head>
+            <div class="header">
+            <h1>JSONLIGAN</h1>
+            <p>M7011E</p>
+            </div>
+        </head>    
+        <head>
+            <div>
+            <h1 class="centerforheader">User</h1>
+            <div class="right">
+            <form id="signout" method="get" action="/signout">
+            <label for=""></label>
+            <input type="submit" value="Signout">
+            </form>
+            <form id="home" method="get" action="/home">
+            <label for=""></label>
+            <input type="submit" value="Home">
+            </form>
+            <form id="settings" method="get" action="/settings">
+            <label for=""></label>
+            <input type="submit" value="Settings">
+            </form>
+            </div>
+            </div>
+        </head>        
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 </head>
 <body onload="myFunction()">
-  <div class="toprightcorner"><a href="/signout">Sign out</a></div>
+ <!--  <div class="toprightcorner"><a href="/signout">Sign out</a></div>
   <div class="topleftcorner"><a href="/home">Home</a></div>
-  <div class="topleftcorner"><a href="/settings">Settings</a></div>
+  <div class="topleftcorner"><a href="/settings">Settings</a></div> -->
   <picture>
       <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'userimage'" width="350" height="200" srcset="/userimage">
     </picture>

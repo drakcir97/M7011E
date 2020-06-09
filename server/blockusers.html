@@ -1,13 +1,86 @@
 <html>
+<style>
+.header {
+    padding: 2px;
+    text-align: center;
+    background: #1abc9c;
+    color: white;
+    font-size: 20px;
+}
+label {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 18px;
+    color: #333;
+    height: 20px;
+    width: 250px;
+    margin-top: 10px;
+    margin-left: 10px;
+    text-align: right;
+    clear: both;
+    float:left;
+    margin-right:15px;
+}
+input {
+    height: 20px;
+    width: 300px;
+    border: 1px solid #000;
+    margin-top: 10px;
+    float: right;
+}
+input[type=button] {
+    float:none;
+}
+form {
+        background-color: #FFF;
+        height: 10px;
+        width: 600px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 0px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 0px;
+}
+.right {
+    float: right;
+}
+.centerforheader {
+    position: absolute;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+.center {
+    margin: auto;
+}
+</style>
 <head>
-<title>Homepage</title>
+    <div class="header">
+        <h1>JSONLIGAN</h1>
+        <p>M7011E</p>
+    </div>
+</head>    
+<head>
+    <div>
+        <h1 class="centerforheader">Block users</h1>
+        <div class="right">
+        <form id="signout" method="get" action="/signout">
+        <label for=""></label>
+        <input type="submit" value="Signout">
+        </form>
+        <form id="home" method="get" action="/home">
+        <label for=""></label>
+        <input type="submit" value="Home">
+        </form>
+        </div>
+    </div>
+</head>
 <body onload="myFunction()">
-    <div class="toprightcorner"><a href="/signout">Sign out</a></div>
-    <div class="topleftcorner"><a href="/home">Home</a></div>
 <p id="test"> </p>
 <iframe src="/usersinfo" onload="this.onload=null; this.src=getSource() + 'usersinfo'" name="iframe" id="iframe" style="display: none;"></iframe> 
 <form id="demo" method="GET" action="/usersinfo" name="demo" target="iframe">
-    <button name="status" value="status">Get data</button>
+    <label for=""></label>
+    <input type="Submit" value="Get user info">
 </form>
 
     <script>
@@ -45,18 +118,18 @@
         document.getElementById("test").innerHTML = displayjson;
     }
     </script>
+<div class="center">
 <form id="deleteusers" method="post" action="/blockusers">
-    User id to to block: <br>
-    <input type="number" name="userid" min="0">
-    <br>
-    Time to block the user to sell (20-100 seconds):<br>
-    <input type="number" name="block" id="block" min="20" max="100">
-    <br>
+    <label for="Userid">User to block:</label>
+    <input type="number" name="Userid" min="0" placeholder="Userid">
+    <label for="Block">Time to block (20-100 seconds):</label>
+    <input id="Block" min="20" max="100" type="number" name="Block" placeholder="Seconds" />
     
 <input type="hidden" id="p2" name="p2" value="2">
 
 <p><input type="Submit" value="Submit"></p>
 
 </form>
+</div>
 </body>
 </html>
