@@ -1014,8 +1014,7 @@ app.post('/fetchuser', (req, res) => {
                         socket.on('/api/user', function (message) {
                                 console.log(message);
                                 var user = JSON.parse(message);
-                                var msg = user.response[0].value;
-                                
+                                var msg = user.response;                         
                                 return res.send(msg);
                         });
                         
