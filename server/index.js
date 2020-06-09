@@ -960,6 +960,7 @@ app.get('/api/:inp', (req, res) => {
                 
                 //res.status(200).send(decoded);
                 // Connect to server
+                
                 var io = require('socket.io-client');
                 var socket = io.connect('http://localhost:'+apiconfig.port+'/');
 
@@ -988,9 +989,61 @@ app.get('/api/:inp', (req, res) => {
         });
 });
 
-app.post('/fetchuser', (req, res) => {
+//Create similar one for admin that takes an userid as input through the post/get that connects to API. Use this to display a special web page
+//with iframe that calls admin passthough to api.
+app.get('/aapi/:inp/:id', (req, res) => {
+        console.log("start '/aapi/:inp/:id");
+        console.log(req.params.inp);
+        console.log('/aapi/'+req.params.inp);
+        var token = req.cookies.token;
+        var inp = '/api/'+req.params.inp;
+        var id = req.params.id;
+        if (!token) {
+                console.log("Token failed, is missing!");
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) {
+                        console.log("Failed to verify!");
+                        return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                }
+                if (decoded.admin == '1') {
+                        //res.status(200).send(decoded);
+                        // Connect to server
+                        var io = require('socket.io-client');
+                        var socket = io.connect('http://localhost:'+apiconfig.port+'/');
+
+                        // socket.on('testServer', function (message) {
+                        //         socket.emit('/api/test', {data: 'asd'});
+                        //         console.log(message);
+                        // });
+
+                        // socket.on('testServer2', function (message) {
+                        //         console.log(message);
+                        // });
+
+                        socket.on('response', function (message) { 
+                                console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id);
+                                console.log("after first emit");
+                                console.log(message);
+                                socket.emit(inp, {id: decoded.id}); //Send id to api.
+                        });
+                        
+                        socket.on(inp, function (message) {
+                                //socket.emit('api/users');
+                                console.log(message);
+                                return res.send(message);
+                        });
+                } else {
+                        return res.send("User is not an administrator");
+                }   
+        });
+});
+
+app.get('/fetchuser/:id', (req, res) => {
         var token = req.cookies.token;
         var userid = req.body.userid;
+        var id = req.params.id;
         if (!token) {
                 console.log("Token failed, is missing!");
                 return res.status(401).end()
@@ -1002,21 +1055,29 @@ app.post('/fetchuser', (req, res) => {
                 }
 
                 if (decoded.admin == '1') {
-                        // Connect to server
-                        var io = require('socket.io-client');
-                        var socket = io.connect('http://localhost:'+apiconfig.port+'/');
+                        // // Connect to server
+                        // var io = require('socket.io-client');
+                        // var socket = io.connect('http://localhost:'+apiconfig.port+'/');
 
-                        socket.on('response', function (message) { 
-                                console.log(message);
-                                socket.emit('/api/user', {id: userid}); //Send id to api.
-                        });
+                        // socket.on('response', function (message) { 
+                        //         console.log(message);
+                        //         socket.emit('/api/user', {id: userid}); //Send id to api.
+                        // });
                         
-                        socket.on('/api/user', function (message) {
-                                console.log(message);
-                                var user = JSON.parse(message);
-                                var msg = user.response;                         
-                                return res.send(msg);
-                        });
+                        // socket.on('/api/user', function (message) {
+                        //         console.log(message);
+                        //         var user = JSON.parse(message);
+                        //         var msg = user.response;                         
+                        //         return res.send(msg);
+                        // });
+                        var options = {
+                                root : './',
+                                headers : {
+                                        'userid' : id
+                                }
+                        };
+                        return res.render('index.html',{userid: id});
+                        //return res.sendFile('fetchuser.html', options);
                         
                 } else {
                         return res.send('User is not an administrator');
