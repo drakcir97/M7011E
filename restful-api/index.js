@@ -178,6 +178,7 @@ io.sockets.on('connect', function(socket)
         });
     });
 
+
     //show powergenerated
     socket.on('/api/powergenerated', function(data) {
         var id = data.id;
@@ -200,18 +201,9 @@ io.sockets.on('connect', function(socket)
         });
     });
     
-    //show current electricity price
+    //show current electricity price type 1
     socket.on('/api/electricityprice', function(data) {
-        var sql = "SELECT householdid, value, datetimeid FROM powercosthousehold";
-        conn.query(sql, (err, results) => {
-            if(err) throw err;
-            return socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": {result: results}}));
-        });
-    });
-
-    //show current electricity price type 2
-    socket.on('/api/electricityprice2', function(data) {
-        console.log("electricityprice2")
+        console.log("electricityprice")
         var sql = "SELECT COUNT(id) FROM household";
         conn.query(sql, (err, results) => {
             if(err) throw err;
@@ -228,7 +220,39 @@ io.sockets.on('connect', function(socket)
                 } else {
                     powercost = powerCostLow;
                 }
-                return socket.emit('/api/electricityprice2', JSON.stringify({"status": 200, "error": null, "response": {result: powercost}}));
+                return socket.emit('/api/electricityprice', JSON.stringify({"status": 200, "error": null, "response": {result: powercost}}));
+            });
+            
+        });
+    });
+
+    //show current electricity price type 2
+    socket.on('/api/electricityprice2', function(data) {
+        console.log("electricityprice2")
+        var id = data.id;
+        var sql = "SELECT COUNT(id) FROM household";
+        conn.query(sql, (err, results) => {
+            if(err) throw err;
+            var totalhouseholds = parseInt(JSON.stringify(results[0]['COUNT(id)']));
+            var powercost = 0;
+            var sqlPower = "SELECT powerin,powerout FROM powertotal ORDER BY i DESC LIMIT 1";
+            conn.query(sqlPower, (err, results) => {
+                if(err) throw err;
+                var powerin = parseFloat(JSON.stringify(results[0]['powerin']));
+                var powerout = parseFloat(JSON.stringify(results[0]['powerout']));
+                var sqlPriceAndPowerFromPlant = mysql.format("SELECT powerplantsettings.powerCostHigh, powerplantsettings.powerCostLow, powerplant.maxpower FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON household.id=user.householdid WHERE user.id=?", [id]);
+                conn.query(sqlPriceAndPowerFromPlant, (err, results) => {
+                    if(err) throw err;
+                    var high = parseFloat(JSON.stringify(results[0]['powerCostHigh']));
+                    var low = parseFloat(JSON.stringify(results[0]['powerCostLow']));
+                    var max = parseFloat(JSON.stringify(results[0]['maxpower']));
+                    if (powerin > powerout) {
+                        powercost = (low * (powerin-powerout) + high*max)/((powerin-powerout)*max);   
+                    } else {
+                        powercost = high;
+                    }
+                    return socket.emit('/api/electricityprice2', JSON.stringify({"status": 200, "error": null, "response": {result: powercost}}));
+                });
             });
             
         });
@@ -315,22 +339,22 @@ io.sockets.on('connect', function(socket)
 
     socket.on('/api/checkblock', function(data) {
         var id = data.id;
-        var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhouseholds INNER JOIN user ON blockedhouseholds.householdid=user.householdid WHERE user.id=?", [id]);
-        con.query(sqlBanned, function(err, results) {
+        var sqlBanned = mysql.format("SELECT COUNT(dt) FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
+        conn.query(sqlBanned, function(err, results) {
             if (err) {
                 console.log(err);
             } else {
                 var num = parseInt(results[0]['COUNT(dt)']);
                 if (num != 0) {
-                    var sqlBanned = mysql.format("SELECT dt FROM blockedhouseholds INNER JOIN user ON blockedhouseholds.householdid=user.householdid WHERE user.id=?", [id]);
-                    con.query(sqlBanned, function(err, results) {
+                    var sqlBanned = mysql.format("SELECT dt FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
+                    conn.query(sqlBanned, function(err, results) {
                         if (err) {
                             console.log(err);
                         }
                         return socket.emit('/api/checkblock', JSON.stringify({"status": 200, "error": null, "response": results}));
                     });
                 } else {
-                    return socket.emit('/api/checkblock', JSON.stringify({"status": 200, "error": null, "response": {dt: -1}}));
+                    return socket.emit('/api/checkblock', JSON.stringify({"status": 200, "error": null, "response": [{dt: -1}]}));
                 }
             }
         });
@@ -339,14 +363,49 @@ io.sockets.on('connect', function(socket)
     socket.on('/api/blockusers', function(data) {
         //res.status(200).send(decoded);
         console.log("id "+data.id);
-        var inp = data.id;
+        var id = data.id;
         var secondsblock = data.secondsblock;
 
-        var sqlsettime = mysql.format("INSERT INTO blockedhousehold (householdid, dt) VALUES (SELECT householdid FROM user WHERE id=?,?)", [inp, secondsblock]);
-        con.query(sqlsettime, function(err, results) {
+        var sqlHouseholdId = mysql.format("SELECT householdid FROM user WHERE id=?", [id]);
+        conn.query(sqlHouseholdId, function(err, results) {
             if (err) throw err;
-            return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
-        });   
+            var householdid = results[0]['householdid'];
+            var sqlCount = mysql.format("SELECT COUNT(blockedhousehold.dt) FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
+            conn.query(sqlCount, function(err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(results);
+                    var num = parseInt(results[0]['COUNT(blockedhousehold.dt)']);
+                    if (num == 0) {
+                        var sqlsettime = mysql.format("INSERT INTO blockedhousehold (householdid, dt) VALUES (?,?)", [householdid,secondsblock]);
+                        conn.query(sqlsettime, function(err, results) {
+                            if (err) throw err;
+                            return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
+                        }); 
+                    } else {
+                        var sqlBanned = mysql.format("SELECT blockedhousehold.dt FROM blockedhousehold INNER JOIN user ON blockedhousehold.householdid=user.householdid WHERE user.id=?", [id]);
+                        conn.query(sqlBanned, function(err, results) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log(results);
+                                var lastblocked = BigInt(results[0]['dt']);
+                                if (lastblocked < secondsblock) {
+                                    var sqlsettime = mysql.format("UPDATE blockedhousehold SET dt=? WHERE householdid=?", [secondsblock,householdid]);
+                                    conn.query(sqlsettime, function(err, results) {
+                                        if (err) throw err;
+                                        return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": results}));
+                                    }); 
+                                } else {
+                                    return socket.emit('/api/blockusers', JSON.stringify({"status": 200, "error": null, "response": "User is already banned for a longer time"}));
+                                }
+                            }
+                        });
+                    }
+                }
+            }); 
+        }); 
 
     });
 
@@ -377,6 +436,46 @@ io.sockets.on('connect', function(socket)
                         return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
                     });
                 }
+            }
+        });
+    });
+
+    socket.on('/api/powersettings', function(data) {
+        var id = data.id;
+        var high = data.powerCostHigh;
+        var low = data.powerCostLow;
+        var sqlSettingsCount = mysql.format("SELECT COUNT(powerplantsettings.id) FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON user.householdid=household.id WHERE user.id=?", [id]);
+        conn.query(sqlSettingsCount, (err, results) => {
+            if (err) {
+                console.log(err);
+            } else {
+                var count = parseInt(JSON.stringify(results[0]['COUNT(powerplantsettings.id)']));
+                var sqlPlantId = mysql.format("SELECT powerplant.id FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid INNER JOIN user ON user.householdid=household.id WHERE user.id=?", [id]);
+                conn.query(sqlPlantId, (err, results) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    //var plantid = results[0]['powerplant.id'];
+                    var plantid = results[0]['id'];
+                    console.log("powerplantid "+plantid);
+                    if (count == 0) {  
+                        var sqlSettings = mysql.format("INSERT INTO powerplantsettings (powerplantid, powerCostHigh, powerCostLow) VALUES (?,?,?)", [plantid,high,low]);
+                        conn.query(sqlSettings, (err, results) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                            return socket.emit('/api/powersettings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                        });
+                    } else {
+                        var sqlSettings = mysql.format("UPDATE powerplantsettings SET powerCostHigh=?,powerCostLow=? WHERE powerplantid=?", [high,low,plantid]);
+                        conn.query(sqlSettings, (err, results) => {
+                            if (err) {
+                                console.log(err);
+                            }
+                            return socket.emit('/api/powersettings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                        });
+                    }
+                });
             }
         });
     });
@@ -527,7 +626,7 @@ io.sockets.on('connect', function(socket)
             if (count == 0) {
                 return socket.emit('/api/blackout', JSON.stringify({"status": 200, "error": null, "response": 'No users in blackout'}));
             } else {
-                var sqlBlackout = "SELECT user.id, blackout.householdid, datet.dt FROM blackout INNER JOIN user ON blackout.householdid=user.householdid INNER JOIN datet ON datet.id=blackout.datetimeid";
+                var sqlBlackout = "SELECT user.id, blackout.householdid, datet.dt FROM blackout INNER JOIN user ON blackout.householdid=user.householdid INNER JOIN datet ON datet.id=blackout.datetimeid ORDER BY datet.dt DESC LIMIT 20";
                 conn.query(sqlBlackout, (err, results) => {
                     if (err) {
                         console.log(err);

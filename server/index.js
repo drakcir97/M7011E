@@ -1,6 +1,7 @@
 var express = require('express')
 var app = express()
 var https = require('https')
+var http = require('http');
 var path = require('path')
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser')
@@ -510,29 +511,34 @@ app.post('/blockusers', function(req, res) {
                         socket.on('/api/checkblock', function (message) {
                                 //socket.emit('api/users');
                                 console.log(message);
-                                timeblocked = BigInt(message.response.dt);
-                        });   
-                        if (timeblocked == -1) {
-                                return res.redirect('/blockusers')
-                        } else if (timeblocked <= currenttime) {
+                                var parsed = JSON.parse(message);
+                                timeblocked = BigInt(parsed['response'][0]['dt']);
+                                console.log("Current time "+currenttime+" timeblocked "+timeblocked);
 
-                                socket.on('response', function (message) { 
-                                        //Send data to api containing new settings user set.
-                                        socket.emit('/api/blockusers',{id: inp, secondsblock: secondsblock}); //Send settings to api.
-                                        console.log(message);
-                                });
-                                
-                                socket.on('/api/blockedusers', function (message) {
-                                        //socket.emit('api/users');
-                                        console.log(message);
-                                        return res.redirect('/blockusers');
-                                });
-                                //       socket.close();
-                        }
-                        else{
-                                return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
-                        }
-                        return res.sendFile('blockusers.html', {root : './'});
+                                if (timeblocked <= currenttime) {
+
+                                        // Connect to server
+                                        var io = require('socket.io-client');
+                                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
+        
+                                        socket.on('response', function (message) { 
+                                                //Send data to api containing new settings user set.
+                                                socket.emit('/api/blockusers',{id: inp, secondsblock: secondsblock}); //Send settings to api.
+                                                console.log(message);
+                                        });
+                                        
+                                        socket.on('/api/blockusers', function (message) {
+                                                //socket.emit('api/users');
+                                                console.log(message);
+                                                return res.redirect('/blockusers');
+                                        });
+                                        //       socket.close();
+                                }
+                                else{
+                                        return res.send('User with id: '+inp+" is already blocked and it is "+(timeblocked-currenttime)+" seconds left");     
+                                }
+                                //return res.sendFile('blockusers.html', {root : './'});
+                        });   
                                         //     return res.send(results);
                 } else {
                         return res.send("User is not an administrator");
@@ -754,6 +760,60 @@ app.post('/settings', function(req, res) {
         });
 });
 
+app.get('/powersettings', (req,res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+                        return res.sendFile('powersettings.html', {root : './'});
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+});
+
+app.post('/powersettings', function(req,res) {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                console.log("Decoded admin"+decoded.admin);
+                if (decoded.admin == '1') {
+
+                        var high = req.body.powerCostHigh;
+                        var low = req.body.powerCostLow;
+
+                        var io = require('socket.io-client');
+                        var socket = io.connect('http://localhost:'+apiconfig.port+'/', {reconnect: true});
+
+                        socket.on('response', function (message) { 
+                                //Send data to api containing new settings user set.
+                                socket.emit('/api/powersettings',{id: decoded.id, powerCostHigh: high, powerCostLow: low}); //Send settings to api.
+                                console.log(message);
+                        });
+                        
+                        socket.on('/api/powersettings', function (message) {
+                                //socket.emit('api/users');
+                                console.log(message);
+                                return res.redirect('/');
+                        });
+
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+});
+
 app.post('/plantsettings', function(req, res) {
         var token = req.cookies.token;
         if (!token) {
@@ -880,6 +940,8 @@ app.post('/plantpower', function(req, res) {
         });
 });
 
+//Create similar one for admin that takes an userid as input through the post/get that connects to API. Use this to display a special web page
+//with iframe that calls admin passthough to api.
 app.get('/api/:inp', (req, res) => {
         console.log("start '/api/:inp");
         console.log(req.params.inp);
@@ -951,13 +1013,16 @@ app.post('/fetchuser', (req, res) => {
                         
                         socket.on('/api/user', function (message) {
                                 console.log(message);
+                                var user = JSON.parse(message);
+                                message = user.response[0].value;
                                 return res.send(message);
                         });
+                        
                 } else {
                         return res.send('User is not an administrator');
                 }
         });
-});
+}); 
 
 app.get('/profile', (req, res) => {
         var token = req.cookies.token;
@@ -1000,7 +1065,12 @@ app.get('/home', (req, res) => {
 //      res.end("hello");
 //}).listen(3000);
 
-var temp = https.createServer(options, app).listen(config.port);
+//var temp = https.createServer(options, app).listen(config.port);
+if (config.https) {
+        var temp = https.createServer(options, app).listen(config.port);
+} else {
+        var temp = http.createServer(app).listen(config.port);
+}
 
 // Connect to server
 var io = require('socket.io')(temp);

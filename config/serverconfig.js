@@ -6,4 +6,5 @@ module.exports = {
         database: "serverdb"
     },
     port: 3000,
+    https: false,
 };

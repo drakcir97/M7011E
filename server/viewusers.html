@@ -122,9 +122,17 @@ form {
     </script>
 
 <p id="test"> </p>
+<<<<<<< HEAD
 <form id="fetchuser" method="post" action="/fetchuser">
     <label for="userid">User id to view page:</label>
     <input id="userid" type="number" name="userid" placeholder="Userid" />
+=======
+<form id="fetchuser" method="post" action="/fetchuser" oninput="out.value=fetchuser.value">
+    User id to view page: <br>
+    <input type="number" name="userid">
+    <output name="out"></output>
+    <br>
+>>>>>>> c47fc4bfd31f9ebeebccd23bb619d30317636ade
 <input type="hidden" id="p2" name="p2" value="2">
 
 <p><input type="Submit" value="Submit"></p>

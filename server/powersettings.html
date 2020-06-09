@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body onload="myFunction()">
+  <div class="toprightcorner"><a href="/signout">Sign out</a></div>
+  <div class="topleftcorner"><a href="/home">Home</a></div>
+<iframe src="/api/electricityprice2" onload="this.onload=null; this.src=getSource() + 'api/electricityprice2'" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
+
+<script>
+    function getSource() {
+        var config = require("../config/htmlconfig");
+        return config.host + ':' + config.port + '/';
+    }
+</script>
+
+<script>
+    function myFunction() {
+        var theFrame = document.getElementById('iframe_price');       
+        var theWin = theFrame.contentWindow;
+        var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+        var theJson = theDoc.body.innerHTML;
+        var div = document.createElement("div");
+        div.innerHTML = theJson;
+        var text = div.textContent || div.innerText || "";
+        var price = JSON.parse(text);
+        
+        var displayjson = " current electricity price: "+price.response.result;
+        displayjson += '<br>';
+        document.getElementById("test").innerHTML = displayjson;
+    }
+    </script>
+
+<p id="test"> </p>
+
+<h2>Change settings: </h2>
+<form id="settings" method="post" action="/powersettings">
+    <p>Electricity price (From plant): </p>
+    <input type="number" name="powerCostHigh" id="powerCostHigh">
+    <p>Electricity price (From wind): </p>
+    <input type="number" name="powerCostLow" id="powerCostLow">
+<input type="hidden" id="p2" name="p2" value="2">
+
+<p><input type="Submit" value="Submit"></p>
+</form>
+
+</body>
+</html>

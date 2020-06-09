@@ -13,6 +13,8 @@ var	tempMinAffect = config.simulatorvar.tempMinAffect; //At this value no power 
 var	tempMaxAffect = config.simulatorvar.tempMaxAffect; //At this value maximum power goes to heat.
 var	tempAffect = config.simulatorvar.tempAffect; //Maximum affect temperature has.
 var	tempCoefficient = config.simulatorvar.tempCoefficient; //Procentage that is affected by temperature.
+
+//THESE ARE NOW ONLY GLOBAL TEMPORARY VARIABLES. VALUE CHANGES AT WILL AND IS NOT STABLE. IS UPDATED EACH TIME A USER BUYS POWER.
 var	powerCostHigh = config.simulatorvar.powerCostHigh; //Cost if powerplant
 var	powerCostLow = config.simulatorvar.powerCostLow; //Cost if wind
 
@@ -379,7 +381,7 @@ function getPowerTotalOut(dateid,callback) {
 	});
 }
 
-async function createbuffer(householdid) {
+async function createbuffer(householdid,callback) {
 	var sqlCheckBuffer = mysql.format("SELECT COUNT(value) FROM powerstored WHERE householdid=?", [householdid]);
 	con.query(sqlCheckBuffer, async function(err, results) {
 		if (err) {
@@ -392,10 +394,18 @@ async function createbuffer(householdid) {
 				if (err) {
 					console.log(err);
 				}
-				return true;
+				try {
+					callback(null, true);
+				} catch (e) {
+					console.log("Can't run");
+				}
 			})
 		} else {
-			return false;
+			try {
+				callback(null, false);
+			} catch (e) {
+				console.log("Can't run");
+			}
 		}
 	});
 }
@@ -503,123 +513,162 @@ async function blackout(householdid,dateid,callback) {
 
 async function generatePowerCost(householdid, dateid, totalin, totalout,totalhouseholds) {
 	console.log("houseid in powercost ",householdid," ",dateid);
-	await createbuffer(householdid);
 	var powergenerated = 0;
 	var powerusage = 0;
 	var powersum = 0;
 	var powercost = 0;
 	var powerkeep = 0;
-	var sqlSettingsCheck = mysql.format("SELECT COUNT(simulationsettings.ratiokeep) FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
-	con.query(sqlSettingsCheck, async function(err, result) {
-		var count = result[0]['COUNT(simulationsettings.ratiokeep'];
-		console.log("Count in powercost: "+count);
-		if (count) {
-			var sqlSettings = mysql.format("SELECT simulationsettings.ratiokeep,simulationsettings.ratiosell FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
-			con.query(sqlSettings, async function(err,result) {
-				var ratiokeep = result[0]['simulationsettings.ratiokeep'];
-				var ratiosell = result[0]['simulationsettings.ratiosell'];
-				con.query(sqlGen, async function (err, result) {
-					powergenerated = parseFloat(JSON.stringify(result[0].value));
-					var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-					con.query(sqlUsage, async function (err, result) {
-						powerusage = parseFloat(JSON.stringify(result[0].value));
-						powersum = powergenerated - powerusage;
-						if(powersum >= 0) { //We generated excess power.
-							powerkeep = powersum * (1-ratiosell); //Keep amount of power from settings
-							await putinbuffer(householdid,powerkeep); //Put power stored into buffer. Powerkeep is positive.
-							powercost = powerCostLow*(powersum * ratiosell);
-						} else { //We need to buy power.
-							var powerneededfrombuffer = -(1-ratiokeep) * powersum;
-							await getfrombuffer(householdid, powerneededfrombuffer, async function(err,dataBuffer) {
-								if (err) {
-									console.log("error");
-								} else {
-									// var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
-									// console.log("BUFFER POWER  "+powerfrombuffer);
-									// console.log("POWERSUM BEFORE  "+powersum);
-									powersum += dataBuffer; //Add power we got from buffer, will still be negative.
-									//console.log("POWERSUM AFTER  "+powersum);
-									if (totalin>totalout) {
-										powercost = powerCostLow*powersum;
-									} else {
-										if ((powersum + totalin/totalhouseholds) > 0) {
-											powercost = powerCostLow*powersum;
+	await createbuffer(householdid, async function(err, createbufferData) {
+		if (err) {
+			console.log(err);
+		}
+		await fetchSettings(householdid, async function(err, fetchData) { //Change powercost to that of users plant, if settings for powerplant does not exist, create them.
+			if (err) {
+				console.log(err);
+			}
+			console.log("powerCostHigh "+powerCostHigh);
+			var sqlSettingsCheck = mysql.format("SELECT COUNT(simulationsettings.ratiokeep) FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
+			con.query(sqlSettingsCheck, async function(err, result) {
+				var count = parseInt(result[0]['COUNT(simulationsettings.ratiokeep']);
+				console.log("Count in powercost: "+count);
+				if (count == 1) {
+					var sqlSettings = mysql.format("SELECT simulationsettings.ratiokeep,simulationsettings.ratiosell FROM simulationsettings INNER JOIN user ON simulationsettings.userid=user.id WHERE user.householdid=?", [householdid]);
+					con.query(sqlSettings, async function(err,result) {
+						var ratiokeep = result[0]['simulationsettings.ratiokeep'];
+						var ratiosell = result[0]['simulationsettings.ratiosell'];
+						con.query(sqlGen, async function (err, result) {
+							powergenerated = parseFloat(JSON.stringify(result[0].value));
+							var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+							con.query(sqlUsage, async function (err, result) {
+								powerusage = parseFloat(JSON.stringify(result[0].value));
+								powersum = powergenerated - powerusage;
+								if(powersum >= 0) { //We generated excess power.
+									powerkeep = powersum * (1-ratiosell); //Keep amount of power from settings
+									await putinbuffer(householdid,powerkeep); //Put power stored into buffer. Powerkeep is positive.
+									powercost = powerCostLow*(powersum * ratiosell);
+								} else { //We need to buy power.
+									var powerneededfrombuffer = -(1-ratiokeep) * powersum;
+									await getfrombuffer(householdid, powerneededfrombuffer, async function(err,dataBuffer) {
+										if (err) {
+											console.log("error");
 										} else {
-											var powerCheap = totalin/totalhouseholds;
-											var powerExpensive = (powersum+powerCheap);
-											await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
-												if (powerExpensive!=dataPlant) {
-													await blackout(householdid,dateid, async function(err, dataBout) {});
+											// var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
+											// console.log("BUFFER POWER  "+powerfrombuffer);
+											console.log("POWERSUM BEFORE  "+powersum);
+											powersum += dataBuffer; //Add power we got from buffer, will still be negative.
+											console.log("POWERSUM AFTER  "+powersum);
+											if (totalin>totalout) {
+												powercost = powerCostLow*powersum;
+												var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+												con.query(sqlCost, async function(err, result) {
+													if (err) {
+														console.log(err);
+													};
+												});
+											} else {
+												if ((powersum + totalin/totalhouseholds) > 0) {
+													powercost = powerCostLow*powersum;
+													var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+													con.query(sqlCost, async function(err, result) {
+														if (err) {
+															console.log(err);
+														};
+													});
+												} else {
+													var powerCheap = totalin/totalhouseholds;
+													var powerExpensive = (powersum+powerCheap);
+													await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
+														if (powerExpensive!=-dataPlant) {
+															await blackout(householdid,dateid, async function(err, dataBout) {});
+														}
+														console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
+														powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
+														console.log("POWERCOST"+powercost);
+														var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+														con.query(sqlCost, async function(err, result) {
+															if (err) {
+																console.log(err);
+															};
+														});
+													});
 												}
-												powercost = dataPlant*powerCostHigh - powerCheap*powerCostLow;
+											}
+										}
+									});
+								} 
+
+							});
+						});
+					});	
+				} else {
+					var ratiokeep = 0.5;
+					var ratiosell = 0.5;
+					var sqlGen = mysql.format("SELECT value FROM powergenerated WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+					con.query(sqlGen, async function (err, result) {
+						powergenerated = parseFloat(JSON.stringify(result[0].value));
+						var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
+						con.query(sqlUsage, async function (err, result) {
+							powerusage = parseFloat(JSON.stringify(result[0].value));
+							powersum = powergenerated - powerusage;
+							if(powersum >= 0) { //We generated excess power.
+								powerkeep = powersum * (1-ratiosell); //Keep amount of power from settings
+								await putinbuffer(householdid,powerkeep); //Put power stored into buffer. Powerkeep is positive.
+								powercost = powerCostLow*(powersum * ratiosell);
+							} else { //We need to buy power.
+								var powerneededfrombuffer = -(1-ratiokeep) * powersum;
+								await getfrombuffer(householdid, powerneededfrombuffer, async function(err,dataBuffer) {
+									if (err) {
+										console.log("error");
+									} else {
+										// var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
+										// console.log("BUFFER POWER  "+powerfrombuffer);
+										console.log("POWERSUM BEFORE  "+powersum);
+										powersum += dataBuffer; //Add power we got from buffer, will still be negative.
+										console.log("POWERSUM AFTER  "+powersum);
+										if (totalin>totalout) {
+											powercost = powerCostLow*powersum;
+											var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+											con.query(sqlCost, async function(err, result) {
+												if (err) {
+													console.log(err);
+												};
 											});
+										} else {
+											if ((powersum + totalin/totalhouseholds) > 0) {
+												powercost = powerCostLow*powersum;
+												var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+												con.query(sqlCost, async function(err, result) {
+													if (err) {
+														console.log(err);
+													};
+												});
+											} else {
+												var powerCheap = totalin/totalhouseholds;
+												var powerExpensive = (powersum+powerCheap);
+												await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
+													if (powerExpensive!=-dataPlant) {
+														await blackout(householdid,dateid, async function(err, dataBout) {});
+													}
+													console.log("POWER EXP "+powerExpensive+" DATAPLANT "+dataPlant);
+													powercost = -dataPlant*powerCostHigh - powerCheap*powerCostLow;
+													console.log("POWERCOST"+powercost);
+													var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
+													con.query(sqlCost, async function(err, result) {
+														if (err) {
+															console.log(err);
+														};
+													});
+												});
+											}
 										}
 									}
-								}
-							});
-						} 
-						var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
-						con.query(sqlCost, async function(err, result) {
-							if (err) {
-								console.log(err);
-							};
+								});
+							} 
 						});
 					});
-				});
-			});	
-		} else {
-			var ratiokeep = 0.5;
-			var ratiosell = 0.5;
-			var sqlGen = mysql.format("SELECT value FROM powergenerated WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-			con.query(sqlGen, async function (err, result) {
-				powergenerated = parseFloat(JSON.stringify(result[0].value));
-				var sqlUsage = mysql.format("SELECT value FROM powerusage WHERE householdid=? AND datetimeid=?", [householdid,dateid]);
-				con.query(sqlUsage, async function (err, result) {
-					powerusage = parseFloat(JSON.stringify(result[0].value));
-					powersum = powergenerated - powerusage;
-					if(powersum >= 0) { //We generated excess power.
-						powerkeep = powersum * (1-ratiosell); //Keep amount of power from settings
-						await putinbuffer(householdid,powerkeep); //Put power stored into buffer. Powerkeep is positive.
-						powercost = powerCostLow*(powersum * ratiosell);
-					} else { //We need to buy power.
-						var powerneededfrombuffer = -(1-ratiokeep) * powersum;
-						await getfrombuffer(householdid, powerneededfrombuffer, async function(err,dataBuffer) {
-							if (err) {
-								console.log("error");
-							} else {
-								// var powerfrombuffer = await getfrombuffer(householdid, powerneededfrombuffer);
-								// console.log("BUFFER POWER  "+powerfrombuffer);
-								// console.log("POWERSUM BEFORE  "+powersum);
-								powersum += dataBuffer; //Add power we got from buffer, will still be negative.
-								//console.log("POWERSUM AFTER  "+powersum);
-								if (totalin>totalout) {
-									powercost = powerCostLow*powersum;
-								} else {
-									if ((powersum + totalin/totalhouseholds) > 0) {
-										powercost = powerCostLow*powersum;
-									} else {
-										var powerCheap = totalin/totalhouseholds;
-										var powerExpensive = (powersum+powerCheap);
-										await buyFromPlant(householdid, -powerExpensive, async function(err,dataPlant) {
-											if (powerExpensive!=dataPlant) {
-												await blackout(householdid,dateid, async function(err, dataBout) {});
-											}
-											powercost = dataPlant*powerCostHigh - powerCheap*powerCostLow;
-										});
-									}
-								}
-							}
-						});
-					} 
-					var sqlCost = mysql.format("INSERT INTO powercosthousehold (householdid, value, datetimeid) VALUES (?,?,?)", [householdid,powercost,dateid]);
-					con.query(sqlCost, async function(err, result) {
-						if (err) {
-							console.log(err);
-						};
-					});
-				});
+				}
 			});
-		}
+		});
 	});
 }
 
@@ -643,7 +692,7 @@ async function buyFromPlant(householdid, amountOfPower,callback) {
 						var plantratiokeep = parseFloat(results[0]['ratiokeep']);
 						if (plantstatus == 'running') {
 							if (plantcurrentpower < amountOfPower) {
-								var sqlSet0 = mysql.format("UPDATE powerplant SET plantcurrentpower=0 WHERE id=?", [plantid]);
+								var sqlSet0 = mysql.format("UPDATE powerplant SET currentpower=0 WHERE id=?", [plantid]);
 								con.query(sqlSet0, (err, results) => {
 									if (err) {
 										console.log(err);
@@ -655,7 +704,7 @@ async function buyFromPlant(householdid, amountOfPower,callback) {
 									}
 								});
 							} else {
-								var sqlReduce = mysql.format("UPDATE powerplant SET plantcurrentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
+								var sqlReduce = mysql.format("UPDATE powerplant SET currentpower=? WHERE id=?", [plantcurrentpower-amountOfPower,plantid]);
 								con.query(sqlReduce, (err, results) => {
 									if (err) {
 										console.log(err);
@@ -698,6 +747,7 @@ async function buyFromPlant(householdid, amountOfPower,callback) {
 				}
 			});
 		} else {
+			console.log("BLOCKED FROM BUYING "+householdid);
 			try {
 				callback(null, 0);
 			} catch (e) {
@@ -720,10 +770,11 @@ async function checkIfBlocked(householdid,callback) {
 					if (err) {
 						console.log(err);
 					} else {
-						var banned = parseInt(results[0]['dt']);
+						var banned = BigInt(results[0]['dt']);
 						var d = new Date();
 						var currenttime = d.getTime()/1000;
-						if (banned <= currentime) {
+						console.log("FOUND BANNED HOUSEHOLD: "+householdid+" BANNED "+banned+" CURRENT TIME "+currenttime);
+						if (banned <= currenttime) {
 							var sqlRemove = mysql.format("DELETE FROM blockedhousehold WHERE householdid=?", [householdid]);
 							con.query(sqlRemove, async function(err, results) {
 								if (err) {
@@ -775,7 +826,7 @@ async function updatePowerPlant(callback) {
 					var newBuffer = plantmaxpower * plantratiokeep + plantbuffer + plantcurrentpower; //We send all power that is not sold to buffer.
 					var newCurrent = plantmaxpower * (1-plantratiokeep);
 
-					var sqlPlant = mysql.format("UPDATE powerplant SET buffer=?, plantcurrentpower=? WHERE id=?", [newBuffer,newCurrent,val.id]);
+					var sqlPlant = mysql.format("UPDATE powerplant SET buffer=?, currentpower=? WHERE id=?", [newBuffer,newCurrent,val.id]);
 					con.query(sqlPlant, (err, results) => {
 						if (err) {
 							console.log(err);
@@ -795,6 +846,55 @@ async function updatePowerPlant(callback) {
 			callback();
 		} catch (e) {
 			console.log("Can't run");
+		}
+	});
+}
+
+//Fetches this households powercosts and CHANGES local variables to match.
+async function fetchSettings(householdid,callback) {
+	var sqlCount = mysql.format("SELECT COUNT(powerplantsettings.id) FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?", [householdid]);
+	con.query(sqlCount, async function(err, result) {
+		if (err) {
+			console.log(err);
+		};
+		var count = parseInt(result[0]['COUNT(powerplantsettings.id)']);
+		if (count == 0) { //Settings do not exist, create with config value and set current cost to new value.
+			console.log("ENTERED IF IN fetchSettings: count "+count);
+			var sqlPlantId = mysql.format("SELECT powerplant.id FROM powerplant INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?", [householdid]);
+			con.query(sqlPlantId, async function(err, result) {
+				if (err) {
+					console.log(err);
+				};
+				var plantid = result[0]['id'];
+				var sqlInsert = mysql.format("INSERT INTO powerplantsettings (powerplantid, powerCostLow, powerCostHigh) VALUES (?,?,?)", [plantid,config.simulatorvar.powerCostLow,config.simulatorvar.powerCostHigh]);
+				con.query(sqlInsert, async function(err, result) {
+					if (err) {
+						console.log(err);
+					};
+					powerCostHigh = config.simulatorvar.powerCostHigh; //Cost if powerplant
+					powerCostLow = config.simulatorvar.powerCostLow; //Cost if wind
+					try {
+						callback();
+					} catch (e) {
+						console.log("Can't run");
+					}
+				});
+			});
+		} else { //Settings do not exist, fetch them and set 'local' instance of powercost to those found in settings.
+			console.log("ENTERED ELSE IN fetchSettings: count "+count);
+			var sqlSettings = mysql.format("SELECT powerplantsettings.powerCostLow, powerplantsettings.powerCostHigh FROM powerplantsettings INNER JOIN powerplant ON powerplantsettings.powerplantid=powerplant.id INNER JOIN household ON powerplant.locationid=household.locationid WHERE household.id=?", [householdid]);
+			con.query(sqlSettings, async function(err, result) {
+				if (err) {
+					console.log(err);
+				};
+				powerCostHigh = parseFloat(result[0]['powerCostHigh']); //Cost if powerplant
+				powerCostLow = parseFloat(result[0]['powerCostLow']); //Cost if wind
+				try {
+					callback();
+				} catch (e) {
+					console.log("Can't run");
+				}
+			});
 		}
 	});
 }
