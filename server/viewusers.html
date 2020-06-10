@@ -140,7 +140,7 @@ form {
      <div class="topleftcorner"><a href="/home">Home</a></div>
      <div class="topleftcorner"><a href="/settings">Settings</a></div> -->
      <picture>
-         <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'userimage'" width="350" height="200" srcset="/userimage">
+         <img id="userimage" src="/auserimage/1" width="350" height="200" srcset="/auserimage/1" style="display: none">
        </picture>
    <iframe src="/aapi/weather/1" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
    <iframe src="/aapi/user/1" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
@@ -157,12 +157,15 @@ form {
             document.getElementById('iframe_powgen').src = '/aapi/powergenerated/' + inp;
             document.getElementById('iframe_price').src = '/aapi/electricityprice2/' + inp;
             document.getElementById('iframe_buffer').src = '/aapi/buffer/' + inp;
+            document.getElementById('userimage').src = '/auserimage/' + inp;
+            document.getElementById('userimage').srcset = '/auserimage/' + inp;
+            document.getElementById('userimage').style = null;
             parseUser();
         }
     </script>
     <script>
         function parseUser() {
-           alert('parseuser');
+
            var theFrame = document.getElementById('iframe_weather');       
            var theWin = theFrame.contentWindow;
            var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
@@ -181,7 +184,7 @@ form {
            div2.innerHTML = theJson2;
            var text2 = div2.textContent || div2.innerText || "";
            var user = JSON.parse(text2);
-           alert("2")
+
            var theFrame3 = document.getElementById('iframe_powgen');
            var theWin3 = theFrame3.contentWindow;
            var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
@@ -190,7 +193,7 @@ form {
            div3.innerHTML = theJson3;
            var text3 = div3.textContent || div3.innerText || "";
            var powgen = JSON.parse(text3);
-           alert("3")
+
            var theFrame4 = document.getElementById('iframe_price');
            var theWin4 = theFrame4.contentWindow;
            var theDoc4 = theFrame4.contentDocument || theFrame4.contentWindow.document;
@@ -199,7 +202,6 @@ form {
            div4.innerHTML = theJson4;
            var text4 = div4.textContent || div4.innerText || "";
            var price = JSON.parse(text4);
-           alert("4")
    
            var theFrame5 = document.getElementById('iframe_buffer');
            var theWin5 = theFrame5.contentWindow;
@@ -209,7 +211,6 @@ form {
            div5.innerHTML = theJson5;
            var text5 = div5.textContent || div5.innerText || "";
            var buffer = JSON.parse(text5);
-           alert(JSON.stringify(weather));
            var displayjson = " windspeed: "+weather.response[0].windspeed;
 
            displayjson += '<br>';
@@ -217,7 +218,6 @@ form {
            displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
            displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
            document.getElementById("test2").innerHTML = displayjson;
-           alert(displayjson);
         }
     </script>
    

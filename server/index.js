@@ -321,6 +321,36 @@ app.get( '/userimage', function( req, res ) {
       
 });
 
+app.get( '/auserimage/:id', function( req, res ) {
+        var token = req.cookies.token;
+        var id = req.params.id;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                
+                //res.status(200).send(decoded);
+                if (decoded.admin == '1') {
+                        var s = parse('images/userhouse/%s', JSON.stringify(id)+".jpg");
+                        fs.readFile( s, function( err, data ) {
+        
+                                if ( err ) {
+        
+                                        console.log( err );
+                                        return res.end();
+                                }
+                                //req.body.usercaptcha
+                                res.write( data );
+                                return res.end();
+                        });
+                } else {
+                        return res.send("User is not an administrator");
+                }
+        });
+      
+});
+
 app.post('/addPicture', function(req, res) {
         console.log("test begin");
         var token = req.cookies.token;
