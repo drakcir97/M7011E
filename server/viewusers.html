@@ -157,11 +157,9 @@ form {
             document.getElementById('iframe_weather').src = '/aapi/weather/' + inp;
             alert('after source');
             document.getElementById('iframe_user').src = '/aapi/user/' + inp;
-            document.getElementById('iframe_powgen') = '/api/powergenerated/' + inp;
+            document.getElementById('iframe_powgen').src = '/api/powergenerated/' + inp;
             document.getElementById('iframe_price').src = '/aapi/electricityprice2/' + inp;
             document.getElementById('iframe_buffer').src = '/aapi/buffer/' + inp;
-            var test = document.getElementById('test');
-            test.innerHTML = "Apa 123";
             alert('before parseuser');
             parseUser();
         }
