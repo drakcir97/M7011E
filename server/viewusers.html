@@ -152,7 +152,7 @@ form {
        function getUserSource() {
         alert('test');
         var inp = document.getElementById('userid').value;
-        alert('test2');
+        alert(inp);
         var weather = document.getElementById('iframe_weather');
         alert('beforce source set');
         weather.src = getSource() + 'aapi/weather/' + inp;
