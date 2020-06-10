@@ -171,7 +171,6 @@ form {
            div.innerHTML = theJson;
            var text = div.textContent || div.innerText || "";
            var weather = JSON.parse(text);
-           alert(weather);
            
    
            var theFrame2 = document.getElementById('iframe_user');
@@ -212,6 +211,7 @@ form {
            var buffer = JSON.parse(text5);
    
            var displayjson = " windspeed: "+weather.response[0].windspeed;
+           alert(displayjson);
            displayjson += '<br>';
            var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
            displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;

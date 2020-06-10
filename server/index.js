@@ -311,7 +311,7 @@ app.get( '/userimage', function( req, res ) {
                         if ( err ) {
       
                                 console.log( err );
-                                return;
+                                return res.end();
                         }
                         //req.body.usercaptcha
                         res.write( data );
