@@ -209,9 +209,9 @@ form {
            div5.innerHTML = theJson5;
            var text5 = div5.textContent || div5.innerText || "";
            var buffer = JSON.parse(text5);
-   
+           alert(JSON.stringify(weather));
            var displayjson = " windspeed: "+weather.response[0].windspeed;
-           alert(displayjson);
+
            displayjson += '<br>';
            var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
            displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
