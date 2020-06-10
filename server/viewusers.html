@@ -151,6 +151,7 @@ form {
     <script>
 
         function getSourceUser() {
+            alert('getsource');
             var config = require("../config/htmlconfig");
             return config.host + ':' + config.port + '/';
         }
@@ -169,7 +170,7 @@ form {
             document.getElementById('iframe_buffer') = getSourceUser() + 'aapi/buffer/' + inp.toString();
             var test = document.getElementById('test');
             test.innerHTML = "Apa 123";
-            alert('before parseuser')
+            alert('before parseuser');
             parseUser();
         }
     </script>
