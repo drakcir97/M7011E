@@ -122,12 +122,12 @@ form {
     </script>
 
 <p id="test"> </p>
-<form id="fetchuser" action="javascript:getUserSource(userid.value)">
+<form id="fetchuser" onsubmit="return false" method="post">
     <label for="userid">User id to view page:</label>
     <input id="userid" type="number" name="userid" placeholder="Userid" />
 <input type="hidden" id="p2" name="p2" value="2">
 
-<p><input type="Submit" value="Submit"></p>
+<p><input type="Submit" value="Submit" onclick="getUserSource()"></p>
 
 <!--<form name="myform" action="javascript:handleIt(lastname.value)">  
     <input type="text" name="lastname" id="lastname" maxlength="40"> 
@@ -149,7 +149,8 @@ form {
    <iframe src="/aapi/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
    
    <script>
-       function getUserSource(inp) {
+       function getUserSource() {
+        var inp = document.getElementById('userid');
         var weather = document.getElementById('iframe_weather');
         weather.src = getSource() + 'aapi/weather/' + inp;
         var user = document.getElementById('iframe_user');
@@ -220,6 +221,7 @@ form {
            displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
            displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
            document.getElementById("test2").innerHTML = displayjson;
+           alert(displayjson);
        }
        </script>
    
