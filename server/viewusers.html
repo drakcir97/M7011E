@@ -150,23 +150,16 @@ form {
    
     <script>
 
-        function getSourceUser() {
-            var config = require("../config/htmlconfig.js");
-            return config.host + ':' + config.port + '/';
-        }
-
         function getUserSource() {
             alert('test');
             var inp = document.getElementById('userid').value;
             alert(inp);
-            var print = getSourceUser();
-            alert(print); 
-            document.getElementById('iframe_weather').src = getSourceUser() + 'aapi/weather/' + inp;
+            document.getElementById('iframe_weather').src = '/aapi/weather/' + inp;
             alert('after source');
-            document.getElementById('iframe_user').src = getSourceUser() + 'aapi/user/' + inp.toString();
-            var power = document.getElementById('iframe_powgen') = getSourceUser() + 'api/powergenerated/' + inp.toString();
-            document.getElementById('iframe_price') = getSourceUser() + 'aapi/electricityprice2/' + inp.toString();
-            document.getElementById('iframe_buffer') = getSourceUser() + 'aapi/buffer/' + inp.toString();
+            document.getElementById('iframe_user').src = '/aapi/user/' + inp.toString();
+            var power = document.getElementById('iframe_powgen') = '/api/powergenerated/' + inp.toString();
+            document.getElementById('iframe_price') = '/aapi/electricityprice2/' + inp.toString();
+            document.getElementById('iframe_buffer') = '/aapi/buffer/' + inp.toString();
             var test = document.getElementById('test');
             test.innerHTML = "Apa 123";
             alert('before parseuser');
