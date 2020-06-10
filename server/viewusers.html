@@ -153,7 +153,7 @@ form {
         alert('test');
         var inp = document.getElementById('userid').value;
         alert(inp);
-        var print = getSource() + 'aapi/weather/' + inp.toString();
+        var print = getSource();
         alert(print); 
         document.getElementById('iframe_weather').src = getSource() + 'aapi/weather/' + inp;
         alert('after source');
