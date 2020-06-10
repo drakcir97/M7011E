@@ -142,17 +142,16 @@ form {
      <picture>
          <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'userimage'" width="350" height="200" srcset="/userimage">
        </picture>
-   <iframe src="/aapi/weather" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
-   <iframe src="/aapi/user" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
-   <iframe src="/aapi/powergenerated" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
-   <iframe src="/aapi/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
-   <iframe src="/aapi/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
+   <iframe src="/aapi/weather/1" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
+   <iframe src="/aapi/user/1" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
+   <iframe src="/aapi/powergenerated/1" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
+   <iframe src="/aapi/electricityprice2/1" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
+   <iframe src="/aapi/buffer/1" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
    
     <script>
 
         function getSourceUser() {
-            alert('getsource');
-            var config = require("../config/htmlconfig");
+            var config = require("../config/htmlconfig.js");
             return config.host + ':' + config.port + '/';
         }
 
