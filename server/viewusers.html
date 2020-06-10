@@ -122,7 +122,7 @@ form {
     </script>
 
 <p id="test"> </p>
-<form id="fetchuser" method="get" action="javascript:getUserSource(userid.value)">
+<form id="fetchuser" action="javascript:getUserSource(userid.value)">
     <label for="userid">User id to view page:</label>
     <input id="userid" type="number" name="userid" placeholder="Userid" />
 <input type="hidden" id="p2" name="p2" value="2">
@@ -160,6 +160,11 @@ form {
         price.src = getSource() + 'aapi/electricityprice2/' + inp;
         var buffer = document.getElementById('iframe_buffer');
         buffer.src = getSource() + 'aapi/buffer/' + inp;
+        weather.style = "display: block;"
+        user.style = "display: block;"
+        power.style = "display: block;"
+        price.style = "display: block;"
+        buffer.style = "display: block;"
         parseUser();
        }
    </script>
