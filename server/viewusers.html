@@ -153,18 +153,14 @@ form {
         alert('test');
         var inp = document.getElementById('userid').value;
         alert(inp);
-        var weather = document.getElementById('iframe_weather');
-        alert(getSource() + 'aapi/weather/' + inp.toString());
-        weather.src = getSource() + 'aapi/weather/' + inp;
+        var print = getSource() + 'aapi/weather/' + inp.toString();
+        alert(print); 
+        document.getElementById('iframe_weather').src = getSource() + 'aapi/weather/' + inp;
         alert('after source');
-        var user = document.getElementById('iframe_user');
-        user.src = getSource() + 'aapi/user/' + inp.toString();
-        var power = document.getElementById('iframe_powgen');
-        power.src = getSource() + 'api/powergenerated/' + inp.toString();
-        var price = document.getElementById('iframe_price');
-        price.src = getSource() + 'aapi/electricityprice2/' + inp.toString();
-        var buffer = document.getElementById('iframe_buffer');
-        buffer.src = getSource() + 'aapi/buffer/' + inp.toString();
+        document.getElementById('iframe_user').src = getSource() + 'aapi/user/' + inp.toString();
+        var power = document.getElementById('iframe_powgen') = getSource() + 'api/powergenerated/' + inp.toString();
+        document.getElementById('iframe_price') = getSource() + 'aapi/electricityprice2/' + inp.toString();
+        document.getElementById('iframe_buffer') = getSource() + 'aapi/buffer/' + inp.toString();
         var test = document.getElementById('test');
         test.innerHTML = "Apa 123";
         alert('before parseuser')
