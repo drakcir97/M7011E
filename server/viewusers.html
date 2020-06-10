@@ -152,8 +152,10 @@ form {
        function getUserSource() {
         alert('test');
         var inp = document.getElementById('userid');
+        alert('test2');
         var weather = document.getElementById('iframe_weather');
         weather.src = getSource() + 'aapi/weather/' + inp.toString();
+        alert('after source');
         var user = document.getElementById('iframe_user');
         user.src = getSource() + 'aapi/user/' + inp.toString();
         var power = document.getElementById('iframe_powgen');
