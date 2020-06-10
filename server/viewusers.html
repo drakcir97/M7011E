@@ -151,7 +151,7 @@ form {
    <script>
        function getUserSource(inp) {
         var weather = document.getElementById('iframe_weather');
-        weather.src = getSource() + 'aapi/weather/' + inp
+        weather.src = getSource() + 'aapi/weather/' + inp;
         var user = document.getElementById('iframe_user');
         user.src = getSource() + 'aapi/user/' + inp;
         var power = document.getElementById('iframe_powgen');
@@ -160,6 +160,8 @@ form {
         price.src = getSource() + 'aapi/electricityprice2/' + inp;
         var buffer = document.getElementById('iframe_buffer');
         buffer.src = getSource() + 'aapi/buffer/' + inp;
+        var test = document.getElementById('test');
+        test.innerHTML = "Apa 123";
         parseUser();
        }
    </script>
