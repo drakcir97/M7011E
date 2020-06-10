@@ -153,17 +153,18 @@ form {
         alert('test');
         var inp = document.getElementById('userid');
         var weather = document.getElementById('iframe_weather');
-        weather.src = getSource() + 'aapi/weather/' + inp;
+        weather.src = getSource() + 'aapi/weather/' + inp.toString();
         var user = document.getElementById('iframe_user');
-        user.src = getSource() + 'aapi/user/' + inp;
+        user.src = getSource() + 'aapi/user/' + inp.toString();
         var power = document.getElementById('iframe_powgen');
-        power.src = getSource() + 'api/powergenerated/' + inp;
+        power.src = getSource() + 'api/powergenerated/' + inp.toString();
         var price = document.getElementById('iframe_price');
-        price.src = getSource() + 'aapi/electricityprice2/' + inp;
+        price.src = getSource() + 'aapi/electricityprice2/' + inp.toString();
         var buffer = document.getElementById('iframe_buffer');
-        buffer.src = getSource() + 'aapi/buffer/' + inp;
+        buffer.src = getSource() + 'aapi/buffer/' + inp.toString();
         var test = document.getElementById('test');
         test.innerHTML = "Apa 123";
+        alert('before parseuser')
         parseUser();
        }
    </script>
