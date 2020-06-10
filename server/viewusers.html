@@ -122,16 +122,106 @@ form {
     </script>
 
 <p id="test"> </p>
-<form id="fetchuser" method="get" action="/fetchuser">
+<form id="fetchuser" method="get" action="javascript:getUserSource(userid.value)">
     <label for="userid">User id to view page:</label>
     <input id="userid" type="number" name="userid" placeholder="Userid" />
 <input type="hidden" id="p2" name="p2" value="2">
 
 <p><input type="Submit" value="Submit"></p>
 
+<!--<form name="myform" action="javascript:handleIt(lastname.value)">  
+    <input type="text" name="lastname" id="lastname" maxlength="40"> 
+    <input name="Submit"  type="submit" value="Update"/>
+   </form> -->
 </form>
 
-<iframe src="/fetchuser" onload="this.onload=null; this.src=getSource() + 'fetchuser'" name="iframe2" id="iframe2" style="display: none;"></iframe> 
+<body>
+    <!--  <div class="toprightcorner"><a href="/signout">Sign out</a></div>
+     <div class="topleftcorner"><a href="/home">Home</a></div>
+     <div class="topleftcorner"><a href="/settings">Settings</a></div> -->
+     <picture>
+         <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'userimage'" width="350" height="200" srcset="/userimage">
+       </picture>
+   <iframe src="/aapi/weather" name="iframe_weather" id="iframe_weather" style="display: none;"></iframe>
+   <iframe src="/aapi/user" name="iframe_user" id="iframe_user" style="display: none;"></iframe>
+   <iframe src="/aapi/powergenerated" name="iframe_powgen" id="iframe_powgen" style="display: none;"></iframe>
+   <iframe src="/aapi/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
+   <iframe src="/aapi/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
+   
+   <script>
+       function getUserSource(inp) {
+        var weather = document.getElementById('iframe_weather');
+        weather.src = getSource() + 'aapi/weather/' + inp
+        var user = document.getElementById('iframe_user');
+        user.src = getSource() + 'aapi/user/' + inp;
+        var power = document.getElementById('iframe_powgen');
+        power.src = getSource() + 'api/powergenerated/' + inp;
+        var price = document.getElementById('iframe_price');
+        price.src = getSource() + 'aapi/electricityprice2/' + inp;
+        var buffer = document.getElementById('iframe_buffer');
+        buffer.src = getSource() + 'aapi/buffer/' + inp;
+        parseUser();
+       }
+   </script>
+   <script>
+       function parseUser() {
+           var theFrame = document.getElementById('iframe_weather');       
+           var theWin = theFrame.contentWindow;
+           var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+           var theJson = theDoc.body.innerHTML;
+           var div = document.createElement("div");
+           div.innerHTML = theJson;
+           var text = div.textContent || div.innerText || "";
+           var weather = JSON.parse(text);
+           
+   
+           var theFrame2 = document.getElementById('iframe_user');
+           var theWin2 = theFrame2.contentWindow;
+           var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
+           var theJson2 = theDoc2.body.innerHTML;
+           var div2 = document.createElement("div");
+           div2.innerHTML = theJson2;
+           var text2 = div2.textContent || div2.innerText || "";
+           var user = JSON.parse(text2);
+   
+           var theFrame3 = document.getElementById('iframe_powgen');
+           var theWin3 = theFrame3.contentWindow;
+           var theDoc3 = theFrame3.contentDocument || theFrame3.contentWindow.document;
+           var theJson3 = theDoc3.body.innerHTML;
+           var div3 = document.createElement("div");
+           div3.innerHTML = theJson3;
+           var text3 = div3.textContent || div3.innerText || "";
+           var powgen = JSON.parse(text3);
+   
+           var theFrame4 = document.getElementById('iframe_price');
+           var theWin4 = theFrame4.contentWindow;
+           var theDoc4 = theFrame4.contentDocument || theFrame4.contentWindow.document;
+           var theJson4 = theDoc4.body.innerHTML;
+           var div4 = document.createElement("div");
+           div4.innerHTML = theJson4;
+           var text4 = div4.textContent || div4.innerText || "";
+           var price = JSON.parse(text4);
+           
+   
+           var theFrame5 = document.getElementById('iframe_buffer');
+           var theWin5 = theFrame5.contentWindow;
+           var theDoc5 = theFrame5.contentDocument || theFrame5.contentWindow.document;
+           var theJson5 = theDoc5.body.innerHTML;
+           var div5 = document.createElement("div");
+           div5.innerHTML = theJson5;
+           var text5 = div5.textContent || div5.innerText || "";
+           var buffer = JSON.parse(text5);
+   
+           var displayjson = " windspeed: "+weather.response[0].windspeed;
+           displayjson += '<br>';
+           var netprod = parseFloat(user.response[0].value) - parseFloat(powgen.response[0].value);
+           displayjson += " used: " + user.response[0].value+"<br> production: "+powgen.response[0].value+"<br> net production: "+netprod;
+           displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
+           document.getElementById("test2").innerHTML = displayjson;
+       }
+       </script>
+   
+   <p id="test2"> </p>
 
 </body>
 </html>

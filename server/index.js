@@ -1076,6 +1076,7 @@ app.get('/fetchuser/', (req, res) => {
                                         'userid' : id
                                 }
                         };
+                        //npm install ejs
                         //return res.render('fetchuser.html',{userid: id});
                         //return res.sendFile('fetchuser.html', options);
                         return res.render('test.html');
