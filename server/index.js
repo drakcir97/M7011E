@@ -996,7 +996,7 @@ app.get('/aapi/:inp/:id', (req, res) => {
         console.log(req.params.inp);
         console.log('/aapi/'+req.params.inp);
         var token = req.cookies.token;
-        var inp = '/aapi/'+req.params.inp;
+        var inp = '/api/'+req.params.inp;
         var id = req.params.id;
         if (!token) {
                 console.log("Token failed, is missing!");
