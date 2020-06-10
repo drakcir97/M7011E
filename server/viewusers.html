@@ -151,7 +151,8 @@ form {
    <script>
        function getUserSource() {
         alert('test');
-        var inp = document.getElementById('userid');
+        var inpdoc = document.getElementById('userid');
+        var inp = inpdoc.value;
         alert('test2');
         var weather = document.getElementById('iframe_weather');
         alert('beforce source set');
