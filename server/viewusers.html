@@ -148,27 +148,33 @@ form {
    <iframe src="/aapi/electricityprice2" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
    <iframe src="/aapi/buffer" name="iframe_buffer" id="iframe_buffer" style="display: none;"></iframe>
    
-   <script>
-       function getUserSource() {
-        alert('test');
-        var inp = document.getElementById('userid').value;
-        alert(inp);
-        var print = getSource();
-        alert(print); 
-        document.getElementById('iframe_weather').src = getSource() + 'aapi/weather/' + inp;
-        alert('after source');
-        document.getElementById('iframe_user').src = getSource() + 'aapi/user/' + inp.toString();
-        var power = document.getElementById('iframe_powgen') = getSource() + 'api/powergenerated/' + inp.toString();
-        document.getElementById('iframe_price') = getSource() + 'aapi/electricityprice2/' + inp.toString();
-        document.getElementById('iframe_buffer') = getSource() + 'aapi/buffer/' + inp.toString();
-        var test = document.getElementById('test');
-        test.innerHTML = "Apa 123";
-        alert('before parseuser')
-        parseUser();
-       }
-   </script>
-   <script>
-       function parseUser() {
+    <script>
+
+        function getSourceUser() {
+            var config = require("../config/htmlconfig");
+            return config.host + ':' + config.port + '/';
+        }
+
+        function getUserSource() {
+            alert('test');
+            var inp = document.getElementById('userid').value;
+            alert(inp);
+            var print = getSourceUser();
+            alert(print); 
+            document.getElementById('iframe_weather').src = getSourceUser() + 'aapi/weather/' + inp;
+            alert('after source');
+            document.getElementById('iframe_user').src = getSourceUser() + 'aapi/user/' + inp.toString();
+            var power = document.getElementById('iframe_powgen') = getSourceUser() + 'api/powergenerated/' + inp.toString();
+            document.getElementById('iframe_price') = getSourceUser() + 'aapi/electricityprice2/' + inp.toString();
+            document.getElementById('iframe_buffer') = getSourceUser() + 'aapi/buffer/' + inp.toString();
+            var test = document.getElementById('test');
+            test.innerHTML = "Apa 123";
+            alert('before parseuser')
+            parseUser();
+        }
+    </script>
+    <script>
+        function parseUser() {
            alert('parseuser');
            var theFrame = document.getElementById('iframe_weather');       
            var theWin = theFrame.contentWindow;
@@ -224,10 +230,10 @@ form {
            displayjson += "<br> buffer: "+buffer.response[0].value+"<br> price: "+price.response.result;
            document.getElementById("test2").innerHTML = displayjson;
            alert(displayjson);
-       }
-       </script>
+        }
+    </script>
    
-   <p id="test2"> </p>
+    <p id="test2"> </p>
 
 </body>
 </html>
