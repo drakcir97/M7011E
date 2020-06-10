@@ -151,12 +151,11 @@ form {
    <script>
        function getUserSource() {
         alert('test');
-        var inpdoc = document.getElementById('userid');
-        var inp = inpdoc.value;
+        var inp = document.getElementById('userid').value;
         alert('test2');
         var weather = document.getElementById('iframe_weather');
         alert('beforce source set');
-        weather.src = getSource() + 'aapi/weather/' + inp.toString();
+        weather.src = getSource() + 'aapi/weather/' + inp;
         alert('after source');
         var user = document.getElementById('iframe_user');
         user.src = getSource() + 'aapi/user/' + inp.toString();
