@@ -154,7 +154,7 @@ form {
         var inp = document.getElementById('userid').value;
         alert(inp);
         var weather = document.getElementById('iframe_weather');
-        alert('beforce source set');
+        alert(getSource() + 'aapi/weather/' + inp);
         weather.src = getSource() + 'aapi/weather/' + inp;
         alert('after source');
         var user = document.getElementById('iframe_user');
