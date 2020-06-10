@@ -150,6 +150,7 @@ form {
    
    <script>
        function getUserSource() {
+        alert('test');
         var inp = document.getElementById('userid');
         var weather = document.getElementById('iframe_weather');
         weather.src = getSource() + 'aapi/weather/' + inp;
