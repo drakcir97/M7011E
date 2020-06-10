@@ -996,7 +996,7 @@ app.get('/aapi/:inp/:id', (req, res) => {
         console.log(req.params.inp);
         console.log('/aapi/'+req.params.inp);
         var token = req.cookies.token;
-        var inp = '/api/'+req.params.inp;
+        var inp = '/aapi/'+req.params.inp;
         var id = req.params.id;
         if (!token) {
                 console.log("Token failed, is missing!");
@@ -1023,10 +1023,10 @@ app.get('/aapi/:inp/:id', (req, res) => {
                         // });
 
                         socket.on('response', function (message) { 
-                                console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+decoded.id);
+                                console.log("before socket.emit,  req.params.inp = "+req.params.inp+"  id: decoded.id = "+id);
                                 console.log("after first emit");
                                 console.log(message);
-                                socket.emit(inp, {id: decoded.id}); //Send id to api.
+                                socket.emit(inp, {id: id}); //Send id to api.
                         });
                         
                         socket.on(inp, function (message) {
