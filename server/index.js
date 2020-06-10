@@ -332,7 +332,7 @@ app.get( '/auserimage/:id', function( req, res ) {
                 
                 //res.status(200).send(decoded);
                 if (decoded.admin == '1') {
-                        var s = parse('images/userhouse/%s', JSON.stringify(id)+".jpg");
+                        var s = parse('images/userhouse/%s', id+".jpg");
                         fs.readFile( s, function( err, data ) {
         
                                 if ( err ) {
