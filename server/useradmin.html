@@ -1,182 +1,135 @@
-<!DOCTYPE html>
-<html>
-<style>
-.header {
-    padding: 2px;
-    text-align: center;
-    background: #1abc9c;
-    color: white;
-    font-size: 20px;
-}
-label {
-    font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 18px;
-    color: #333;
-    height: 20px;
-    width: 250px;
-    margin-top: 10px;
-    margin-left: 10px;
-    text-align: right;
-    clear: both;
-    float:left;
-    margin-right:15px;
-}
-input {
-    height: 20px;
-    width: 300px;
-    border: 1px solid #000;
-    margin-top: 10px;
-    float: right;
-}
-input[type=button] {
-    float:none;
-}
-form {
-    background-color: #FFF;
-    height: 10px;
-    width: 600px;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: 0px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    padding: 0px;
-}
-.right {
-    float: right;
-}
-.centerforheader {
-    position: absolute;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-}
-.center {
-    margin: auto;
-}
-.under {
-    position: absolute;
-    float: left;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-.output {
-    height: 20px;
-    width: 300px;
-    border: 1px solid #000;
-    margin-top: 10px;
-    text-align: center;
-    float: right;
-}
-</style>
-<head>
-    <div class="header">
-    <h1>JSONLIGAN</h1>
-    <p>M7011E</p>
-    </div>
-</head>    
-<head>
-    <div>
-    <h1 class="centerforheader">Admin</h1>
-    <div class="right">
-    <form id="signout" method="get" action="/signout">
-    <label for=""></label>
-    <input type="submit" value="Signout">
-    </form>
-    <form id="home" method="get" action="/home">
-    <label for=""></label>
-    <input type="submit" value="Home">
-    </form>
-    </div>
-    </div>
-</head>   
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<picture>
+    <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'usersimage'"width="350" height="200" srcset="/userimage">
+  </picture>
 
-</head>
-<body onload="myFunction()">
- <!--  <div class="toprightcorner"><a href="/signout">Sign out</a></div>
-  <div class="topleftcorner"><a href="/home">Home</a></div> -->
-  <picture>
-      <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'usersimage'"width="350" height="200" srcset="/userimage">
-    </picture>
-<iframe src="/api/plantstatus" onload="this.onload=null; this.src=getSource() + 'api/usersinfo'" name="iframe_plant" id="iframe_plant" style="display: none;"></iframe>
-<iframe src="/api/electricityprice2" onload="this.onload=null; this.src=getSource() + 'api/electricityprice2'" name="iframe_price" id="iframe_price" style="display: none;"></iframe>
-
-<script>
-    function getSource() {
-        var config = require("../config/htmlconfig");
-        return config.host + ':' + config.port + '/';
+  <html>
+    <style>
+    .header {
+        padding: 2px;
+        text-align: center;
+        background: #1abc9c;
+        color: white;
+        font-size: 20px;
     }
-</script>
-
-<script>
-    function myFunction() {
-        var theFrame = document.getElementById('iframe_price');       
-        var theWin = theFrame.contentWindow;
-        var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
-        var theJson = theDoc.body.innerHTML;
-        var div = document.createElement("div");
-        div.innerHTML = theJson;
-        var text = div.textContent || div.innerText || "";
-        var price = JSON.parse(text);
-        
-
-        var theFrame2 = document.getElementById('iframe_plant');
-        var theWin2 = theFrame2.contentWindow;
-        var theDoc2 = theFrame2.contentDocument || theFrame2.contentWindow.document;
-        var theJson2 = theDoc2.body.innerHTML;
-        var div2 = document.createElement("div");
-        div2.innerHTML = theJson2;
-        var text2 = div2.textContent || div2.innerText || "";
-        var plant = JSON.parse(text2);
-
-        var displayjson = " current electricity price: "+price.response.result;
-        //powerplant.maxpower, powerplant.buffer, powerplant.ratiokeep, powerplant.status 
-        displayjson += '<br>';
-        displayjson += " plant power generation: "+plant.response[0].maxpower;
-        displayjson += '<br>';
-        displayjson += " plant power buffer: "+plant.response[0].buffer;
-        displayjson += '<br>';
-        displayjson += " plant power ratio keep: "+plant.response[0].ratiokeep;
-        displayjson += '<br>';
-        displayjson += " plant power status: "+plant.response[0].status;
-        displayjson += '<br>';
-        document.getElementById("test").innerHTML = displayjson;
+    label {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        font-size: 18px;
+        color: #333;
+        height: 20px;
+        width: 250px;
+        margin-top: 10px;
+        margin-left: 10px;
+        text-align: right;
+        clear: both;
+        float:left;
+        margin-right:15px;
     }
+    input {
+        height: 20px;
+        width: 300px;
+        border: 1px solid #000;
+        margin-top: 10px;
+        float: right;
+    }
+    input[type=button] {
+        float:none;
+    }
+    form {
+        background-color: #FFF;
+        height: 10px;
+        width: 600px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 0px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        padding: 0px;
+    }
+    .right {
+        float: right;
+    }
+    .centerforheader {
+        position: absolute;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+    }
+    .center {
+        margin: auto;
+    }
+    </style>
+    <head>
+        <div class="header">
+        <h1>JSONLIGAN</h1>
+        <p>M7011E</p>
+        </div>
+    </head>    
+    <head>
+        <div>
+        <h1 class="centerforheader">Admin userpage</h1>
+        <div class="right">
+        <form id="signout" method="get" action="/signout">
+        <label for=""></label>
+        <input type="submit" value="Signout">
+        </form>
+        <form id="home" method="get" action="/home">
+        <label for=""></label>
+        <input type="submit" value="Home">
+        </form>
+        </div>
+        </div>
+    </head> 
+    <b>Profile picture for admin:</b>
+    <picture>
+        <img src="/userimage" onload="this.onload=null; this.src=getSource() + 'userimage'" width="350" height="200" srcset="/userimage">
+      </picture>           
+    <body onload="myFunction()">
+    <p id="test"> </p>
+    <iframe src="/usersinfo" onload="this.onload=null; this.src=getSource() + 'usersinfo'" name="iframe" id="iframe" style="display: none;"></iframe> 
+    
+    <script>
+        function getSource() {
+            var config = require("../config/htmlconfig");
+            return config.host + ':' + config.port + '/';
+        }
     </script>
-
-<p id="test"> </p>
-
-
-<h2></h2>
-<form id="settings" method="post" action="/plantsettings">
-    <label for="ratiokeep">Ratio to keep in buffer: </label>
-    <input type="range" name="ratiokeep" id="ratiokeep" value="0.5" min="0" max="1" step="0.1" oninput="keepOutputId.value = ratiokeep.value">
-    <div class="output">
-    <output name="keepOutputName" id="keepOutputId">0.5</output>
-    </div>
-<input type="hidden" id="p2" name="p2" value="2">
-
-<!-- <p><input type="Submit" value="Submit"></p> -->
-</form>
-
-<form id="planton" method="POST" action="/planton">
-    <!--<button name="status" value="status">ON</button>-->
-    <label for="status">Turn on plant: </label>
-    <input name="status" value="ON" type="submit">
-</form>
-
-<form id="plantoff" method="POST" action="/plantoff">
-    <!--<button name="status" value="status">OFF</button>-->
-    <label for="status">Turn off plant: </label>
-    <input name="status" value="OFF" type="submit">
-</form>
-
-<form id="plantpower" method="POST" action="/plantpower">
-    <label for="power">Power to produce from plant: </label>
-    <input type="number" name="power" min="1" max="1000000">
-    <input type="Submit" value="Submit power">
-</form>
-</body>
-</html>
+    
+    <script>
+        function myFunction() {
+    
+            //två raderna nedanför skriver ut all data, med html taggar
+            //var nameValue = window.frames['iframe'].document.body;
+            //document.getElementById("test").innerHTML = nameValue.outerHTML;
+    
+            //remove all html tags and change the iframe/html object to json 
+            var theFrame = document.getElementById('iframe');
+            var theWin = theFrame.contentWindow;
+            var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+            var theJson = theDoc.body.innerHTML;
+            var div = document.createElement("div");
+            div.innerHTML = theJson;
+            var text = div.textContent || div.innerText || "";
+            obj = JSON.parse(text);
+     //       document.getElementById("test").innerHTML = obj[0].email;
+    
+            var displayjson = ""
+            for(var i = 0; i < obj.length; i++) {
+                if((obj[i].email.includes("@deleted") == false)){
+                    displayjson += "id: "+obj[i].id+"  email: "+obj[i].email+"<br>";
+                }
+    
+            }
+            document.getElementById("test").innerHTML = displayjson;
+        }
+        </script>
+    <form id="deleteusers" method="post" action="/deleteusers">
+        <label for="deleteusers">User id to remove:</label>
+        <input id="Userid" type="text" name="userid" placeholder="User id" />
+        
+    <input type="hidden" id="p2" name="p2" value="2">
+    
+    <p><input type="Submit" value="Submit"></p>
+    
+    </form>
+    </body>
+    </html>tml>tml>tml>tml>tml>tml>

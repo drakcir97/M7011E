@@ -790,6 +790,22 @@ app.post('/settings', function(req, res) {
         });
 });
 
+app.get('/plantcontrol', (req, res) => {
+        var token = req.cookies.token;
+        if (!token) {
+                return res.status(401).end()
+        }
+        jwt.verify(token, authenticator.secret, function(err, decoded) {
+                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+                        if(decoded.admin == '1'){
+                                return res.sendFile('plantcontrol.html', {root : './'});
+                        }
+                        else{
+                                return res.sendFile('user.html', {root : './'});
+                        }
+        });    
+});
+
 app.get('/powersettings', (req,res) => {
         var token = req.cookies.token;
         if (!token) {
@@ -844,7 +860,7 @@ app.post('/powersettings', function(req,res) {
         });
 });
 
-app.post('/plantsettings', function(req, res) {
+app.post('/powersettings', function(req, res) {
         var token = req.cookies.token;
         if (!token) {
                 return res.status(401).end()
