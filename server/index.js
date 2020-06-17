@@ -451,24 +451,6 @@ app.get('/createadmin', (req, res) => {
         });
 });
 
-app.get('/deleteusers', (req, res) => {
-        var token = req.cookies.token;
-        if (!token) {
-                return res.status(401).end()
-        }
-        jwt.verify(token, authenticator.secret, function(err, decoded) {
-                if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-                
-                //res.status(200).send(decoded);
-                console.log("Decoded admin"+decoded.admin);
-                if (decoded.admin == '1') {
-                        return res.sendFile('deleteusers.html', {root : './'});
-                } else {
-                        return res.send("User is not an administrator");
-                }
-        });
-});
-
 app.get('/viewusers', (req, res) => {
         var token = req.cookies.token;
         if (!token) {
@@ -634,7 +616,7 @@ app.post('/deleteusers', function(req, res) {
                                                    //     return res.send(results);
                                                 }
                                         });
-                                        return res.sendFile('deleteusers.html', {root : './'});
+                                        return res.sendFile('useradmin.html', {root : './'});
                                 }
                         });
                 } else {
