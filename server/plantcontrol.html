@@ -69,6 +69,19 @@ form {
     text-align: center;
     float: right;
 }
+
+.statusButton{
+  border: none;
+  width: 32px;
+  height: 32px;
+  background-color: #eee;
+  transition: all ease-in-out 0s;
+  cursor: pointer;
+}
+.statusButton:hover{
+  border: 1px solid #888;
+  background-color: #ddd;
+}
 </style>
 <head>
     <div class="header">
@@ -151,7 +164,7 @@ form {
 
 
 <h2></h2>
-<form id="settings" method="post" action="/plantsettings">
+<form id="settings" method="post" action="/plantsettingsratio">
     <label for="ratiokeep">Ratio to keep in buffer: </label>
     <input type="range" name="ratiokeep" id="ratiokeep" value="0.5" min="0" max="1" step="0.1" oninput="keepOutputId.value = ratiokeep.value">
     <div class="output">
@@ -162,22 +175,23 @@ form {
 <!-- <p><input type="Submit" value="Submit"></p> -->
 </form>
 
-<form id="planton" method="POST" action="/planton">
-    <!--<button name="status" value="status">ON</button>-->
-    <label for="status">Turn on plant: </label>
-    <input name="status" value="ON" type="submit">
-</form>
 
-<form id="plantoff" method="POST" action="/plantoff">
-    <!--<button name="status" value="status">OFF</button>-->
-    <label for="status">Turn off plant: </label>
-    <input name="status" value="OFF" type="submit">
-</form>
 
 <form id="plantpower" method="POST" action="/plantpower">
     <label for="power">Power to produce from plant: </label>
     <input type="number" name="power" min="1" max="1000000">
     <input type="Submit" value="Submit power">
+</form>
+<form id="planton" method="POST" action="/planton">
+    <!--<button name="status" value="status">ON</button>-->
+    <label for="status">Turn on plant: </label>
+    <input class=statusButton name="status" title="Powerplant will be started at the next cycle of the simulation" value="ON" type="submit">
+</form>
+
+<form id="plantoff" method="POST" action="/plantoff">
+    <!--<button name="status" value="status">OFF</button>-->
+    <label for="status">Turn off plant: </label>
+    <input class=statusButton name="status" title="Powerplant will be stopped at the next cycle of the simulation" value="OFF" type="submit">
 </form>
 </body>
 </html>

@@ -783,7 +783,7 @@ app.get('/plantcontrol', (req, res) => {
                                 return res.sendFile('plantcontrol.html', {root : './'});
                         }
                         else{
-                                return res.sendFile('user.html', {root : './'});
+                                return res.send("User is not an administrator");
                         }
         });    
 });
@@ -833,7 +833,7 @@ app.post('/powersettings', function(req,res) {
                         socket.on('/api/powersettings', function (message) {
                                 //socket.emit('api/users');
                                 console.log(message);
-                                return res.redirect('/');
+                                return res.redirect('/powersettings');
                         });
 
                 } else {
@@ -842,7 +842,7 @@ app.post('/powersettings', function(req,res) {
         });
 });
 
-app.post('/powersettings', function(req, res) {
+app.post('/powersettingsratio', function(req, res) {
         var token = req.cookies.token;
         if (!token) {
                 return res.status(401).end()
@@ -866,7 +866,7 @@ app.post('/powersettings', function(req, res) {
                         socket.on('/api/plantsettings', function (message) {
                                 //socket.emit('api/users');
                                 console.log(message);
-                                return res.redirect('/');
+                                return res.redirect('/plantcontrol');
                         });
                 } else {
                         return res.send("User is not an administrator");
@@ -897,7 +897,7 @@ app.post('/planton', function(req, res) {
                         socket.on('/api/planton', function (message) {
                                 //socket.emit('api/users');
                                 console.log(message);
-                                return res.redirect('/');
+                                return res.redirect('/plantcontrol');
                         });
                 } else {
                         return res.send("User is not an administrator");
@@ -928,7 +928,7 @@ app.post('/plantoff', function(req, res) {
                         socket.on('/api/plantoff', function (message) {
                                 //socket.emit('api/users');
                                 console.log(message);
-                                return res.redirect('/');
+                                return res.redirect('/plantcontrol');
                         });
                 } else {
                         return res.send("User is not an administrator");
