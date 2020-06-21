@@ -440,6 +440,29 @@ io.sockets.on('connect', function(socket)
         });
     });
 
+    socket.on('/api/getsettings', function(data) {
+        var id = data.id;
+        var sqlSettingsCount = mysql.format("SELECT COUNT(userid) FROM simulationsettings WHERE userid=?", [id]);
+        conn.query(sqlSettingsCount, (err, results) => {
+            if (err) {
+                console.log(err);
+            } else {
+                var count = parseInt(JSON.stringify(results[0]['COUNT(userid)']));
+                if (count == 0) {
+                    return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": true, "response": 'User does not exist in settings'}));
+                } else {
+                    var sqlSettings = mysql.format("SELECT ratiokeep,ratiosell FROM simulationsettings WHERE userid=?", [id]);
+                    conn.query(sqlSettings, (err, results) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                        return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                    });
+                }
+            }
+        });
+    });
+
     socket.on('/api/powersettings', function(data) {
         var id = data.id;
         var high = data.powerCostHigh;

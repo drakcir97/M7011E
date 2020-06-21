@@ -86,7 +86,34 @@ form {
 <!-- <div class="toprightcorner"><a href="/signout">Sign out</a></div>
 <div class="topleftcorner"><a href="/home">Home</a></div> -->
 </body>
-<body>    
+<body onload="myFunction()">  
+    <iframe src="/api/getsettings" onload="this.onload=null; this.src=getSource() + 'api/getsettings'" name="iframe_settings" id="iframe_settings" style="display: none;"></iframe>
+    <script>
+            function getSource() {
+                var config = require("../config/htmlconfig");
+                return config.host + ':' + config.port + '/';
+            }
+    </script>
+    <script>
+        function myFunction() {
+            var theFrame = document.getElementById('iframe_settings');       
+            var theWin = theFrame.contentWindow;
+            var theDoc = theFrame.contentDocument || theFrame.contentWindow.document;
+            var theJson = theDoc.body.innerHTML;
+            var div = document.createElement("div");
+            div.innerHTML = theJson;
+            var text = div.textContent || div.innerText || "";
+            var settings = JSON.parse(text);
+    
+            var displayjson = " Ratio keep: "+settings.response[0].ratiokeep;
+            displayjson += '<br>';
+            displayjson += " Ratio sell: " + settings.response[0].ratiosell;
+            document.getElementById("test").innerHTML = displayjson;
+        }
+        </script>
+    
+    <p id="test"> </p>
+            
 <h2></h2>
 <form id="settings" method="post" action="/settings">
     <label for="ratiokeep">Ratio to keep in buffer:</label>
