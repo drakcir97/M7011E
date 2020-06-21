@@ -449,14 +449,14 @@ io.sockets.on('connect', function(socket)
             } else {
                 var count = parseInt(JSON.stringify(results[0]['COUNT(userid)']));
                 if (count == 0) {
-                    return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": true, "response": 'User does not exist in settings'}));
+                    return socket.emit('/api/getsettings', JSON.stringify({"status": 200, "error": true, "response": 'User does not exist in settings'}));
                 } else {
                     var sqlSettings = mysql.format("SELECT ratiokeep,ratiosell FROM simulationsettings WHERE userid=?", [id]);
                     conn.query(sqlSettings, (err, results) => {
                         if (err) {
                             console.log(err);
                         }
-                        return socket.emit('/api/settings', JSON.stringify({"status": 200, "error": null, "response": results}));
+                        return socket.emit('/api/getsettings', JSON.stringify({"status": 200, "error": null, "response": results}));
                     });
                 }
             }
